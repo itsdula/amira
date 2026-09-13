@@ -19,8 +19,12 @@
       --muted: #6f6a63;
       --line: #e4dfd6;
       --fill: #111111;
-      --ok: #1f6b3a;
+      --ok: #14532d;
+      --ok-bg: #e7f6ec;
+      --ok-line: #b7e0c4;
       --err: #9b1c1c;
+      --err-bg: #fdecec;
+      --err-line: #f3c4c4;
       --radius: 1.25rem;
       font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
     }
@@ -234,18 +238,58 @@
       transform: translateY(1px);
     }
 
+    button.submit:disabled {
+      cursor: wait;
+      opacity: 0.72;
+      transform: none;
+    }
+
+    button.submit[aria-busy="true"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+
+    button.submit[aria-busy="true"]::before {
+      content: "";
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     #status {
-      min-height: 1.2rem;
-      margin: 0.85rem 0 0;
-      font-size: 0.82rem;
+      display: none;
+      margin: 0.9rem 0 0;
+      padding: 0.8rem 0.95rem;
+      border-radius: 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    #status.ok,
+    #status.err {
+      display: block;
     }
 
     #status.ok {
+      background: var(--ok-bg);
       color: var(--ok);
+      border: 1px solid var(--ok-line);
     }
 
     #status.err {
+      background: var(--err-bg);
       color: var(--err);
+      border: 1px solid var(--err-line);
     }
   </style>
 </head>
@@ -302,7 +346,7 @@
           </div>
 
           <button class="submit" type="submit" data-i18n="submit"></button>
-          <p id="status"></p>
+          <p id="status" role="alert" aria-live="polite"></p>
         </form>
       </div>
     </main>
@@ -323,7 +367,8 @@
         vehiclePh: "اختر السيارة",
         consent: "أوافق على التواصل عبر واتساب",
         submit: "إرسال",
-        sent: "تم استلام طلبك.",
+        sending: "جارٍ الإرسال…",
+        sent: "تم استلام طلبك. سنتواصل معك قريباً.",
         failed: "تعذر الإرسال. حاول مرة أخرى.",
       },
       en: {
@@ -338,15 +383,18 @@
         vehiclePh: "Choose a vehicle",
         consent: "I consent to being contacted on WhatsApp",
         submit: "Send",
-        sent: "Your request was received.",
+        sending: "Sending…",
+        sent: "Your request was received. We will be in touch shortly.",
         failed: "Could not send. Please try again.",
       },
     };
 
     const form = document.getElementById("form");
     const status = document.getElementById("status");
+    const submitBtn = form.querySelector("button.submit");
     const vehicle = document.getElementById("vehicle");
     let language = localStorage.getItem("lang") === "ar" ? "ar" : "en";
+    let busy = false;
 
     function applyLanguage(next) {
       language = next;
@@ -356,6 +404,7 @@
       document.documentElement.dir = t.dir;
       document.title = t.documentTitle;
       document.querySelectorAll("[data-i18n]").forEach((el) => {
+        if (el === submitBtn && busy) return;
         el.textContent = t[el.dataset.i18n];
       });
       document.getElementById("mobileE164").placeholder = t.mobilePh;
@@ -373,9 +422,14 @@
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (busy) return;
+      const t = copy[language];
+      busy = true;
+      submitBtn.disabled = true;
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.textContent = t.sending;
       status.textContent = "";
       status.className = "";
-      const t = copy[language];
       const body = {
         fullName: form.fullName.value.trim(),
         mobileE164: form.mobileE164.value.trim(),
@@ -402,6 +456,11 @@
       } catch (err) {
         status.className = "err";
         status.textContent = err.message || t.failed;
+      } finally {
+        busy = false;
+        submitBtn.disabled = false;
+        submitBtn.removeAttribute("aria-busy");
+        submitBtn.textContent = copy[language].submit;
       }
     });
   </script>
