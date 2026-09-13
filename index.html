@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Request a call | Changan</title>
+  <style>
+    :root { color-scheme: light; font-family: ui-sans-serif, system-ui, sans-serif; }
+    body { margin: 0; background: #f4f4f5; color: #18181b; }
+    main { max-width: 28rem; margin: 2.5rem auto; background: #fff; padding: 1.5rem; border: 1px solid #e4e4e7; }
+    h1 { font-size: 1.25rem; margin: 0 0 0.25rem; }
+    p.lead { color: #52525b; margin: 0 0 1.25rem; }
+    label { display: block; font-size: 0.875rem; margin: 0.85rem 0 0.3rem; }
+    input, select { width: 100%; box-sizing: border-box; padding: 0.55rem 0.65rem; border: 1px solid #d4d4d8; font: inherit; }
+    .row { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+    .row input { width: auto; }
+    .row label { margin: 0; }
+    button { margin-top: 1.25rem; width: 100%; padding: 0.7rem; border: 0; background: #18181b; color: #fff; font: inherit; cursor: pointer; }
+    .ok { color: #166534; }
+    .err { color: #991b1b; }
+    #status { min-height: 1.25rem; margin-top: 0.75rem; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>اطلب مكالمة / Request a call</h1>
+    <p class="lead">Changan KSA</p>
+    <form id="form">
+      <label for="fullName">الاسم الكامل / Full name</label>
+      <input id="fullName" name="fullName" required autocomplete="name" />
+
+      <label for="mobileE164">الجوال / Mobile</label>
+      <input id="mobileE164" name="mobileE164" required inputmode="tel" placeholder="+9665XXXXXXXX" />
+
+      <label for="vehicle">السيارة / Vehicle</label>
+      <select id="vehicle" name="vehicle" required>
+        <option value="" selected disabled>اختر السيارة / Choose</option>
+        <option value="ALSVIN">ALSVIN</option>
+        <option value="CS-35-PLUS">CS 35 Plus</option>
+        <option value="CS-75-PLUS">CS 75 Plus</option>
+        <option value="CS-95">CS 95</option>
+        <option value="EADO-PLUS">EADO Plus</option>
+        <option value="HUNTER-PLUS">Hunter</option>
+        <option value="UNI-K">UNI-K</option>
+        <option value="UNI-S">UNI S</option>
+        <option value="UNI-T">UNI-T</option>
+        <option value="UNI-V">UNI V</option>
+      </select>
+
+      <label for="language">اللغة / Language</label>
+      <select id="language" name="language" required>
+        <option value="ar">العربية</option>
+        <option value="en">English</option>
+      </select>
+
+      <div class="row">
+        <input id="consentWhatsapp" name="consentWhatsapp" type="checkbox" />
+        <label for="consentWhatsapp">موافق على واتساب / I consent to WhatsApp</label>
+      </div>
+
+      <button type="submit">إرسال / Submit</button>
+      <p id="status"></p>
+    </form>
+  </main>
+  <script>
+    const POST_URL = "https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/request-call";
+    const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtZXdic3diaG5tdXVvbWRmZXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNzM1ODIsImV4cCI6MjEwNDg0OTU4Mn0.NHswq5aroSy4DKV5igmcf7lA3OIS5JLmDJbm9n8-Mhw";
+    const form = document.getElementById("form");
+    const status = document.getElementById("status");
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "";
+      status.className = "";
+      const body = {
+        fullName: form.fullName.value.trim(),
+        mobileE164: form.mobileE164.value.trim(),
+        vehicle: form.vehicle.value,
+        language: form.language.value,
+        consentWhatsapp: form.consentWhatsapp.checked,
+      };
+      try {
+        const res = await fetch(POST_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: ANON_KEY,
+            Authorization: "Bearer " + ANON_KEY,
+          },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || res.statusText);
+        status.className = "ok";
+        status.textContent = "تم. " + data.submittedAt;
+        form.reset();
+      } catch (err) {
+        status.className = "err";
+        status.textContent = err.message || "Failed";
+      }
+    });
+  </script>
+</body>
+</html>
