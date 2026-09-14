@@ -17,6 +17,80 @@ python3 flows/validate_flow.py flows/amira-inbound-whatsapp.json
 
 **Debugging imports:** "No valid templates found" = wrong wrapper (needs the SHARED `flows[]` shape). Flow created with an **empty trigger** = the imported first piece was a webhook/schedule trigger (must be Manual Trigger, swapped in the UI after). "Template file is invalid" = run `flows/validate_flow.py` — usually a missing per-step key. Red nodes after a successful import = unresolved `{{variables['…']}}` or a piece-version prompt (accept what AF offers). Last resort: rebuild by hand from the node list below; Code bodies are paste-ready in `flows/snippets/`.
 
+## Diagram — inbound flow (labels = AF step names)
+
+AF's canvas supports sticky notes (`flows[0].notes[]` in the schema), but they are untested on import and the file finally imports clean — so the flow documentation lives here instead.
+
+```mermaid
+flowchart TD
+  %% trigger — imported as Manual Trigger (import rule), swapped to Catch Webhook in the UI.
+  %% After the swap it receives every event the WhatsApp channel posts to its webhookUrl.
+  trigger["trigger (PIECE_TRIGGER)<br/>Manual Trigger in the file — swap to<br/>Catch Webhook in UI; receives channel events"]
+
+  %% prep_inbound — the ONLY node that reads the trigger. Dual input evt/evtAlt covers both
+  %% payload ref shapes (trigger['body'] vs trigger['output']['body']); emits normalized fields.
+  prep_inbound["prep_inbound (CODE)<br/>normalize event → eventType, mobile,<br/>text, ready record_inbound body"]
+
+  %% route_event — deterministic switch on the platform eventType.
+  route_event{"route_event (ROUTER)<br/>eventType?"}
+
+  %% store_inbound — store contract: index the message BEFORE any model call.
+  %% Appends messages row, opens the 24h window, returns lead pack + next_action.
+  store_inbound["store_inbound (HTTP)<br/>POST rpc/record_inbound<br/>log inbound first · open 24h window<br/>returns pack + next_action"]
+
+  %% route_action — branches on next_action computed by the store, not by a model.
+  route_action{"route_action (ROUTER)<br/>next_action?"}
+
+  %% mark_opted_out — platform said the contact opted out; mirror it in our store.
+  mark_opted_out["mark_opted_out (HTTP)<br/>PATCH leads set opted_out=true"]
+
+  subgraph ask ["ask_channel branch — deterministic, no model"]
+    %% parse_channel — parses the reply for a channel choice (1/2/3, AR/EN/Arabizi keywords,
+    %% cancel words). No match → emits the canned channel question in the lead's language.
+    parse_channel["parse_channel (CODE)<br/>detect whatsapp / call_now / schedule /<br/>cancel; else build channel question"]
+    route_choice{"route_choice (ROUTER)<br/>mode?"}
+    %% rpc_set_choice — transactional: lead channel/status/preferred_call_at (clamped to
+    %% 09:00–21:00 Riyadh), preferred_channel fact, channel step_context, system message.
+    rpc_set_choice["rpc_set_choice (HTTP)<br/>POST rpc/set_channel_choice<br/>set channel + hours clamp + fact"]
+    %% build_confirm — confirmation copy per choice + language; call_window from the RPC
+    %% picks the outside-hours variant.
+    build_confirm["build_confirm (CODE)<br/>confirmation copy per choice + language"]
+    send_confirm["send_confirm (HTTP)<br/>POST /messaging/messages"]
+    log_confirm["log_confirm (HTTP)<br/>POST rpc/record_outbound"]
+    send_question["send_question (HTTP)<br/>send channel question / cancel ack"]
+    log_question["log_question (HTTP)<br/>POST rpc/record_outbound"]
+  end
+
+  subgraph gather ["gather branch — the assistant"]
+    %% chat_generate — AF harness generates the reply; threadKey = mobile keeps one billed
+    %% conversation. assistantId comes from the AMIRA_CHAT_ASSISTANT_ID variable.
+    chat_generate["chat_generate (HTTP)<br/>POST /chat/message<br/>threadKey = mobile"]
+    send_reply["send_reply (HTTP)<br/>deliver reply text to customer"]
+    log_reply["log_reply (HTTP)<br/>POST rpc/record_outbound"]
+  end
+
+  trigger --> prep_inbound --> route_event
+  route_event -->|"message.received"| store_inbound --> route_action
+  route_event -->|"contact.opted_out"| mark_opted_out
+  route_event -->|"otherwise"| endA((end))
+  route_action -->|"ask_channel"| parse_channel --> route_choice
+  route_action -->|"gather"| chat_generate --> send_reply --> log_reply
+  route_action -->|"stop_opted_out · already_closed"| endB((end — nothing sent))
+  route_choice -->|"set_choice"| rpc_set_choice --> build_confirm --> send_confirm --> log_confirm
+  route_choice -->|"ask · cancel"| send_question --> log_question
+
+  classDef codeN fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f;
+  classDef storeN fill:#dcfce7,stroke:#22c55e,color:#14532d;
+  classDef sendN fill:#ffedd5,stroke:#f97316,color:#7c2d12;
+  classDef routerN fill:#f3e8ff,stroke:#a855f7,color:#581c87;
+  class prep_inbound,parse_channel,build_confirm codeN;
+  class store_inbound,rpc_set_choice,log_confirm,log_question,log_reply,mark_opted_out storeN;
+  class send_confirm,send_question,chat_generate,send_reply sendN;
+  class route_event,route_action,route_choice routerN;
+```
+
+Colors: blue = Code (isolated-vm JS), green = Supabase store call, orange = AgenticFlow send/chat, purple = router.
+
 ## Workspace variables (Dashboard → Variables)
 
 | Variable | Value |
