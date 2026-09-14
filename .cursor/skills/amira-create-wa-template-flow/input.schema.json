@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Amira WA template flow input",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["name", "languages", "templates", "sample", "params"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Flow display name, e.g. Send Form Submission Template"
+    },
+    "out": {
+      "type": "string",
+      "description": "Write path for the import JSON. Optional."
+    },
+    "languages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": { "enum": ["en", "en_US", "ar"] },
+      "description": "en/en_US only, ar only, or both. en and en_US are the same; Meta English locale is always en_US."
+    },
+    "templates": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "en": { "type": "string", "minLength": 1 },
+        "en_US": { "type": "string", "minLength": 1 },
+        "ar": { "type": "string", "minLength": 1 }
+      },
+      "description": "Meta template names. en and en_US are aliases. Must include a key for every language."
+    },
+    "sample": {
+      "type": "object",
+      "required": ["phone"],
+      "properties": {
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+[1-9][0-9]{7,14}$"
+        }
+      },
+      "additionalProperties": true,
+      "description": "Data Gather sample. phone is required E.164. Both-language flows also need language."
+    },
+    "params": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Sample keys that fill body {{1}}, {{2}}, … in order"
+    }
+  }
+}

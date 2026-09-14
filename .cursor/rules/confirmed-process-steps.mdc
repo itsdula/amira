@@ -1,0 +1,15 @@
+---
+description: Do not treat Eraser as source of truth. Process lives in the brief and the store spec.
+alwaysApply: true
+---
+
+# Process source of truth
+
+Eraser is retired. Ignore the old swimlane and band colours.
+
+Source of truth:
+
+- Brief: `requirements/Practical assessment — bilingual WhatsApp + voice assistant for KSA automotive retail.md`
+- Data contract: `requirements/store-micro-context.md`
+
+Services stay split: **init (form)**, **inbound**, **ghost/reschedule**. Do not merge them. Do not invent later-step facts or new external tools without adding them to the store spec.

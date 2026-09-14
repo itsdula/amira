@@ -1,0 +1,99 @@
+{
+  "name": "Send Form Submission Template",
+  "type": "SHARED",
+  "summary": "",
+  "description": "Callable: Data Gather → Prepare Data (Code) → Make the Call (HTTP). Do not set metadata.externalId.",
+  "tags": ["whatsapp", "template"],
+  "blogUrl": "",
+  "metadata": {},
+  "author": "amira",
+  "categories": [],
+  "pieces": [
+    "@activepieces/piece-subflows",
+    "@activepieces/piece-http"
+  ],
+  "flows": [
+    {
+      "displayName": "Send Form Submission Template",
+      "trigger": {
+        "name": "trigger",
+        "valid": true,
+        "displayName": "Data Gather",
+        "type": "PIECE_TRIGGER",
+        "nextAction": {
+          "name": "step_2",
+          "skip": false,
+          "type": "CODE",
+          "valid": true,
+          "displayName": "Prepare Data",
+          "settings": {
+            "input": {
+              "name": "{{trigger['output']['data']['name']}}",
+              "phone": "{{trigger['output']['data']['phone']}}",
+              "apiKey": "{{variables['AgenticFlow_API_KEY']}}",
+              "vehicle": "{{trigger['output']['data']['vehicle']}}",
+              "language": "{{trigger['output']['data']['language']}}"
+            },
+            "sampleData": {},
+            "sourceCode": {
+              "code": "SEE SKILL.md Node 2",
+              "packageJson": "{}"
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": { "value": false },
+              "continueOnFailure": { "value": false }
+            }
+          },
+          "nextAction": {
+            "name": "step_1",
+            "skip": false,
+            "type": "PIECE",
+            "valid": true,
+            "displayName": "Make the Call",
+            "settings": {
+              "pieceName": "@activepieces/piece-http",
+              "actionName": "send_request",
+              "pieceVersion": "0.11.19",
+              "sampleData": {},
+              "input": {
+                "url": "{{step_2['output']['url']}}",
+                "body": { "data": "{{step_2['output']['body']}}" },
+                "method": "{{step_2['output']['method']}}",
+                "headers": "{{step_2['output']['headers']}}",
+                "authType": "NONE",
+                "body_type": "json",
+                "use_proxy": false,
+                "authFields": {},
+                "failureMode": "continue_all",
+                "queryParams": {},
+                "proxy_settings": {},
+                "followRedirects": false,
+                "response_is_binary": false
+              }
+            }
+          }
+        },
+        "settings": {
+          "pieceName": "@activepieces/piece-subflows",
+          "pieceVersion": "0.6.4",
+          "triggerName": "callableFlow",
+          "input": {
+            "mode": "advanced",
+            "exampleData": {
+              "sampleData": {
+                "name": "dula",
+                "phone": "+966555841684",
+                "vehicle": "Camry",
+                "language": "en"
+              }
+            }
+          }
+        }
+      },
+      "valid": true,
+      "schemaVersion": "22",
+      "notes": []
+    }
+  ],
+  "status": "PUBLISHED"
+}

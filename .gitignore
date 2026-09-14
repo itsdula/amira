@@ -1,0 +1,14 @@
+# secrets
+.env
+*.local
+
+# deps / junk
+node_modules/
+.DS_Store
+
+# supabase CLI scratch
+supabase/.temp/
+
+# web page lives in its own repo (github.com/itsdula/amira).
+# To fold it into this repo: remove web/.git and delete this line.
+web/

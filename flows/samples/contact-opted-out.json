@@ -1,0 +1,23 @@
+{
+  "eventType": "contact.opted_out",
+  "eventId": "evt_sample_opt_00000000004",
+  "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
+  "channelType": "whatsapp",
+  "occurredAt": "2026-09-14T15:20:00.000Z",
+  "messageId": null,
+  "conversationId": "c0ffee00-1234-4abc-9def-56789abcdef0",
+  "contactId": "aa11bb22-cc33-4dd4-8ee5-ff6677889900",
+  "senderIdentifier": "+966500000001",
+  "providerMessageId": null,
+  "messageType": null,
+  "text": null,
+  "subject": null,
+  "media": null,
+  "location": null,
+  "contactVcard": null,
+  "interactive": null,
+  "reactionEmoji": null,
+  "reactionTargetMessageId": null,
+  "windowState": null,
+  "windowOpenUntil": null
+}

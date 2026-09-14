@@ -1,0 +1,14 @@
+{
+  "name": "amira-catalogue-scrape",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "One-pass polite scrape of changan-ksa.com into a grounded catalogue JSON",
+  "scripts": {
+    "scrape": "node scrape.mjs",
+    "scrape:offline": "node scrape.mjs --from-raw raw/audit"
+  },
+  "dependencies": {
+    "cheerio": "^1.1.2"
+  }
+}

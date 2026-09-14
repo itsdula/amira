@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "eraser": {
+      "url": "https://app.eraser.io/api/mcp"
+    },
+    "agenticflow-docs": {
+      "url": "https://docs.agenticflow.studio/mcp"
+    },
+    "agenticflow": {
+      "command": "node",
+      "args": ["${workspaceFolder}/tools/agenticflow-mcp/index.mjs"],
+      "envFile": "${workspaceFolder}/.env"
+    }
+  }
+}

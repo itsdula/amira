@@ -1,0 +1,15 @@
+{
+  "name": "agenticflow-mcp",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Thin MCP wrapper over the AgenticFlow REST API",
+  "scripts": {
+    "start": "node index.mjs",
+    "catalog": "node generate-catalog.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.25.2",
+    "zod": "^3.25.76"
+  }
+}

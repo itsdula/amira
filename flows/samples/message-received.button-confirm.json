@@ -1,0 +1,23 @@
+{
+  "eventType": "message.received",
+  "eventId": "evt_sample_btn_00000000003",
+  "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
+  "channelType": "whatsapp",
+  "occurredAt": "2026-09-14T15:08:00.000Z",
+  "messageId": "5b4c3d2e-1f0a-4b9c-8d6e-f7a6b5c4d3e2",
+  "conversationId": "c0ffee00-1234-4abc-9def-56789abcdef0",
+  "contactId": "aa11bb22-cc33-4dd4-8ee5-ff6677889900",
+  "senderIdentifier": "+966500000001",
+  "providerMessageId": "wamid.SAMPLE_BTN==",
+  "messageType": "interactive",
+  "text": "Confirm",
+  "subject": null,
+  "media": null,
+  "location": null,
+  "contactVcard": null,
+  "interactive": { "type": "button_reply" },
+  "reactionEmoji": null,
+  "reactionTargetMessageId": null,
+  "windowState": "open",
+  "windowOpenUntil": "2026-09-15T15:08:00.000Z"
+}

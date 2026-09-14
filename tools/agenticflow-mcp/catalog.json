@@ -1,0 +1,2276 @@
+{
+  "generatedAt": "2026-09-13T03:10:14.447Z",
+  "source": "https://docs.agenticflow.studio/llms.txt",
+  "operations": [
+    {
+      "operationId": "listOrganizations",
+      "title": "List the organizations under the calling tenant",
+      "description": "List all organizations in the current tenant.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/listOrganizations",
+      "method": "GET",
+      "path": "/management/tenant/organizations"
+    },
+    {
+      "operationId": "createOrganization",
+      "title": "Create an organization under the calling tenant",
+      "description": "Create a new organization in the current tenant.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/createOrganization",
+      "method": "POST",
+      "path": "/management/tenant/organizations"
+    },
+    {
+      "operationId": "getOrganization",
+      "title": "Retrieve one organization",
+      "description": "Get a specific organization. Accessible by tenant admins and org admins.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/getOrganization",
+      "method": "GET",
+      "path": "/management/tenant/organizations/{org_id}"
+    },
+    {
+      "operationId": "updateOrganization",
+      "title": "Update an organization",
+      "description": "Update an organization.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/updateOrganization",
+      "method": "PATCH",
+      "path": "/management/tenant/organizations/{org_id}"
+    },
+    {
+      "operationId": "deleteOrganization",
+      "title": "Delete an organization and cascade-remove its resources",
+      "description": "Delete an organization. Requires organization.delete permission (admin only).",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/deleteOrganization",
+      "method": "DELETE",
+      "path": "/management/tenant/organizations/{org_id}"
+    },
+    {
+      "operationId": "listOrganizationApiKeys",
+      "title": "List an organization's API keys",
+      "description": "List the API keys owned by an organization under the calling",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/listOrganizationApiKeys",
+      "method": "GET",
+      "path": "/management/tenant/organizations/{org_id}/api-keys"
+    },
+    {
+      "operationId": "createOrganizationApiKey",
+      "title": "Issue an API key for an organization",
+      "description": "Mint an organization-scope API key for an organization under the",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/createOrganizationApiKey",
+      "method": "POST",
+      "path": "/management/tenant/organizations/{org_id}/api-keys"
+    },
+    {
+      "operationId": "revokeOrganizationApiKey",
+      "title": "Revoke one of an organization's API keys",
+      "description": "Revoke an API key belonging to an organization under the calling",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/organizations/revokeOrganizationApiKey",
+      "method": "DELETE",
+      "path": "/management/tenant/organizations/{org_id}/api-keys/{key_id}"
+    },
+    {
+      "operationId": "getTenantOverview",
+      "title": "Every customer's status, usage and workflow count in one call",
+      "description": "Composite report over the calling tenant's organizations.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/reporting/getTenantOverview",
+      "method": "GET",
+      "path": "/management/tenant/overview"
+    },
+    {
+      "operationId": "getOrganizationWorkflowSummary",
+      "title": "Workflow counts for one organization",
+      "description": "Total / enabled / published flow counts.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/reporting/getOrganizationWorkflowSummary",
+      "method": "GET",
+      "path": "/management/tenant/organizations/{org_id}/workflows/summary"
+    },
+    {
+      "operationId": "getTenantWorkflowSummary",
+      "title": "Workflow counts across every organization under the tenant",
+      "description": "Per-organization counts plus a tenant total.",
+      "family": "organizations",
+      "kind": "http",
+      "docsPath": "api-reference/organizations/reporting/getTenantWorkflowSummary",
+      "method": "GET",
+      "path": "/management/tenant/workflows/summary"
+    },
+    {
+      "operationId": "listAssistants",
+      "title": "List Assistants",
+      "description": "List assistants in your workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/listAssistants",
+      "method": "GET",
+      "path": "/assistant"
+    },
+    {
+      "operationId": "createAssistant",
+      "title": "Create Assistant",
+      "description": "Create a new assistant.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/createAssistant",
+      "method": "POST",
+      "path": "/assistant"
+    },
+    {
+      "operationId": "getAssistant",
+      "title": "Get Assistant",
+      "description": "Retrieve a single assistant by id.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/getAssistant",
+      "method": "GET",
+      "path": "/assistant/{assistantId}"
+    },
+    {
+      "operationId": "updateAssistant",
+      "title": "Update Assistant",
+      "description": "Update an assistant — partial PATCH semantics.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/updateAssistant",
+      "method": "PATCH",
+      "path": "/assistant/{assistantId}"
+    },
+    {
+      "operationId": "deleteAssistant",
+      "title": "Delete Assistant",
+      "description": "Soft-delete an assistant.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/deleteAssistant",
+      "method": "DELETE",
+      "path": "/assistant/{assistantId}"
+    },
+    {
+      "operationId": "listAssistantVersions",
+      "title": "List versions",
+      "description": "List version history for an assistant, newest first.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/listAssistantVersions",
+      "method": "GET",
+      "path": "/assistant/{assistantId}/versions"
+    },
+    {
+      "operationId": "getAssistantVersion",
+      "title": "Get Assistant Version",
+      "description": "Get a single assistant version with its full snapshot payload.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/getAssistantVersion",
+      "method": "GET",
+      "path": "/assistant/{assistantId}/versions/{versionId}"
+    },
+    {
+      "operationId": "updateAssistantVersion",
+      "title": "Update version",
+      "description": "Update the editable metadata on a version.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/assistants/updateAssistantVersion",
+      "method": "PATCH",
+      "path": "/assistant/{assistantId}/versions/{versionId}"
+    },
+    {
+      "operationId": "listFolders",
+      "title": "List Folders",
+      "description": "List every folder of `resourceType` for the caller's workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/folders/listFolders",
+      "method": "GET",
+      "path": "/folders"
+    },
+    {
+      "operationId": "createFolder",
+      "title": "Create Folder",
+      "description": "Create a new folder. Returns the fresh folder with `itemCount=0`.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/folders/createFolder",
+      "method": "POST",
+      "path": "/folders"
+    },
+    {
+      "operationId": "getFolder",
+      "title": "Get Folder",
+      "description": "Fetch a single folder by id, including its live item count.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/folders/getFolder",
+      "method": "GET",
+      "path": "/folders/{folderId}"
+    },
+    {
+      "operationId": "updateFolder",
+      "title": "Update Folder",
+      "description": "Update a folder's `name` in place.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/folders/updateFolder",
+      "method": "PATCH",
+      "path": "/folders/{folderId}"
+    },
+    {
+      "operationId": "deleteFolder",
+      "title": "Delete Folder",
+      "description": "Delete a folder, optionally cascading to its contents.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/folders/deleteFolder",
+      "method": "DELETE",
+      "path": "/folders/{folderId}"
+    },
+    {
+      "operationId": "listPhoneNumbers",
+      "title": "List Phone Numbers",
+      "description": "List phone numbers in your workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/phone-numbers/listPhoneNumbers",
+      "method": "GET",
+      "path": "/phone-number"
+    },
+    {
+      "operationId": "createPhoneNumber",
+      "title": "Create Phone Number",
+      "description": "Provision a phone number for your workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/phone-numbers/createPhoneNumber",
+      "method": "POST",
+      "path": "/phone-number"
+    },
+    {
+      "operationId": "getPhoneNumber",
+      "title": "Get Phone Number",
+      "description": "Return a single phone number with its provider variant, routing",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/phone-numbers/getPhoneNumber",
+      "method": "GET",
+      "path": "/phone-number/{phoneNumberId}"
+    },
+    {
+      "operationId": "updatePhoneNumber",
+      "title": "Update Phone Number",
+      "description": "Update a phone number.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/phone-numbers/updatePhoneNumber",
+      "method": "PATCH",
+      "path": "/phone-number/{phoneNumberId}"
+    },
+    {
+      "operationId": "deletePhoneNumber",
+      "title": "Delete Phone Number",
+      "description": "Delete a phone number and release every provisioned resource.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/phone-numbers/deletePhoneNumber",
+      "method": "DELETE",
+      "path": "/phone-number/{phoneNumberId}"
+    },
+    {
+      "operationId": "listSipTrunks",
+      "title": "List SIP Trunks",
+      "description": "List SIP trunks in your workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/listSipTrunks",
+      "method": "GET",
+      "path": "/sip-trunk"
+    },
+    {
+      "operationId": "createSipTrunk",
+      "title": "Create a SIP Trunk",
+      "description": "Create a new SIP trunk.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/createSipTrunk",
+      "method": "POST",
+      "path": "/sip-trunk"
+    },
+    {
+      "operationId": "getSipTrunk",
+      "title": "Get SIP Trunk",
+      "description": "Return a single SIP trunk with its gateway list, header policy,",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/getSipTrunk",
+      "method": "GET",
+      "path": "/sip-trunk/{trunkId}"
+    },
+    {
+      "operationId": "updateSipTrunk",
+      "title": "Update a SIP Trunk",
+      "description": "Update a SIP trunk and propagate the edit to every linked phone number.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/updateSipTrunk",
+      "method": "PATCH",
+      "path": "/sip-trunk/{trunkId}"
+    },
+    {
+      "operationId": "deleteSipTrunk",
+      "title": "Delete a SIP Trunk",
+      "description": "Delete a SIP trunk.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/deleteSipTrunk",
+      "method": "DELETE",
+      "path": "/sip-trunk/{trunkId}"
+    },
+    {
+      "operationId": "clearSipTrunkCredentials",
+      "title": "Clear credentials",
+      "description": "Clear the digest-auth credentials (`authUsername` and `authPassword`).",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/sip-trunks/clearSipTrunkCredentials",
+      "method": "DELETE",
+      "path": "/sip-trunk/{trunkId}/credentials"
+    },
+    {
+      "operationId": "listTools",
+      "title": "List Tools",
+      "description": "List tools with pagination, search, folder scoping, and sort.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/listTools",
+      "method": "GET",
+      "path": "/tool"
+    },
+    {
+      "operationId": "createTool",
+      "title": "Create Tool",
+      "description": "Create a tool of any supported type.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/createTool",
+      "method": "POST",
+      "path": "/tool"
+    },
+    {
+      "operationId": "getTool",
+      "title": "Get Tool",
+      "description": "Get a tool by id.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/getTool",
+      "method": "GET",
+      "path": "/tool/{toolId}"
+    },
+    {
+      "operationId": "updateTool",
+      "title": "Update Tool",
+      "description": "Update a tool — patch fields on an existing tool of the same type.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/updateTool",
+      "method": "PATCH",
+      "path": "/tool/{toolId}"
+    },
+    {
+      "operationId": "deleteTool",
+      "title": "Delete Tool",
+      "description": "Soft-delete a tool and detach it from every assistant that references it.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/deleteTool",
+      "method": "DELETE",
+      "path": "/tool/{toolId}"
+    },
+    {
+      "operationId": "listToolVersions",
+      "title": "List Tool Versions",
+      "description": "List version history for a tool, newest first.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/listToolVersions",
+      "method": "GET",
+      "path": "/tool/{toolId}/versions"
+    },
+    {
+      "operationId": "getToolVersion",
+      "title": "Get Tool Version",
+      "description": "Get a single tool version with its full snapshot payload.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/getToolVersion",
+      "method": "GET",
+      "path": "/tool/{toolId}/versions/{versionId}"
+    },
+    {
+      "operationId": "updateToolVersion",
+      "title": "Update version",
+      "description": "Update label / note / pinned on a tool version. Snapshot is immutable.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/tools/updateToolVersion",
+      "method": "PATCH",
+      "path": "/tool/{toolId}/versions/{versionId}"
+    },
+    {
+      "operationId": "listCalls",
+      "title": "List Calls",
+      "description": "List calls in your workspace.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/listCalls",
+      "method": "GET",
+      "path": "/call"
+    },
+    {
+      "operationId": "createCall",
+      "title": "Create Call",
+      "description": "Create a new call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/createCall",
+      "method": "POST",
+      "path": "/call"
+    },
+    {
+      "operationId": "getCall",
+      "title": "Get Call",
+      "description": "Return a single call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/getCall",
+      "method": "GET",
+      "path": "/call/{callId}"
+    },
+    {
+      "operationId": "updateCall",
+      "title": "Update Call",
+      "description": "Update a call's display name or metadata.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/updateCall",
+      "method": "PATCH",
+      "path": "/call/{callId}"
+    },
+    {
+      "operationId": "deleteCall",
+      "title": "Delete Call",
+      "description": "Delete a call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/deleteCall",
+      "method": "DELETE",
+      "path": "/call/{callId}"
+    },
+    {
+      "operationId": "getCallLogs",
+      "title": "Get Call Log Archive",
+      "description": "Return the sanitized log stream for a call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/getCallLogs",
+      "method": "GET",
+      "path": "/call/{callId}/logs"
+    },
+    {
+      "operationId": "updateLiveCallAgent",
+      "title": "Update a Live Call's Instructions or Tools",
+      "description": "Change a running assistant's system instructions and/or tools mid-call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/calls/updateLiveCallAgent",
+      "method": "PATCH",
+      "path": "/call/{callId}/agent"
+    },
+    {
+      "operationId": "listChatSessions",
+      "title": "List chat sessions",
+      "description": "Cursor-paginated list of chat sessions in the caller's scope.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/listChatSessions",
+      "method": "GET",
+      "path": "/chat/session"
+    },
+    {
+      "operationId": "createChatSession",
+      "title": "Create a chat session",
+      "description": "Create a new chat session bound to a saved or inline assistant.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/createChatSession",
+      "method": "POST",
+      "path": "/chat/session"
+    },
+    {
+      "operationId": "getChatSession",
+      "title": "Get a chat session",
+      "description": "Fetch a chat session along with its most recent N messages",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/getChatSession",
+      "method": "GET",
+      "path": "/chat/session/{sessionId}"
+    },
+    {
+      "operationId": "deleteChatSession",
+      "title": "Delete session",
+      "description": "Delete a chat session.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/deleteChatSession",
+      "method": "DELETE",
+      "path": "/chat/session/{sessionId}"
+    },
+    {
+      "operationId": "closeChatSession",
+      "title": "Close a chat session",
+      "description": "End an active chat session immediately.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/closeChatSession",
+      "method": "POST",
+      "path": "/chat/session/{sessionId}/close"
+    },
+    {
+      "operationId": "injectChatMessage",
+      "title": "Inject message",
+      "description": "Append a hidden message into a chat session's history.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/injectChatMessage",
+      "method": "POST",
+      "path": "/chat/session/{sessionId}/inject"
+    },
+    {
+      "operationId": "listChatMessages",
+      "title": "List messages",
+      "description": "Cursor-paginated message history for a chat session.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/listChatMessages",
+      "method": "GET",
+      "path": "/chat/session/{sessionId}/message"
+    },
+    {
+      "operationId": "getChatSessionLogs",
+      "title": "Get Chat Session Log Archive",
+      "description": "Return the sanitized log stream for a chat session.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/sessions/getChatSessionLogs",
+      "method": "GET",
+      "path": "/chat/session/{sessionId}/logs"
+    },
+    {
+      "operationId": "sendChatMessage",
+      "title": "Send message",
+      "description": "Send a user message into a chat session and receive the assistant reply.",
+      "family": "chat",
+      "kind": "http",
+      "docsPath": "api-reference/chat/messages/sendChatMessage",
+      "method": "POST",
+      "path": "/chat/message"
+    },
+    {
+      "operationId": "getCallMonitor",
+      "title": "Get monitor URLs",
+      "description": "Return live-call monitoring info — capability flags + pre-built URLs.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/monitor/getCallMonitor",
+      "method": "GET",
+      "path": "/call/{callId}/monitor"
+    },
+    {
+      "operationId": "getCallListenToken",
+      "title": "Get Listen-Only Token",
+      "description": "Generate a listen-only access token for a live call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/monitor/getCallListenToken",
+      "method": "GET",
+      "path": "/call/{callId}/monitor/listen-token"
+    },
+    {
+      "operationId": "sendCallControl",
+      "title": "Send control",
+      "description": "Send a control message to the live agent.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/monitor/sendCallControl",
+      "method": "POST",
+      "path": "/call/{callId}/monitor/control"
+    },
+    {
+      "operationId": "endCallTakeover",
+      "title": "End Takeover Session",
+      "description": "End a human takeover session.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/monitor/endCallTakeover",
+      "method": "POST",
+      "path": "/call/{callId}/monitor/end-takeover"
+    },
+    {
+      "operationId": "getCallTakeoverToken",
+      "title": "Get Takeover Token",
+      "description": "Generate a takeover access token for a live call.",
+      "family": "voice",
+      "kind": "http",
+      "docsPath": "api-reference/voice/monitor/getCallTakeoverToken",
+      "method": "GET",
+      "path": "/call/{callId}/monitor/takeover-token"
+    },
+    {
+      "operationId": "listFiles",
+      "title": "List Files",
+      "description": "List files in your workspace.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/files/listFiles",
+      "method": "GET",
+      "path": "/file"
+    },
+    {
+      "operationId": "uploadFile",
+      "title": "Upload a File",
+      "description": "Upload a document for use as a knowledge-base source.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/files/uploadFile",
+      "method": "POST",
+      "path": "/file"
+    },
+    {
+      "operationId": "getFile",
+      "title": "Get File",
+      "description": "Return a single file with a freshly-generated presigned download URL.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/files/getFile",
+      "method": "GET",
+      "path": "/file/{fileId}"
+    },
+    {
+      "operationId": "deleteFile",
+      "title": "Delete a File",
+      "description": "Delete a file.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/files/deleteFile",
+      "method": "DELETE",
+      "path": "/file/{fileId}"
+    },
+    {
+      "operationId": "listKnowledgeBases",
+      "title": "List Knowledge Bases",
+      "description": "List knowledge bases in your workspace.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/listKnowledgeBases",
+      "method": "GET",
+      "path": "/knowledge-base"
+    },
+    {
+      "operationId": "createKnowledgeBase",
+      "title": "Create knowledge base",
+      "description": "Create a new knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/createKnowledgeBase",
+      "method": "POST",
+      "path": "/knowledge-base"
+    },
+    {
+      "operationId": "getKnowledgeBase",
+      "title": "Get Knowledge Base",
+      "description": "Return a single knowledge base with its sources, configs, and rolled-up stats.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/getKnowledgeBase",
+      "method": "GET",
+      "path": "/knowledge-base/{kbId}"
+    },
+    {
+      "operationId": "updateKnowledgeBase",
+      "title": "Update knowledge base",
+      "description": "Update a knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/updateKnowledgeBase",
+      "method": "PATCH",
+      "path": "/knowledge-base/{kbId}"
+    },
+    {
+      "operationId": "deleteKnowledgeBase",
+      "title": "Delete knowledge base",
+      "description": "Soft-delete a knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/deleteKnowledgeBase",
+      "method": "DELETE",
+      "path": "/knowledge-base/{kbId}"
+    },
+    {
+      "operationId": "addKnowledgeBaseSource",
+      "title": "Add source",
+      "description": "Attach a new source to a knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/addKnowledgeBaseSource",
+      "method": "POST",
+      "path": "/knowledge-base/{kbId}/sources"
+    },
+    {
+      "operationId": "removeKnowledgeBaseSource",
+      "title": "Remove source",
+      "description": "Remove a source from a knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/removeKnowledgeBaseSource",
+      "method": "DELETE",
+      "path": "/knowledge-base/{kbId}/sources/{sourceId}"
+    },
+    {
+      "operationId": "syncKnowledgeBase",
+      "title": "Re-Sync All Sources",
+      "description": "Re-process every source in a knowledge base.",
+      "family": "knowledge",
+      "kind": "http",
+      "docsPath": "api-reference/knowledge/knowledge-bases/syncKnowledgeBase",
+      "method": "POST",
+      "path": "/knowledge-base/{kbId}/sync"
+    },
+    {
+      "operationId": "listMessagingChannels",
+      "title": "List channels",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/listMessagingChannels",
+      "method": "GET",
+      "path": "/messaging/channels"
+    },
+    {
+      "operationId": "getMessagingChannel",
+      "title": "Get a channel by id",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/getMessagingChannel",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}"
+    },
+    {
+      "operationId": "patchMessagingChannel",
+      "title": "Update channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/patchMessagingChannel",
+      "method": "PATCH",
+      "path": "/messaging/channels/{channel_id}"
+    },
+    {
+      "operationId": "deleteMessagingChannel",
+      "title": "Soft-delete a channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/deleteMessagingChannel",
+      "method": "DELETE",
+      "path": "/messaging/channels/{channel_id}"
+    },
+    {
+      "operationId": "disconnectMessagingChannel",
+      "title": "Disconnect channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/disconnectMessagingChannel",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/disconnect"
+    },
+    {
+      "operationId": "reconnectMessagingChannel",
+      "title": "Reconnect channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/reconnectMessagingChannel",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/reconnect"
+    },
+    {
+      "operationId": "registerWhatsAppChannel",
+      "title": "Register number",
+      "description": "Complete Cloud API registration for a WhatsApp number.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/registerWhatsAppChannel",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/whatsapp/register"
+    },
+    {
+      "operationId": "refreshWhatsAppChannelStatus",
+      "title": "Refresh WhatsApp status",
+      "description": "Re-read the number's live status from Meta and mirror it locally.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/refreshWhatsAppChannelStatus",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/whatsapp/refresh-status"
+    },
+    {
+      "operationId": "resubscribeWhatsAppChannel",
+      "title": "Resubscribe WABA",
+      "description": "Repair a channel whose per-WABA subscription landed with empty",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/resubscribeWhatsAppChannel",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/whatsapp/resubscribe"
+    },
+    {
+      "operationId": "diagnoseWhatsAppChannel",
+      "title": "Diagnose channel",
+      "description": "Pull WABA details, subscribed apps + their fields, and full phone state",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/diagnoseWhatsAppChannel",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/whatsapp/diagnose"
+    },
+    {
+      "operationId": "refreshEmailChannelStatus",
+      "title": "Refresh email status",
+      "description": "Re-read the Resend domain status and mirror it locally.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/refreshEmailChannelStatus",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/email/refresh-status"
+    },
+    {
+      "operationId": "getMessagingChannelCapabilities",
+      "title": "Get capabilities",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/getMessagingChannelCapabilities",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}/capabilities"
+    },
+    {
+      "operationId": "getMessagingChannelHealth",
+      "title": "Get health",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/getMessagingChannelHealth",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}/health"
+    },
+    {
+      "operationId": "revealMessagingSigningSecret",
+      "title": "Reveal the current outbound-webhook HMAC signing secret",
+      "description": "Return the channel's outbound-webhook HMAC secret in plaintext.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/revealMessagingSigningSecret",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}/signing-secret"
+    },
+    {
+      "operationId": "rotateMessagingSigningSecret",
+      "title": "Rotate the outbound-webhook signing secret and return the new value",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/channels/rotateMessagingSigningSecret",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/signing-secret/rotate"
+    },
+    {
+      "operationId": "createWhatsAppConnectTicket",
+      "title": "Mint a one-time ticket for the hosted WhatsApp connect popup",
+      "description": "Mint a 10-minute single-use ticket carrying the caller's tenant /",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/createWhatsAppConnectTicket",
+      "method": "POST",
+      "path": "/messaging/onboarding/whatsapp/connect-ticket"
+    },
+    {
+      "operationId": "onboardWhatsAppEmbeddedSignup",
+      "title": "Complete WhatsApp onboarding via Meta's Embedded Signup popup",
+      "description": "Finish the Embedded Signup handshake started in the browser.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/onboardWhatsAppEmbeddedSignup",
+      "method": "POST",
+      "path": "/messaging/onboarding/whatsapp/embedded-signup"
+    },
+    {
+      "operationId": "onboardWhatsAppManual",
+      "title": "Connect a WhatsApp number by pasting credentials",
+      "description": "Manual WhatsApp onboarding — bypass Embedded Signup OAuth.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/onboardWhatsAppManual",
+      "method": "POST",
+      "path": "/messaging/onboarding/whatsapp/manual"
+    },
+    {
+      "operationId": "onboardTelegram",
+      "title": "Connect a Telegram bot",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/onboardTelegram",
+      "method": "POST",
+      "path": "/messaging/onboarding/telegram"
+    },
+    {
+      "operationId": "onboardEmail",
+      "title": "Connect a Resend email channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/onboardEmail",
+      "method": "POST",
+      "path": "/messaging/onboarding/email"
+    },
+    {
+      "operationId": "onboardSmsTwilio",
+      "title": "Connect a Twilio SMS channel",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/onboarding/onboardSmsTwilio",
+      "method": "POST",
+      "path": "/messaging/onboarding/sms/twilio"
+    },
+    {
+      "operationId": "canSendMessagingMessage",
+      "title": "Check send window",
+      "description": "Pre-flight check before sending a free-form (non-template) message.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/canSendMessagingMessage",
+      "method": "GET",
+      "path": "/messaging/messages/can-send"
+    },
+    {
+      "operationId": "listMessagingMessages",
+      "title": "List messages",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/listMessagingMessages",
+      "method": "GET",
+      "path": "/messaging/messages"
+    },
+    {
+      "operationId": "sendMessagingMessage",
+      "title": "Send message",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/sendMessagingMessage",
+      "method": "POST",
+      "path": "/messaging/messages"
+    },
+    {
+      "operationId": "getMessagingMessage",
+      "title": "Get message",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/getMessagingMessage",
+      "method": "GET",
+      "path": "/messaging/messages/{message_id}"
+    },
+    {
+      "operationId": "markMessagingMessageRead",
+      "title": "Mark as read",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/markMessagingMessageRead",
+      "method": "POST",
+      "path": "/messaging/messages/{message_id}/read"
+    },
+    {
+      "operationId": "addMessagingReaction",
+      "title": "Add reaction",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/addMessagingReaction",
+      "method": "POST",
+      "path": "/messaging/messages/{message_id}/reactions"
+    },
+    {
+      "operationId": "removeMessagingReaction",
+      "title": "Remove reaction",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/removeMessagingReaction",
+      "method": "DELETE",
+      "path": "/messaging/messages/{message_id}/reactions"
+    },
+    {
+      "operationId": "retractMessagingMessage",
+      "title": "Retract message",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/retractMessagingMessage",
+      "method": "POST",
+      "path": "/messaging/messages/{message_id}/retract"
+    },
+    {
+      "operationId": "getMessagingMessageStatusHistory",
+      "title": "Get status history",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/getMessagingMessageStatusHistory",
+      "method": "GET",
+      "path": "/messaging/messages/{message_id}/status-history"
+    },
+    {
+      "operationId": "bulkSendMessages",
+      "title": "Bulk send",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/bulkSendMessages",
+      "method": "POST",
+      "path": "/messaging/messages/bulk"
+    },
+    {
+      "operationId": "scheduleMessagingMessage",
+      "title": "Schedule message",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/scheduleMessagingMessage",
+      "method": "POST",
+      "path": "/messaging/messages/schedule"
+    },
+    {
+      "operationId": "cancelScheduledMessagingMessage",
+      "title": "Cancel scheduled",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/messages/cancelScheduledMessagingMessage",
+      "method": "POST",
+      "path": "/messaging/messages/{message_id}/cancel-scheduled"
+    },
+    {
+      "operationId": "listMessagingConversations",
+      "title": "List conversations",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/listMessagingConversations",
+      "method": "GET",
+      "path": "/messaging/conversations"
+    },
+    {
+      "operationId": "getMessagingConversation",
+      "title": "Get conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/getMessagingConversation",
+      "method": "GET",
+      "path": "/messaging/conversations/{conversation_id}"
+    },
+    {
+      "operationId": "patchMessagingConversation",
+      "title": "Update conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/patchMessagingConversation",
+      "method": "PATCH",
+      "path": "/messaging/conversations/{conversation_id}"
+    },
+    {
+      "operationId": "closeMessagingConversation",
+      "title": "Close a conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/closeMessagingConversation",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/close"
+    },
+    {
+      "operationId": "reopenMessagingConversation",
+      "title": "Reopen conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/reopenMessagingConversation",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/reopen"
+    },
+    {
+      "operationId": "sendMessagingTypingIndicator",
+      "title": "Send typing",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/sendMessagingTypingIndicator",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/typing"
+    },
+    {
+      "operationId": "readAllMessagingConversation",
+      "title": "Mark all read",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/readAllMessagingConversation",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/read-all"
+    },
+    {
+      "operationId": "assignMessagingConversation",
+      "title": "Assign conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/assignMessagingConversation",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/assign"
+    },
+    {
+      "operationId": "unassignMessagingConversation",
+      "title": "Unassign conversation",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/unassignMessagingConversation",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/unassign"
+    },
+    {
+      "operationId": "listMessagingConversationNotes",
+      "title": "List notes",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/listMessagingConversationNotes",
+      "method": "GET",
+      "path": "/messaging/conversations/{conversation_id}/notes"
+    },
+    {
+      "operationId": "createMessagingConversationNote",
+      "title": "Add note",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/createMessagingConversationNote",
+      "method": "POST",
+      "path": "/messaging/conversations/{conversation_id}/notes"
+    },
+    {
+      "operationId": "deleteMessagingConversationNote",
+      "title": "Delete note",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/conversations/deleteMessagingConversationNote",
+      "method": "DELETE",
+      "path": "/messaging/conversations/{conversation_id}/notes/{note_id}"
+    },
+    {
+      "operationId": "listMessagingContacts",
+      "title": "List contacts",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/contacts/listMessagingContacts",
+      "method": "GET",
+      "path": "/messaging/contacts"
+    },
+    {
+      "operationId": "createMessagingContact",
+      "title": "Create a contact",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/contacts/createMessagingContact",
+      "method": "POST",
+      "path": "/messaging/contacts"
+    },
+    {
+      "operationId": "getMessagingContact",
+      "title": "Get a contact by id",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/contacts/getMessagingContact",
+      "method": "GET",
+      "path": "/messaging/contacts/{contact_id}"
+    },
+    {
+      "operationId": "patchMessagingContact",
+      "title": "Update contact fields",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/contacts/patchMessagingContact",
+      "method": "PATCH",
+      "path": "/messaging/contacts/{contact_id}"
+    },
+    {
+      "operationId": "listMessagingBatches",
+      "title": "List batches",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/batches/listMessagingBatches",
+      "method": "GET",
+      "path": "/messaging/batches"
+    },
+    {
+      "operationId": "getMessagingBatch",
+      "title": "Get batch",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/batches/getMessagingBatch",
+      "method": "GET",
+      "path": "/messaging/batches/{batch_id}"
+    },
+    {
+      "operationId": "listMessagingBatchItems",
+      "title": "List batch items",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/batches/listMessagingBatchItems",
+      "method": "GET",
+      "path": "/messaging/batches/{batch_id}/items"
+    },
+    {
+      "operationId": "cancelMessagingBatch",
+      "title": "Cancel batch",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/batches/cancelMessagingBatch",
+      "method": "POST",
+      "path": "/messaging/batches/{batch_id}/cancel"
+    },
+    {
+      "operationId": "listMessagingOptOuts",
+      "title": "List opt-outs",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/opt-outs/listMessagingOptOuts",
+      "method": "GET",
+      "path": "/messaging/opt-outs"
+    },
+    {
+      "operationId": "createMessagingOptOut",
+      "title": "Add opt-out",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/opt-outs/createMessagingOptOut",
+      "method": "POST",
+      "path": "/messaging/opt-outs"
+    },
+    {
+      "operationId": "deleteMessagingOptOut",
+      "title": "Remove opt-out",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/opt-outs/deleteMessagingOptOut",
+      "method": "DELETE",
+      "path": "/messaging/opt-outs/{optout_id}"
+    },
+    {
+      "operationId": "checkMessagingOptOut",
+      "title": "Check opt-out",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/opt-outs/checkMessagingOptOut",
+      "method": "GET",
+      "path": "/messaging/opt-outs/check"
+    },
+    {
+      "operationId": "listMessagingConsent",
+      "title": "List consent records",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/consent/listMessagingConsent",
+      "method": "GET",
+      "path": "/messaging/consent"
+    },
+    {
+      "operationId": "createMessagingConsent",
+      "title": "Record opt-in",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/consent/createMessagingConsent",
+      "method": "POST",
+      "path": "/messaging/consent"
+    },
+    {
+      "operationId": "getMessagingConsentForContact",
+      "title": "Get contact consent",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/consent/getMessagingConsentForContact",
+      "method": "GET",
+      "path": "/messaging/consent/{contact_id}"
+    },
+    {
+      "operationId": "listMessagingQuickReplies",
+      "title": "List quick replies",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/quick-replies/listMessagingQuickReplies",
+      "method": "GET",
+      "path": "/messaging/quick-replies"
+    },
+    {
+      "operationId": "createMessagingQuickReply",
+      "title": "Create a quick reply",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/quick-replies/createMessagingQuickReply",
+      "method": "POST",
+      "path": "/messaging/quick-replies"
+    },
+    {
+      "operationId": "patchMessagingQuickReply",
+      "title": "Update a quick reply",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/quick-replies/patchMessagingQuickReply",
+      "method": "PATCH",
+      "path": "/messaging/quick-replies/{quick_reply_id}"
+    },
+    {
+      "operationId": "deleteMessagingQuickReply",
+      "title": "Delete a quick reply",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/quick-replies/deleteMessagingQuickReply",
+      "method": "DELETE",
+      "path": "/messaging/quick-replies/{quick_reply_id}"
+    },
+    {
+      "operationId": "useMessagingQuickReply",
+      "title": "Record quick-reply use",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/quick-replies/useMessagingQuickReply",
+      "method": "POST",
+      "path": "/messaging/quick-replies/{quick_reply_id}/use"
+    },
+    {
+      "operationId": "listMessagingWebhookDeliveries",
+      "title": "List deliveries",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/webhook-deliveries/listMessagingWebhookDeliveries",
+      "method": "GET",
+      "path": "/messaging/webhook-deliveries"
+    },
+    {
+      "operationId": "getMessagingWebhookDelivery",
+      "title": "Get delivery",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/webhook-deliveries/getMessagingWebhookDelivery",
+      "method": "GET",
+      "path": "/messaging/webhook-deliveries/{delivery_id}"
+    },
+    {
+      "operationId": "retryMessagingWebhookDelivery",
+      "title": "Retry delivery",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/webhook-deliveries/retryMessagingWebhookDelivery",
+      "method": "POST",
+      "path": "/messaging/webhook-deliveries/{delivery_id}/retry"
+    },
+    {
+      "operationId": "uploadMessagingMedia",
+      "title": "Upload media",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/media/uploadMessagingMedia",
+      "method": "POST",
+      "path": "/messaging/media"
+    },
+    {
+      "operationId": "listMessagingTemplates",
+      "title": "List templates",
+      "description": "List a channel's templates.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/listMessagingTemplates",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}/templates"
+    },
+    {
+      "operationId": "createMessagingTemplate",
+      "title": "Create template",
+      "description": "Create a WhatsApp message template and submit it to Meta for review.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/createMessagingTemplate",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/templates"
+    },
+    {
+      "operationId": "getMessagingTemplate",
+      "title": "Get a single template",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/getMessagingTemplate",
+      "method": "GET",
+      "path": "/messaging/channels/{channel_id}/templates/{template_id}"
+    },
+    {
+      "operationId": "updateMessagingTemplate",
+      "title": "Edit template",
+      "description": "Edit a template's content and resubmit it to Meta for review.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/updateMessagingTemplate",
+      "method": "PATCH",
+      "path": "/messaging/channels/{channel_id}/templates/{template_id}"
+    },
+    {
+      "operationId": "deleteMessagingTemplate",
+      "title": "Delete template",
+      "description": "Delete a template on Meta and soft-delete it locally. Irreversible.",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/deleteMessagingTemplate",
+      "method": "DELETE",
+      "path": "/messaging/channels/{channel_id}/templates/{template_id}"
+    },
+    {
+      "operationId": "syncMessagingTemplates",
+      "title": "Sync templates",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/syncMessagingTemplates",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/templates/sync"
+    },
+    {
+      "operationId": "previewMessagingTemplate",
+      "title": "Preview template",
+      "description": "",
+      "family": "messaging",
+      "kind": "http",
+      "docsPath": "api-reference/messaging/templates/previewMessagingTemplate",
+      "method": "POST",
+      "path": "/messaging/channels/{channel_id}/templates/{template_id}/preview"
+    },
+    {
+      "operationId": "listWidgets",
+      "title": "List widgets",
+      "description": "Return the current org's widgets, newest-first. Excludes",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/listWidgets",
+      "method": "GET",
+      "path": "/widget/admin/widgets"
+    },
+    {
+      "operationId": "createWidget",
+      "title": "Create widget",
+      "description": "Create a new widget under the caller's current organization.",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/createWidget",
+      "method": "POST",
+      "path": "/widget/admin/widgets"
+    },
+    {
+      "operationId": "getWidget",
+      "title": "Get one widget by id",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/getWidget",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}"
+    },
+    {
+      "operationId": "updateWidget",
+      "title": "Update a widget config",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/updateWidget",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}"
+    },
+    {
+      "operationId": "deleteWidget",
+      "title": "Soft-delete a widget",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/deleteWidget",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}"
+    },
+    {
+      "operationId": "rotateWidgetIdentitySecret",
+      "title": "Rotate identity secret",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/rotateWidgetIdentitySecret",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/rotate-identity-secret"
+    },
+    {
+      "operationId": "rotateWidgetWebhookSecret",
+      "title": "Rotate webhook secret",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/rotateWidgetWebhookSecret",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/rotate-webhook-secret"
+    },
+    {
+      "operationId": "widgetAdminUploadLogo",
+      "title": "Upload logo",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/widgetAdminUploadLogo",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/upload-logo"
+    },
+    {
+      "operationId": "widgetAdminUploadHeaderBg",
+      "title": "Upload header image",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/widgets/widgetAdminUploadHeaderBg",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/upload-header-bg"
+    },
+    {
+      "operationId": "widgetListArticlesAdmin",
+      "title": "List articles",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetListArticlesAdmin",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/articles"
+    },
+    {
+      "operationId": "widgetCreateArticle",
+      "title": "Create article",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetCreateArticle",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/articles"
+    },
+    {
+      "operationId": "widgetUpdateArticle",
+      "title": "Update an article",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetUpdateArticle",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}/articles/{article_id}"
+    },
+    {
+      "operationId": "widgetDeleteArticle",
+      "title": "Soft-delete an article",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetDeleteArticle",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}/articles/{article_id}"
+    },
+    {
+      "operationId": "widgetListArticleCategories",
+      "title": "List categories",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetListArticleCategories",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/articles/categories"
+    },
+    {
+      "operationId": "widgetCreateArticleCategory",
+      "title": "Create category",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetCreateArticleCategory",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/articles/categories"
+    },
+    {
+      "operationId": "widgetUpdateArticleCategory",
+      "title": "Update category",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetUpdateArticleCategory",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}/articles/categories/{category_id}"
+    },
+    {
+      "operationId": "widgetDeleteArticleCategory",
+      "title": "Delete category",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/articles/widgetDeleteArticleCategory",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}/articles/categories/{category_id}"
+    },
+    {
+      "operationId": "widgetListNewsAdmin",
+      "title": "List news posts",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/news/widgetListNewsAdmin",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/news"
+    },
+    {
+      "operationId": "widgetCreateNews",
+      "title": "Create a news post",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/news/widgetCreateNews",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/news"
+    },
+    {
+      "operationId": "widgetUpdateNews",
+      "title": "Update a news post",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/news/widgetUpdateNews",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}/news/{news_id}"
+    },
+    {
+      "operationId": "widgetDeleteNews",
+      "title": "Delete news post",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/news/widgetDeleteNews",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}/news/{news_id}"
+    },
+    {
+      "operationId": "widgetListGdprRequests",
+      "title": "List GDPR requests",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/gdpr/widgetListGdprRequests",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/gdpr-requests"
+    },
+    {
+      "operationId": "widgetListSurveys",
+      "title": "List surveys",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/surveys/widgetListSurveys",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/surveys"
+    },
+    {
+      "operationId": "widgetCreateSurvey",
+      "title": "Create survey",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/surveys/widgetCreateSurvey",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/surveys"
+    },
+    {
+      "operationId": "widgetUpdateSurvey",
+      "title": "Update a survey config",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/surveys/widgetUpdateSurvey",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}/surveys/{survey_id}"
+    },
+    {
+      "operationId": "widgetDeleteSurvey",
+      "title": "Soft-delete a survey",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/surveys/widgetDeleteSurvey",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}/surveys/{survey_id}"
+    },
+    {
+      "operationId": "widgetGetSurveyResponses",
+      "title": "Get survey stats",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/surveys/widgetGetSurveyResponses",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/surveys/{survey_id}/responses"
+    },
+    {
+      "operationId": "widgetListAuditEndpoints",
+      "title": "List endpoints",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetListAuditEndpoints",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-endpoints"
+    },
+    {
+      "operationId": "widgetCreateAuditEndpoint",
+      "title": "Create endpoint",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetCreateAuditEndpoint",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-endpoints"
+    },
+    {
+      "operationId": "widgetUpdateAuditEndpoint",
+      "title": "Update endpoint",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetUpdateAuditEndpoint",
+      "method": "PATCH",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-endpoints/{endpoint_id}"
+    },
+    {
+      "operationId": "widgetDeleteAuditEndpoint",
+      "title": "Delete endpoint",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetDeleteAuditEndpoint",
+      "method": "DELETE",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-endpoints/{endpoint_id}"
+    },
+    {
+      "operationId": "widgetTestAuditEndpoint",
+      "title": "Test endpoint",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetTestAuditEndpoint",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-endpoints/{endpoint_id}/test"
+    },
+    {
+      "operationId": "widgetListAuditDeliveries",
+      "title": "List deliveries",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetListAuditDeliveries",
+      "method": "GET",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-deliveries"
+    },
+    {
+      "operationId": "widgetReplayAuditDelivery",
+      "title": "Replay delivery",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetReplayAuditDelivery",
+      "method": "POST",
+      "path": "/widget/admin/widgets/{widget_id}/audit-webhook-deliveries/{delivery_id}/replay"
+    },
+    {
+      "operationId": "widgetGetAuditEventCatalog",
+      "title": "List event names",
+      "description": "",
+      "family": "widgets",
+      "kind": "http",
+      "docsPath": "api-reference/widgets/audit-webhooks/widgetGetAuditEventCatalog",
+      "method": "GET",
+      "path": "/widget/admin/widget-audit-event-catalog"
+    },
+    {
+      "operationId": "listOrgPlans",
+      "title": "List Org Plans visible to the caller",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/listOrgPlans",
+      "method": "GET",
+      "path": "/billing/org-plans"
+    },
+    {
+      "operationId": "getOrgPlan",
+      "title": "Retrieve an Org Plan",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/getOrgPlan",
+      "method": "GET",
+      "path": "/billing/org-plans/{plan_id}"
+    },
+    {
+      "operationId": "previewOrgPlanAssignment",
+      "title": "Preview the impact of assigning an Org Plan",
+      "description": "Read-only forecast — drives the assign-plan dialog. No mutations.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/previewOrgPlanAssignment",
+      "method": "GET",
+      "path": "/billing/org-plans/{plan_id}/preview-assignment"
+    },
+    {
+      "operationId": "assignOrgPlan",
+      "title": "Assign an Org Plan to an organization",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/assignOrgPlan",
+      "method": "POST",
+      "path": "/billing/org-plans/{plan_id}/assign"
+    },
+    {
+      "operationId": "getOrganizationPricingPolicy",
+      "title": "Retrieve an organization's active PricingPolicy",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/getOrganizationPricingPolicy",
+      "method": "GET",
+      "path": "/billing/organizations/{organization_id}/pricing-policy"
+    },
+    {
+      "operationId": "switchOrgPlan",
+      "title": "Switch an organization's plan",
+      "description": "Tenant admin (or platform admin) switches a specific org's plan.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/plans/switchOrgPlan",
+      "method": "POST",
+      "path": "/billing/orgs/{org_id}/plans/switch"
+    },
+    {
+      "operationId": "listBillingInvoices",
+      "title": "List invoices visible to the caller",
+      "description": "Every invoice your key can see, newest first.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/invoices/listBillingInvoices",
+      "method": "GET",
+      "path": "/billing/invoices"
+    },
+    {
+      "operationId": "getBillingInvoice",
+      "title": "Retrieve a single invoice",
+      "description": "One invoice, by its AgenticFlow id.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/invoices/getBillingInvoice",
+      "method": "GET",
+      "path": "/billing/invoices/{invoice_id}"
+    },
+    {
+      "operationId": "downloadBillingInvoiceJson",
+      "title": "Download an invoice as a JSON package",
+      "description": "Machine-readable twin of the invoice PDF.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/invoices/downloadBillingInvoiceJson",
+      "method": "GET",
+      "path": "/billing/invoices/{invoice_id}/json"
+    },
+    {
+      "operationId": "markInvoicePaid",
+      "title": "Confirm an offline payment landed → credits the MC ledger",
+      "description": "Record that an offline payment landed, and credit the ledger.",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/invoices/markInvoicePaid",
+      "method": "POST",
+      "path": "/billing/invoices/{invoice_id}/mark-paid"
+    },
+    {
+      "operationId": "suspendOrganization",
+      "title": "Suspend an organization",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/lifecycle/suspendOrganization",
+      "method": "POST",
+      "path": "/billing/orgs/{org_id}/suspend"
+    },
+    {
+      "operationId": "reactivateOrganization",
+      "title": "Reactivate an organization",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/lifecycle/reactivateOrganization",
+      "method": "POST",
+      "path": "/billing/orgs/{org_id}/reactivate"
+    },
+    {
+      "operationId": "getOrgUsage",
+      "title": "Read an organization's pre-rolled usage aggregates",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getOrgUsage",
+      "method": "GET",
+      "path": "/billing/orgs/{org_id}/usage"
+    },
+    {
+      "operationId": "getOrgUsageLive",
+      "title": "Live usage breakdown for an organization",
+      "description": "Live \"Usage this period\" breakdown — reads",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getOrgUsageLive",
+      "method": "GET",
+      "path": "/billing/orgs/{org_id}/usage/live"
+    },
+    {
+      "operationId": "getTenantUsageLive",
+      "title": "Live usage breakdown for a tenant",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getTenantUsageLive",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/usage/live"
+    },
+    {
+      "operationId": "getOrgUsageCsv",
+      "title": "CSV export of an organization's usage aggregates",
+      "description": "Returns a `text/csv` body. Caller streams or downloads",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getOrgUsageCsv",
+      "method": "GET",
+      "path": "/billing/orgs/{org_id}/usage/csv"
+    },
+    {
+      "operationId": "getOrgBalance",
+      "title": "Read an organization's current ledger balance",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getOrgBalance",
+      "method": "GET",
+      "path": "/billing/orgs/{org_id}/balance"
+    },
+    {
+      "operationId": "listOrgTransactions",
+      "title": "Raw ledger feed for an organization",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/listOrgTransactions",
+      "method": "GET",
+      "path": "/billing/orgs/{org_id}/transactions"
+    },
+    {
+      "operationId": "getTenantUsage",
+      "title": "Read a tenant's pre-rolled usage aggregates",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getTenantUsage",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/usage"
+    },
+    {
+      "operationId": "getTenantBalance",
+      "title": "Read a tenant's current wholesale ledger balance",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/getTenantBalance",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/balance"
+    },
+    {
+      "operationId": "listTenantTransactions",
+      "title": "Raw wholesale ledger feed for a tenant",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/usage/listTenantTransactions",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/transactions"
+    },
+    {
+      "operationId": "getTenantRevenueDashboard",
+      "title": "All Revenue page sections for a tenant",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/revenue/getTenantRevenueDashboard",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/revenue/dashboard"
+    },
+    {
+      "operationId": "getTenantRevenueSummary",
+      "title": "Revenue KPI summary for a tenant",
+      "description": "",
+      "family": "billing",
+      "kind": "http",
+      "docsPath": "api-reference/billing/revenue/getTenantRevenueSummary",
+      "method": "GET",
+      "path": "/billing/tenants/{tenant_id}/revenue/summary"
+    },
+    {
+      "operationId": "webhookAssistantRequest",
+      "title": "Assistant Request",
+      "description": "Fires before the call is connected when the receiving phone number has `server.url` configured. Your endpoint **must** respond within `server.timeoutSeconds` (default 7s, max 7s) with one of the supported response shapes — see the response schema for the union of valid replies. The body is signed with HMAC-SHA256 in the `X-Webhook-Signature` header when a signing secret is configured on the phone number.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/voice/webhookAssistantRequest",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookStatusUpdate",
+      "title": "Status Update",
+      "description": "Call lifecycle transition (queued → ringing → in-progress → ended). When the call is in-progress, `call.monitor` carries live-monitoring URLs. Fire-and-forget; one retry on 5xx with 200ms backoff. Subscribe via `assistant.webhookEvents` containing `status-update`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/voice/webhookStatusUpdate",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookTranscript",
+      "title": "Transcript",
+      "description": "Final or partial transcript chunk for a single utterance. Use `isFinal` to distinguish stable transcripts from streaming partials. Subscribe via `assistant.webhookEvents`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/voice/webhookTranscript",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookEndOfCallReport",
+      "title": "End of Call Report",
+      "description": "Post-call snapshot fired once per call after analysis and recording split finish. The most important event for downstream systems — persist transcripts, archive recordings, push CRM updates, run analytics. Subscribe via `assistant.webhookEvents` containing `end-of-call-report`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/voice/webhookEndOfCallReport",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookToolFunctionCall",
+      "title": "Tool Function Call",
+      "description": "Per-invocation HTTP call to the **tool's own** `server.url` — fires every time the LLM picks a function tool. **Sync mode** (`async = false`): the LLM blocks on your response and forwards your reply as the tool result. **Async mode** (`async = true`): fire-and-forget — the LLM sees `{\"async\": true}` immediately; your reply (if any) is discarded. Custom headers configured on `tool.server.headers` are merged into every request.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/voice/webhookToolFunctionCall",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookChatSessionStatusUpdate",
+      "title": "Chat Session Status Update",
+      "description": "Fires when a chat session is created and again when it ends (closed, expired, or errored) — `event` says which. Delivered to the assistant's `server.url`; subscribe via `assistant.webhookEvents` containing `chat-session-status-update`. Signed with HMAC-SHA256 in `X-Webhook-Signature` (`sha256=<hex>` over the raw body) when `server.secret` is set.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/chat/webhookChatSessionStatusUpdate",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookChatMessage",
+      "title": "Chat Message",
+      "description": "Fires after every completed assistant turn — and when an operator injects a hidden message (`message.source = \"operator-inject\"`). Delivered to the assistant's `server.url`; subscribe via `assistant.webhookEvents` containing `chat-message`. Signed with HMAC-SHA256 in `X-Webhook-Signature`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/chat/webhookChatMessage",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookChatSessionEndReport",
+      "title": "Chat Session End Report",
+      "description": "The canonical conversation-finished record — delivered once the post-session pipeline (analysis, anonymization) completes, and **before** any zero-day retention purge, so this payload is your durable copy. Subscribe via `assistant.webhookEvents` containing `chat-session-end-report`. Signed with HMAC-SHA256 in `X-Webhook-Signature`. Delivery failures re-queue the job (up to 3 attempts) — dedupe on `id`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/chat/webhookChatSessionEndReport",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookWidgetMessageIncoming",
+      "title": "Widget Message Incoming",
+      "description": "One POST per visitor message to the widget's `incomingMessageWebhookUrl` — your endpoint is the widget's brain. Headers: `X-AgenticFlow-Signature-256` (`sha256=<hex>` HMAC-SHA256 over the raw body with the widget's webhook secret), `X-AgenticFlow-Event: widget.message.incoming`, `X-AgenticFlow-Delivery` (dedupe key), `X-AgenticFlow-Timestamp`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/widget/webhookWidgetMessageIncoming",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookWidgetAuditEvent",
+      "title": "Widget Audit Event",
+      "description": "Write-only event mirror delivered to each configured audit-webhook endpoint (separate from the reply webhook). An empty subscription list on the endpoint subscribes to **all** events. Signed per endpoint with `X-AgenticFlow-Signature-256` over the raw body using that endpoint's own `whsec_…` secret. Delivery is at-least-once — dedupe on `id`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/widget/webhookWidgetAuditEvent",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingMessageReceived",
+      "title": "Message Received",
+      "description": "An inbound message arrived on a channel. `messageType` selects which content fields are populated (`text`, `media` with a signed 24h `downloadUrl`, `location`, `contactVcard`, `interactive`, inbound-email `subject`). WhatsApp events carry the 24h window state so you can branch without a follow-up call. Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingMessageReceived",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingMessageStatusChanged",
+      "title": "Status Changed",
+      "description": "An outbound message advanced — `newStatus` is `sent`, `delivered`, or `read` (there are no separate per-status events, and statuses never downgrade). Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingMessageStatusChanged",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingMessageFailed",
+      "title": "Message Failed",
+      "description": "An outbound message permanently failed — `failureReason` carries the provider's verbatim reason (e.g. \"recipient not on WhatsApp\", \"template not approved\"). Failed messages are not retried by the platform. Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingMessageFailed",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingReactionAdded",
+      "title": "Reaction Added",
+      "description": "Someone reacted to one of your messages — `reactionEmoji` plus `reactionTargetMessageId` (the provider id of the message that was reacted to). Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingReactionAdded",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingReactionRemoved",
+      "title": "Reaction Removed",
+      "description": "A reaction was removed. Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingReactionRemoved",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingContactOptedOut",
+      "title": "Contact Opted Out",
+      "description": "The contact opted out — a STOP keyword, unsubscribe link, or provider opt-out signal. The platform records it in the opt-out registry automatically. Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingContactOptedOut",
+      "method": null,
+      "path": null
+    },
+    {
+      "operationId": "webhookMessagingContactOptedIn",
+      "title": "Contact Opted In",
+      "description": "The contact opted back in (START keyword or manual removal) — the opt-out registry entry is lifted. Delivered to the channel's `webhookUrl`. Headers: `X-Webhook-Signature` (`t=<unix_ts>,v1=<hex>` — HMAC-SHA256 over `v1:{timestamp}:{raw_body}` with the channel's signing secret; reject stale timestamps, ~5 min tolerance), `X-Webhook-Event-Id` (dedupe key), `X-Webhook-Event-Type`, `X-Webhook-Channel-Id`, `User-Agent: MessagingWebhook/1.0`. Respond `2xx` within 10 seconds. Retries: +30s, +2m, +10m, +1h (5 attempts total); after 25 consecutive permanent failures the URL is auto-disabled. Delivery is at-least-once and unordered — dedupe on `eventId`, order by `occurredAt`. The envelope is identical for every event type; inapplicable fields are `null`.",
+      "family": "webhook-events",
+      "kind": "webhook-event",
+      "docsPath": "api-reference/webhook-events/messaging/webhookMessagingContactOptedIn",
+      "method": null,
+      "path": null
+    }
+  ]
+}

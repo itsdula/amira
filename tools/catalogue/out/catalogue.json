@@ -1,0 +1,3462 @@
+{
+  "source": {
+    "brand": "Changan",
+    "distributor": "Almajdouie",
+    "market": "KSA",
+    "base_url": "https://changan-ksa.com",
+    "scraped_at": "2026-09-13T04:11:44.574Z",
+    "user_agent": "AmiraCatalogueBot/1.0 (+one-pass KSA demo catalogue; respects robots.txt)",
+    "delay_ms": 0,
+    "mode": "from_raw",
+    "robots_url": "https://changan-ksa.com/robots.txt",
+    "sitemap_url": "https://changan-ksa.com/sitemap.xml"
+  },
+  "notes": [
+    "The site publishes one colour picker per model, not a per-grade list. Each grade stores that same colours array.",
+    "Showroom option-pack prices are not published. /parts publishes spare-part retail SAR; those are stored as accessories with kind=spare_part.",
+    "ALSVIN and UNI-K publish one grade. UNI-S was 403 on an earlier pass; this run received 200.",
+    "Do not invent a figure that is not in this file."
+  ],
+  "models": [
+    {
+      "id": "CS-95",
+      "url": "https://changan-ksa.com/vehicle/CS-95",
+      "status": "ok",
+      "http_status": 200,
+      "name": "CS 95",
+      "line": "changan",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 116600,
+      "grades": [
+        {
+          "id": "e20d22a5-7991-4854-95ed-2779cc72f532",
+          "name_ar": "كلاسيك",
+          "name_en": "Classic",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 101391,
+          "price_incl_vat_sar": 116600,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color2.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/c_CS95_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color3.webp"
+            },
+            {
+              "id": "أسود بالكامل-3",
+              "name_ar": "أسود بالكامل",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_all_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color1.webp"
+            }
+          ]
+        },
+        {
+          "id": "d81736b0-b1ec-4fcb-a074-a4dbbf0a2cfd",
+          "name_ar": "بلاتينيوم",
+          "name_en": "Platinum",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 110000,
+          "price_incl_vat_sar": 126500,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color2.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/c_CS95_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color3.webp"
+            },
+            {
+              "id": "أسود بالكامل-3",
+              "name_ar": "أسود بالكامل",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_all_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color1.webp"
+            }
+          ]
+        },
+        {
+          "id": "35d1a4a2-98e3-4bfd-9775-033e1898e621",
+          "name_ar": "رويال",
+          "name_en": "Royal",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 121043,
+          "price_incl_vat_sar": 139200,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color2.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/c_CS95_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color3.webp"
+            },
+            {
+              "id": "أسود بالكامل-3",
+              "name_ar": "أسود بالكامل",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/CL_CS95_all_Black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS95-color1.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "EADO-PLUS",
+      "url": "https://changan-ksa.com/vehicle/EADO-PLUS",
+      "status": "ok",
+      "http_status": 200,
+      "name": "EADO Plus",
+      "line": "changan",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 69500,
+      "grades": [
+        {
+          "id": "acc94afb-209e-4a9b-985e-b6e2bdbf9a12",
+          "name_ar": "تريند",
+          "name_en": "Trend",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 60435,
+          "price_incl_vat_sar": 69500,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_4.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color5.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_grey.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color1.webp"
+            },
+            {
+              "id": "فضي-3",
+              "name_ar": "فضي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_silver.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color4.webp"
+            },
+            {
+              "id": "آخضر-4",
+              "name_ar": "آخضر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_green.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color2.webp"
+            },
+            {
+              "id": "أحمر-5",
+              "name_ar": "أحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color3.webp"
+            }
+          ]
+        },
+        {
+          "id": "0120223d-e660-468c-8bb8-8bb597979063",
+          "name_ar": "سمارت",
+          "name_en": "Smart",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 64522,
+          "price_incl_vat_sar": 74200,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_4.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color5.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_grey.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color1.webp"
+            },
+            {
+              "id": "فضي-3",
+              "name_ar": "فضي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_silver.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color4.webp"
+            },
+            {
+              "id": "آخضر-4",
+              "name_ar": "آخضر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_green.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color2.webp"
+            },
+            {
+              "id": "أحمر-5",
+              "name_ar": "أحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color3.webp"
+            }
+          ]
+        },
+        {
+          "id": "28ee29ab-69d4-4b46-8d5d-fd7f264de611",
+          "name_ar": "ليميتد",
+          "name_en": "Limited",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 71913,
+          "price_incl_vat_sar": 82700,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_4.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color5.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_grey.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color1.webp"
+            },
+            {
+              "id": "فضي-3",
+              "name_ar": "فضي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_silver.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color4.webp"
+            },
+            {
+              "id": "آخضر-4",
+              "name_ar": "آخضر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_green.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color2.webp"
+            },
+            {
+              "id": "أحمر-5",
+              "name_ar": "أحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/EadoPlus-color3.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "HUNTER-PLUS",
+      "url": "https://changan-ksa.com/vehicle/HUNTER-PLUS",
+      "status": "ok",
+      "http_status": 200,
+      "name": "Hunter",
+      "line": "changan",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 88999,
+      "grades": [
+        {
+          "id": "cbe8f210-e58f-4b30-b4c7-9bb8361edee3",
+          "name_ar": "أوميجا دفع ثنائي",
+          "name_en": "Omega 2WD",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 77390,
+          "price_incl_vat_sar": 88999,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/4_0.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/white.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/1.webp"
+            },
+            {
+              "id": "فضي-4",
+              "name_ar": "فضي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/silver_0.png",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51%20copy2.webp"
+            }
+          ]
+        },
+        {
+          "id": "e153299b-4214-4bc9-9c07-e4082cb6490e",
+          "name_ar": "أوميجا دفع رباعي",
+          "name_en": "Omega 4WD",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 83391,
+          "price_incl_vat_sar": 95900,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/4_0.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/white.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/1.webp"
+            },
+            {
+              "id": "فضي-4",
+              "name_ar": "فضي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/silver_0.png",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51%20copy2.webp"
+            }
+          ]
+        },
+        {
+          "id": "61e4ce15-f325-466f-9aa2-18af90c906ea",
+          "name_ar": "دلتا دفع رباعي",
+          "name_en": "Delta 4WD",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 93912,
+          "price_incl_vat_sar": 107999,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/4_0.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/white.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/1.webp"
+            },
+            {
+              "id": "فضي-4",
+              "name_ar": "فضي",
+              "swatch_url": "/sites/changan-ksa.com/files/2026-01/silver_0.png",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/51%20copy2.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "ALSVIN",
+      "url": "https://changan-ksa.com/vehicle/ALSVIN",
+      "status": "ok",
+      "http_status": 200,
+      "name": "ALSVIN",
+      "line": "changan",
+      "year": "2027",
+      "starting_price_incl_vat_sar": 48900,
+      "grades": [
+        {
+          "id": "a5f65c74-68c0-48e9-9263-2adc4437c0a9",
+          "name_ar": "فل كامل",
+          "name_en": "Full",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 42522,
+          "price_incl_vat_sar": 48900,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_6.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/ALSVIN-color3.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/ALSVIN-color1.webp"
+            },
+            {
+              "id": "أحمر-3",
+              "name_ar": "أحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/ALSVIN-color2.webp"
+            },
+            {
+              "id": "أزرق-4",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_bleu.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/ALSVIN-color4.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Fewer than 2 published grades on this page.",
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "CS-75-PLUS",
+      "url": "https://changan-ksa.com/vehicle/CS-75-PLUS",
+      "status": "ok",
+      "http_status": 200,
+      "name": "CS 75 Plus",
+      "line": "changan",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 99500,
+      "grades": [
+        {
+          "id": "33236df3-d28b-4e89-b916-03308add1a1b",
+          "name_ar": "كلاسيك",
+          "name_en": "Classic",
+          "name_en_source": "published",
+          "price_ex_vat_sar": 86522,
+          "price_incl_vat_sar": 99500,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_White.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color1.webp"
+            },
+            {
+              "id": "ذهبي فاتح-2",
+              "name_ar": "ذهبي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Golden.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color5.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Putty_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color6.webp"
+            },
+            {
+              "id": "أزرق-4",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Blue.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color4.webp"
+            },
+            {
+              "id": "رمادي-5",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color3.webp"
+            },
+            {
+              "id": "أسود-6",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color2.webp"
+            }
+          ]
+        },
+        {
+          "id": "4c95cddd-dc94-42f8-93db-52b044991289",
+          "name_ar": "بلاتينيوم",
+          "name_en": "Platinum",
+          "name_en_source": "published",
+          "price_ex_vat_sar": 88913,
+          "price_incl_vat_sar": 102250,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_White.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color1.webp"
+            },
+            {
+              "id": "ذهبي فاتح-2",
+              "name_ar": "ذهبي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Golden.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color5.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Putty_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color6.webp"
+            },
+            {
+              "id": "أزرق-4",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Blue.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color4.webp"
+            },
+            {
+              "id": "رمادي-5",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color3.webp"
+            },
+            {
+              "id": "أسود-6",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color2.webp"
+            }
+          ]
+        },
+        {
+          "id": "6c211ff6-b68d-447d-85dd-52eaabe36dbe",
+          "name_ar": "رويال",
+          "name_en": "Royal",
+          "name_en_source": "published",
+          "price_ex_vat_sar": 98913,
+          "price_incl_vat_sar": 113750,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_White.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color1.webp"
+            },
+            {
+              "id": "ذهبي فاتح-2",
+              "name_ar": "ذهبي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Golden.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color5.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Putty_Gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color6.webp"
+            },
+            {
+              "id": "أزرق-4",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_Light_Blue.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color4.webp"
+            },
+            {
+              "id": "رمادي-5",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color3.webp"
+            },
+            {
+              "id": "أسود-6",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS75-color2.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "CS-35-PLUS",
+      "url": "https://changan-ksa.com/vehicle/CS-35-PLUS",
+      "status": "ok",
+      "http_status": 200,
+      "name": "CS 35 Plus",
+      "line": "changan",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 70900,
+      "grades": [
+        {
+          "id": "45804b3d-35c6-4021-8e29-ea0ba773e495",
+          "name_ar": "تريند",
+          "name_en": "Trend",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 61652,
+          "price_incl_vat_sar": 70900,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_7.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-white.webp"
+            },
+            {
+              "id": "رمادي فاتح-2",
+              "name_ar": "رمادي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_light_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl__gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray-l.webp"
+            },
+            {
+              "id": "آحمر-4",
+              "name_ar": "آحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_2.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-red.webp"
+            },
+            {
+              "id": "أزرق-5",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_blue_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-blue.webp"
+            }
+          ]
+        },
+        {
+          "id": "73c3f6e5-b097-4d7f-8263-d1f0eeb13a36",
+          "name_ar": "سمارت",
+          "name_en": "Smart",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 66500,
+          "price_incl_vat_sar": 76475,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_7.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-white.webp"
+            },
+            {
+              "id": "رمادي فاتح-2",
+              "name_ar": "رمادي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_light_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl__gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray-l.webp"
+            },
+            {
+              "id": "آحمر-4",
+              "name_ar": "آحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_2.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-red.webp"
+            },
+            {
+              "id": "أزرق-5",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_blue_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-blue.webp"
+            }
+          ]
+        },
+        {
+          "id": "24399460-c03d-4194-b403-02bcb6f5d26d",
+          "name_ar": "ليميتد",
+          "name_en": "Limited",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 71500,
+          "price_incl_vat_sar": 82225,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_7.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-white.webp"
+            },
+            {
+              "id": "رمادي فاتح-2",
+              "name_ar": "رمادي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_light_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray.webp"
+            },
+            {
+              "id": "رمادي-3",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl__gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-gray-l.webp"
+            },
+            {
+              "id": "آحمر-4",
+              "name_ar": "آحمر",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_red_2.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-red.webp"
+            },
+            {
+              "id": "أزرق-5",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_blue_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/CS-35-Plus-blue.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "UNI-T",
+      "url": "https://changan-ksa.com/vehicle/UNI-T",
+      "status": "ok",
+      "http_status": 200,
+      "name": "UNI-T",
+      "line": "uni",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 102810,
+      "grades": [
+        {
+          "id": "5ff799b9-0125-4c29-b3fa-fe3e3d9b428c",
+          "name_ar": "إيليت",
+          "name_en": "Elite",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 89400,
+          "price_incl_vat_sar": 102810,
+          "colours": [
+            {
+              "id": "أسود-1",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color3.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_putty_gray_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color4.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color1.webp"
+            },
+            {
+              "id": "رمادي غامق-4",
+              "name_ar": "رمادي غامق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_dark_gray_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color2.webp"
+            }
+          ]
+        },
+        {
+          "id": "afe020e1-0ca0-45f7-8ef7-3d4c5a295227",
+          "name_ar": "إس ڤي بي",
+          "name_en": "SVP",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 97500,
+          "price_incl_vat_sar": 112125,
+          "colours": [
+            {
+              "id": "أسود-1",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color3.webp"
+            },
+            {
+              "id": "رمادي-2",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_putty_gray_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color4.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color1.webp"
+            },
+            {
+              "id": "رمادي غامق-4",
+              "name_ar": "رمادي غامق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_dark_gray_1.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-t-color2.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "UNI-S",
+      "url": "https://changan-ksa.com/vehicle/UNI-S",
+      "status": "ok",
+      "http_status": 200,
+      "name": "UNI S",
+      "line": "uni",
+      "year": "2027",
+      "starting_price_incl_vat_sar": 84985,
+      "grades": [
+        {
+          "id": "1bd203b8-e35f-428e-b657-e597d12ae373",
+          "name_ar": "بلاتينيوم",
+          "name_en": "Platinum",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 73900,
+          "price_incl_vat_sar": 84985,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_white_2.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/White - أبيض_0.webp"
+            },
+            {
+              "id": "اسمنتي-2",
+              "name_ar": "اسمنتي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_putty-grey.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Putty Gray - اسمنتي.webp"
+            },
+            {
+              "id": "رمادي داكن-3",
+              "name_ar": "رمادي داكن",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_dark.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Dark Gray - رمادي داكن.webp"
+            },
+            {
+              "id": "ذهبي-4",
+              "name_ar": "ذهبي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_light-gold.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Light Gold - ذهبي.webp"
+            },
+            {
+              "id": "أسود-5",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_black.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Black - أسود.webp"
+            }
+          ]
+        },
+        {
+          "id": "35294d29-5fe8-45cc-92f4-8c5d5b1865fd",
+          "name_ar": "رويال",
+          "name_en": "Royal",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 84900,
+          "price_incl_vat_sar": 97635,
+          "colours": [
+            {
+              "id": "ابيض-1",
+              "name_ar": "ابيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_white_2.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/White - أبيض_0.webp"
+            },
+            {
+              "id": "اسمنتي-2",
+              "name_ar": "اسمنتي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_putty-grey.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Putty Gray - اسمنتي.webp"
+            },
+            {
+              "id": "رمادي داكن-3",
+              "name_ar": "رمادي داكن",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_dark.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Dark Gray - رمادي داكن.webp"
+            },
+            {
+              "id": "ذهبي-4",
+              "name_ar": "ذهبي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_light-gold.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Light Gold - ذهبي.webp"
+            },
+            {
+              "id": "أسود-5",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/cl_black.webp",
+              "image_path": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2026-05/Black - أسود.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "UNI-V",
+      "url": "https://changan-ksa.com/vehicle/UNI-V",
+      "status": "ok",
+      "http_status": 200,
+      "name": "UNI V",
+      "line": "uni",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 91200,
+      "grades": [
+        {
+          "id": "4e0b9193-85e0-46e9-9ac2-5af9923a1758",
+          "name_ar": "إيليت",
+          "name_en": "Elite",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 79304,
+          "price_incl_vat_sar": 91200,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors2.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_2.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors1.webp"
+            },
+            {
+              "id": "رمادي فاتح-3",
+              "name_ar": "رمادي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_lightgray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors3_1.webp"
+            },
+            {
+              "id": "آبيض-4",
+              "name_ar": "آبيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_5.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors4.webp"
+            }
+          ]
+        },
+        {
+          "id": "c6ec8f7e-c72f-4423-b528-4baaa8d03c4a",
+          "name_ar": "يوني-ڤي سبورت",
+          "name_en": "UNI-V Sport",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 85217,
+          "price_incl_vat_sar": 97999,
+          "colours": [
+            {
+              "id": "رمادي-1",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_gray_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors2.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black_2.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors1.webp"
+            },
+            {
+              "id": "رمادي فاتح-3",
+              "name_ar": "رمادي فاتح",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_lightgray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors3_1.webp"
+            },
+            {
+              "id": "آبيض-4",
+              "name_ar": "آبيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_5.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-v-colors4.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    },
+    {
+      "id": "UNI-K",
+      "url": "https://changan-ksa.com/vehicle/UNI-K",
+      "status": "ok",
+      "http_status": 200,
+      "name": "2026 UNI-K",
+      "line": "uni",
+      "year": "2026",
+      "starting_price_incl_vat_sar": 141335,
+      "grades": [
+        {
+          "id": "78ac28ed-33c1-4406-b29f-102702ac6ba5",
+          "name_ar": "إيليت",
+          "name_en": "Elite",
+          "name_en_source": "transliteration_map",
+          "price_ex_vat_sar": 122900,
+          "price_incl_vat_sar": 141335,
+          "colours": [
+            {
+              "id": "رمادي غامق-1",
+              "name_ar": "رمادي غامق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_dark_gray_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-k-color3.webp"
+            },
+            {
+              "id": "أسود-2",
+              "name_ar": "أسود",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_black.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-k-color4.webp"
+            },
+            {
+              "id": "أبيض-3",
+              "name_ar": "أبيض",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_white_0.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-k-color2.webp"
+            },
+            {
+              "id": "أزرق-4",
+              "name_ar": "أزرق",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_blue.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-k-color1.webp"
+            },
+            {
+              "id": "رمادي-5",
+              "name_ar": "رمادي",
+              "swatch_url": "https://webteamcdnep-ctg2hcb5hybcbwgv.a02.azurefd.net/changan-beta/2025-10/cl_putty_gray.webp",
+              "image_path": "/sites/changan-ksa.com/files/2026-01/uni-k-color5.webp"
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "Fewer than 2 published grades on this page.",
+        "Starting price taken from the homepage card (page had none)."
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "id": "EADO-2016-2018-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-C201014-0101",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "C201014-0101",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 68,
+      "price_incl_vat_sar": 78,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-B211032-0300",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "B211032-0300",
+      "name_en": "FILTER ASSY, FUEL",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 45,
+      "price_incl_vat_sar": 52,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-H16001-0800",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "H16001-0800",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 144,
+      "price_incl_vat_sar": 166,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-C201135-3000",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "C201135-3000",
+      "name_en": "AC FILTER",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 47,
+      "price_incl_vat_sar": 54,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-H16012-0100-BB",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "H16012-0100-BB",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 160,
+      "price_incl_vat_sar": 184,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-B311056-0400-/-B311056-0401",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "B311056-0400 / B311056-0401",
+      "name_en": "REAR BRAKE PAD SET, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 320,
+      "price_incl_vat_sar": 368,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2016-2018-C201070-0500-/-C201070-0501",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2016-2018",
+      "part_number": "C201070-0500 / C201070-0501",
+      "name_en": "FRONT BRAKE PAD SET- LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 325,
+      "price_incl_vat_sar": 374,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-C201014-0102",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "C201014-0102",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 72,
+      "price_incl_vat_sar": 83,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-B211032-0300",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "B211032-0300",
+      "name_en": "FILTER ASSY, FUEL",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 45,
+      "price_incl_vat_sar": 52,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-H16001-0810",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "H16001-0810",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 296,
+      "price_incl_vat_sar": 340,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-S201041-3701",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "S201041-3701",
+      "name_en": "AC FILTER",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 105,
+      "price_incl_vat_sar": 121,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-H15T012-2600-AA",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "H15T012-2600-AA",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 188,
+      "price_incl_vat_sar": 216,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-C211F260301-0600/-C211F260301-1100",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "C211F260301-0600/ C211F260301-1100",
+      "name_en": "FRONT BRAKE PAD BRANCH UNIT,FR-LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 318,
+      "price_incl_vat_sar": 365,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-2019-2020-C211F260303-0901-/C211F260303-1601",
+      "kind": "spare_part",
+      "vehicle_group": "EADO 2019-2020",
+      "part_number": "C211F260303-0901 /C211F260303-1601",
+      "name_en": "BRAKE PAD BRANCH UNIT,LH & RH -REAR",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 370,
+      "price_incl_vat_sar": 426,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-C201014-0102",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "C201014-0102",
+      "name_en": "AIR FILTER (1.6L Enging)",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 72,
+      "price_incl_vat_sar": 83,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-S201016-0400",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "S201016-0400",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 65,
+      "price_incl_vat_sar": 75,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "NE15T001-1155",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-C211F260301-0600-/-C211F260301-1100",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "C211F260301-0600 / C211F260301-1100",
+      "name_en": "FRONT BRAKE PAD BRANCH UNIT,FR-LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 318,
+      "price_incl_vat_sar": 365,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-2021-2023-C211F260303-0901/-C211F260303-1601",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus 2021-2023",
+      "part_number": "C211F260303-0901/ C211F260303-1601",
+      "name_en": "BRAKE PAD BRANCH UNIT,LH & RH -REAR",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 370,
+      "price_incl_vat_sar": 426,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-S101014-0400",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "S101014-0400",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 69,
+      "price_incl_vat_sar": 79,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-S101124-0701-BB",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "S101124-0701-BB",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 35,
+      "price_incl_vat_sar": 40,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-H16001-0800",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "H16001-0800",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 144,
+      "price_incl_vat_sar": 166,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-S101126-2600",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "S101126-2600",
+      "name_en": "FILTER, AIR INLET, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 58,
+      "price_incl_vat_sar": 66,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-H16012-0100-BB",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "H16012-0100-BB",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 160,
+      "price_incl_vat_sar": 184,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-S101062-0300-/-S101062-0301",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "S101062-0300 / S101062-0301",
+      "name_en": "FRONT BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 250,
+      "price_incl_vat_sar": 288,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-2016-2018-S101063-0404-/S101063-0406",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 2016-2018",
+      "part_number": "S101063-0404 /S101063-0406",
+      "name_en": "REAR BRAKE PAD ASSY, LH & RH - NEW MODEL",
+      "name_ar": "فحمات خلفيه( يمين + يسار ) ( 2018 / 2019 / 2020 )",
+      "price_ex_vat_sar": 305,
+      "price_incl_vat_sar": 350,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-S111F210501-0600",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "S111F210501-0600",
+      "name_en": "AIR FILTER ASSY",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 65,
+      "price_incl_vat_sar": 75,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-S111F280103-1702",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "S111F280103-1702",
+      "name_en": "AIR FILTER ASSY- AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 73,
+      "price_incl_vat_sar": 84,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "NE15T001-1155",
+      "name_en": "BELT,FEAD",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-S111F260301-1000/-S111F260301-0600",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "S111F260301-1000/ S111F260301-0600",
+      "name_en": "FRONT- BRAKE PAD ,FR-LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 350,
+      "price_incl_vat_sar": 403,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS35-Plus-2019-2025-S111F260303-1601-/-S111F260303-0901",
+      "kind": "spare_part",
+      "vehicle_group": "CS35 Plus 2019-2025",
+      "part_number": "S111F260303-1601 / S111F260303-0901",
+      "name_en": "REAR- BRAKE PAD ,RR-LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 395,
+      "price_incl_vat_sar": 454,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-H16001-0800",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "H16001-0800",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 144,
+      "price_incl_vat_sar": 166,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-B211014-0500",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "B211014-0500",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 83,
+      "price_incl_vat_sar": 95,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-B211032-0300",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "B211032-0300",
+      "name_en": "FILTER ASSY, FUEL",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 45,
+      "price_incl_vat_sar": 52,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-B211068-2500",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "B211068-2500",
+      "name_en": "FILTER, AIR INLET, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-K012-0102",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "K012-0102",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 125,
+      "price_incl_vat_sar": 144,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-B211053-0501/-B211053-0500",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "B211053-0501/ B211053-0500",
+      "name_en": "FRONT- BRAKE PAD, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 265,
+      "price_incl_vat_sar": 305,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "V7-B211054-0900/-B211054-0901",
+      "kind": "spare_part",
+      "vehicle_group": "V7",
+      "part_number": "B211054-0900/ B211054-0901",
+      "name_en": "REAR- BRAKE PAD, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 320,
+      "price_incl_vat_sar": 368,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-EA008-1900-AB",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "EA008-1900-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 22,
+      "price_incl_vat_sar": 25,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-B511F210501-0200",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "B511F210501-0200",
+      "name_en": "FILTER ASSY,AIR CLEANER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 74,
+      "price_incl_vat_sar": 85,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-B211032-0300",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "B211032-0300",
+      "name_en": "FILTER ASSY, FUEL",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 45,
+      "price_incl_vat_sar": 52,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-EA012-0400",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "EA012-0400",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 140,
+      "price_incl_vat_sar": 161,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-B511F280103-1800",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "B511F280103-1800",
+      "name_en": "AIR FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 68,
+      "price_incl_vat_sar": 78,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-EA15015-2150",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "EA15015-2150",
+      "name_en": "BELT,ALT",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 60,
+      "price_incl_vat_sar": 69,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-B511F260302-0700/-B511F260302-1200",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "B511F260302-0700/ B511F260302-1200",
+      "name_en": "BRAKE SHOE ASSY,LH-& RH- REAR",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 302,
+      "price_incl_vat_sar": 347,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "L7-B511F260301-1200/B511F260301-0700",
+      "kind": "spare_part",
+      "vehicle_group": "L7",
+      "part_number": "B511F260301-1200/B511F260301-0700",
+      "name_en": "FRONT-PAD ASSY, FR BRAKE, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 360,
+      "price_incl_vat_sar": 414,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-S301014-0900",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "S301014-0900",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 75,
+      "price_incl_vat_sar": 86,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-S301130-0500-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "S301130-0500-AA",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 40,
+      "price_incl_vat_sar": 46,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-K002-1600",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "K002-1600",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 188,
+      "price_incl_vat_sar": 216,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-CD101145-32001",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "CD101145-32001",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 79,
+      "price_incl_vat_sar": 91,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-K012-0102",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "K012-0102",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 125,
+      "price_incl_vat_sar": 144,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-S301066-1000-/S301066-1001",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "S301066-1000 /S301066-1001",
+      "name_en": "FRONT BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 563,
+      "price_incl_vat_sar": 647,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2016-2018-S301068-0131",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2016-2018",
+      "part_number": "S301068-0131",
+      "name_en": "REAR BRAKE ASSY, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 390,
+      "price_incl_vat_sar": 449,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-S301014-0900",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "S301014-0900",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 75,
+      "price_incl_vat_sar": 86,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-S301130-0500-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "S301130-0500-AA",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 40,
+      "price_incl_vat_sar": 46,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-K002-1600",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "K002-1600",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 188,
+      "price_incl_vat_sar": 216,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-S301133-2202",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "S301133-2202",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 77,
+      "price_incl_vat_sar": 89,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-K012-0102",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "K012-0102",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 125,
+      "price_incl_vat_sar": 144,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-S301066-1000-/S301066-1001",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "S301066-1000 /S301066-1001",
+      "name_en": "FRONT BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 563,
+      "price_incl_vat_sar": 647,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-2019-2021-S301068-0131",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 2019-2021",
+      "part_number": "S301068-0131",
+      "name_en": "REAR BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 390,
+      "price_incl_vat_sar": 449,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER ( 2.0T )",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-H15T002-1200",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "H15T002-1200",
+      "name_en": "OIL FILER ( 1.5T )",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 22,
+      "price_incl_vat_sar": 25,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S401014-0911-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S401014-0911-AA",
+      "name_en": "AIR FILTER ( CS75Plus 2.0T )",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 80,
+      "price_incl_vat_sar": 92,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S301014-0901-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S301014-0901-AA",
+      "name_en": "AIR FILTER ( CS75Plus 1.5T )",
+      "name_ar": "فلتر مكيف",
+      "price_ex_vat_sar": 73,
+      "price_incl_vat_sar": 84,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S201041-3700",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S201041-3700",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 73,
+      "price_incl_vat_sar": 84,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-K012-0102",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "K012-0102",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 125,
+      "price_incl_vat_sar": 144,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S311F260301-1700-/-S311F260301-2800",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S311F260301-1700 / S311F260301-2800",
+      "name_en": "FRONT- BRAKE PAD ASSY, LH & RH",
+      "name_ar": "2WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 498,
+      "price_incl_vat_sar": 573,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S301066-1010-/S301066-1011",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S301066-1010 /S301066-1011",
+      "name_en": "FRONT BRAKE PAD ASSY, LH & RH (4WD)",
+      "name_ar": "4WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 555,
+      "price_incl_vat_sar": 638,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S311F260303-1800",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S311F260303-1800",
+      "name_en": "REAR BRAKE PAD LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 551,
+      "price_incl_vat_sar": 634,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2022-2023-S311F260303-1801",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2022-2023",
+      "part_number": "S311F260303-1801",
+      "name_en": "REAR BRAKE PAD LH & RH ( 4WD)",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )4WD",
+      "price_ex_vat_sar": 535,
+      "price_incl_vat_sar": 615,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-S401014-0911-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "S401014-0911-AA",
+      "name_en": "ELEMENT, AIR FILTER Ý",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 80,
+      "price_incl_vat_sar": 92,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-CD101141-0400-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "CD101141-0400-AA",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 75,
+      "price_incl_vat_sar": 86,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-S401022-0300",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "S401022-0300",
+      "name_en": "AIR FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 105,
+      "price_incl_vat_sar": 121,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-D20T011-0500",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "D20T011-0500",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 174,
+      "price_incl_vat_sar": 200,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-S401031-1100-/-S401031-1000",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "S401031-1100 / S401031-1000",
+      "name_en": "FRONT BRAKE PAD SET, LH & RH (2WD)",
+      "name_ar": "2WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 570,
+      "price_incl_vat_sar": 656,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-S401031-1001-/-S401031-1101",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "S401031-1001 / S401031-1101",
+      "name_en": "FRONT BRAKE PAD BRANCH UNIT,FR-LH- & RH (4WD)",
+      "name_ar": "4WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 850,
+      "price_incl_vat_sar": 978,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2018-2022-S401032-1300",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2018-2022",
+      "part_number": "S401032-1300",
+      "name_en": "REAR -BRAKE PAD BRANCH UNIT,LH & RH CS95 قمشات",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 525,
+      "price_incl_vat_sar": 604,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-S401014-0911-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "S401014-0911-AA",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 80,
+      "price_incl_vat_sar": 92,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-S401022-0300",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "S401022-0300",
+      "name_en": "AIR FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 105,
+      "price_incl_vat_sar": 121,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-D20T011-0500",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "D20T011-0500",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 174,
+      "price_incl_vat_sar": 200,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-S401031-1100-/-S401031-1000",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "S401031-1100 / S401031-1000",
+      "name_en": "FRONT BRAKE PAD SET, LH & RH (2WD)",
+      "name_ar": "2WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 570,
+      "price_incl_vat_sar": 656,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-S401031-1001-/-S401031-1101",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "S401031-1001 / S401031-1101",
+      "name_en": "FRONT BRAKE PAD BRANCH UNIT,FR-LH- & RH (4WD)",
+      "name_ar": "4WD ( يمين + يسار ) فحمات أماميه",
+      "price_ex_vat_sar": 850,
+      "price_incl_vat_sar": 978,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS95-2023-2025-S401032-1301",
+      "kind": "spare_part",
+      "vehicle_group": "CS95 2023-2025",
+      "part_number": "S401032-1301",
+      "name_en": "REAR- BRAKE PAD BRANCH UNIT,LH & RH قمشات",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 525,
+      "price_incl_vat_sar": 604,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-K003-2300",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "K003-2300",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 26,
+      "price_incl_vat_sar": 30,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-S302F210501-0200",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "S302F210501-0200",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 106,
+      "price_incl_vat_sar": 122,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-S301130-0500-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "S301130-0500-AA",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 40,
+      "price_incl_vat_sar": 46,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-S302F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "S302F280103-2601",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 148,
+      "price_incl_vat_sar": 170,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-D20T011-0500",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "D20T011-0500",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 174,
+      "price_incl_vat_sar": 200,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-S302F260301-0801-/-S302F260301-1401",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "S302F260301-0801 / S302F260301-1401",
+      "name_en": "FRONT BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 578,
+      "price_incl_vat_sar": 664,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS85-S301068-1400-AA",
+      "kind": "spare_part",
+      "vehicle_group": "CS85",
+      "part_number": "S301068-1400-AA",
+      "name_en": "RR BRAKE ASSY,",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 678,
+      "price_incl_vat_sar": 780,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201013-4501",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201013-4501",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 85,
+      "price_incl_vat_sar": 98,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201012-0501",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201012-0501",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 107,
+      "price_incl_vat_sar": 123,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201024-2602",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201024-2602",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 180,
+      "price_incl_vat_sar": 207,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201098-1202",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201098-1202",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 95,
+      "price_incl_vat_sar": 109,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201019-4201",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201019-4201",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 122,
+      "price_incl_vat_sar": 140,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201050-0301-A3",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201050-0301-A3",
+      "name_en": "PAD ASSY, FR BRAKE, LH & RH (Complete)",
+      "name_ar": "فحمات أماميه ( يسار )",
+      "price_ex_vat_sar": 483,
+      "price_incl_vat_sar": 555,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-PC201058-0401-/-PC201058-0701",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter",
+      "part_number": "PC201058-0401 / PC201058-0701",
+      "name_en": "REAR BRAKE PAD,LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 410,
+      "price_incl_vat_sar": 471,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-CD569F210501-0300",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "CD569F210501-0300",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 60,
+      "price_incl_vat_sar": 69,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-CD569F280103-2701",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "CD569F280103-2701",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 99,
+      "price_incl_vat_sar": 114,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-D20T014-1940",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "D20T014-1940",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 99,
+      "price_incl_vat_sar": 114,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-CD569F260301-1200-/-CD569F260301-1700",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "CD569F260301-1200 / CD569F260301-1700",
+      "name_en": "FRONT- BRAKE PAD ASSY, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 565,
+      "price_incl_vat_sar": 650,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-K-CD569F260303-1600",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-K",
+      "part_number": "CD569F260303-1600",
+      "name_en": "RR BRAKE ASSY, LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 550,
+      "price_incl_vat_sar": 633,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-S202F210501-0200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "S202F210501-0200",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 65,
+      "price_incl_vat_sar": 75,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-C281F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "C281F280103-2601",
+      "name_en": "AIR FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "NE15T001-1155",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-S202F260301-0800-/-S202F260301-1400",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "S202F260301-0800 / S202F260301-1400",
+      "name_en": "FRONT BRAKE PAD, LH & RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 528,
+      "price_incl_vat_sar": 607,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-T-S202F260303-0700-/-S202F260303-1200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-T",
+      "part_number": "S202F260303-0700 / S202F260303-1200",
+      "name_en": "REAR BRAKE PAD UNIT,LH-RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 467,
+      "price_incl_vat_sar": 537,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-S301014-0903",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "S301014-0903",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 76,
+      "price_incl_vat_sar": 87,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-C281F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "C281F280103-2601",
+      "name_en": "FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "NE15T001-1155",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-C281F260301-2600-/-C281F260301-3200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "C281F260301-2600 / C281F260301-3200",
+      "name_en": "FRONT BRAKE PAD- RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 495,
+      "price_incl_vat_sar": 569,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-C281F260303-2500",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "C281F260303-2500",
+      "name_en": "REAR BRAKE PAD BRANCH UNIT,RR-LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 540,
+      "price_incl_vat_sar": 621,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-TF004-1200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "TF004-1200",
+      "name_en": "PLUG,OIL DRAIN",
+      "name_ar": "مسمار تصريف الزيت",
+      "price_ex_vat_sar": 15,
+      "price_incl_vat_sar": 17,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-TF004-1300",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V",
+      "part_number": "TF004-1300",
+      "name_en": "GASKET,OIL DRAIN",
+      "name_ar": "وردة تصريف الزيت",
+      "price_ex_vat_sar": 13,
+      "price_incl_vat_sar": 15,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-S301014-0903",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "S301014-0903",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 76,
+      "price_incl_vat_sar": 87,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-C281F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "C281F280103-2601",
+      "name_en": "FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "NE15T001-1155",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-C589F260301-2300-/-C589F260301-2600",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "C589F260301-2300 / C589F260301-2600",
+      "name_en": "FRONT BRAKE PAD- RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 344,
+      "price_incl_vat_sar": 396,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "EADO-Plus-New-2024-2025-C589F260303-1800",
+      "kind": "spare_part",
+      "vehicle_group": "EADO Plus New 2024-2025",
+      "part_number": "C589F260303-1800",
+      "name_en": "REAR BRAKE PAD BRANCH UNIT,RR-LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 491,
+      "price_incl_vat_sar": 565,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-S201016-0402",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "S201016-0402",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 96,
+      "price_incl_vat_sar": 110,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-NE14T003-0200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "NE14T003-0200",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 184,
+      "price_incl_vat_sar": 212,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-S203F280101-0107",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "S203F280101-0107",
+      "name_en": "FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 50,
+      "price_incl_vat_sar": 58,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-NE15T001-1155",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "NE15T001-1155",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 120,
+      "price_incl_vat_sar": 138,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-S203F260301-0800-/-S203F260301-1300",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "S203F260301-0800 / S203F260301-1300",
+      "name_en": "FRONT BRAKE PAD",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 576,
+      "price_incl_vat_sar": 662,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-S202F260303-1200-/-S202F260303-0700",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "S202F260303-1200 / S202F260303-0700",
+      "name_en": "REAR BRAKE PAD BRANCH UNIT,RR-LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 467,
+      "price_incl_vat_sar": 537,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-TF004-1200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "TF004-1200",
+      "name_en": "PLUG,OIL DRAIN",
+      "name_ar": "مسمار تصريف الزيت",
+      "price_ex_vat_sar": 15,
+      "price_incl_vat_sar": 17,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-S-TF004-1300",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-S",
+      "part_number": "TF004-1300",
+      "name_en": "GASKET,OIL DRAIN",
+      "name_ar": "وردة تصريف الزيت",
+      "price_ex_vat_sar": 13,
+      "price_incl_vat_sar": 15,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201013-4501",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201013-4501",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 85,
+      "price_incl_vat_sar": 98,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201012-0501",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201012-0501",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 107,
+      "price_incl_vat_sar": 123,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201024-2602",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201024-2602",
+      "name_en": "FUEL FILTER",
+      "name_ar": "فلتر الوقود",
+      "price_ex_vat_sar": 180,
+      "price_incl_vat_sar": 207,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-P201F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "P201F280103-2601",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 144,
+      "price_incl_vat_sar": 165,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201019-4201",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201019-4201",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 122,
+      "price_incl_vat_sar": 140,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201050-0301-A3",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201050-0301-A3",
+      "name_en": "PAD ASSY, FR BRAKE, LH & RH (Complete)",
+      "name_ar": "فحمات أماميه ( يسار )",
+      "price_ex_vat_sar": 483,
+      "price_incl_vat_sar": 555,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-AT-PC201058-0401-A1-/-PC201058-0701-A1",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter AT",
+      "part_number": "PC201058-0401-A1 / PC201058-0701-A1",
+      "name_en": "REAR BRAKE PAD,LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 410,
+      "price_incl_vat_sar": 471,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-C281F210501-0201",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "C281F210501-0201",
+      "name_en": "FILTER, AIR",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 78,
+      "price_incl_vat_sar": 90,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-C281F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "C281F280103-2601",
+      "name_en": "FILTER, A/C",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-D20T014-1940",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "D20T014-1940",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 99,
+      "price_incl_vat_sar": 114,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-C281F260301-2601-/-C281F260301-3201",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "C281F260301-2601 / C281F260301-3201",
+      "name_en": "FRONT BRAKE PAD- RH",
+      "name_ar": "فحمات أماميه ( يمين + يسار )",
+      "price_ex_vat_sar": 554,
+      "price_incl_vat_sar": 637,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-C281F260303-2501",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "C281F260303-2501",
+      "name_en": "REAR BRAKE PAD BRANCH UNIT,RR-LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 469,
+      "price_incl_vat_sar": 539,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-TF004-1200",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "TF004-1200",
+      "name_en": "PLUG,OIL DRAIN",
+      "name_ar": "مسمار تصريف الزيت",
+      "price_ex_vat_sar": 15,
+      "price_incl_vat_sar": 17,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "UNI-V-Sport-TF004-1300",
+      "kind": "spare_part",
+      "vehicle_group": "UNI-V Sport",
+      "part_number": "TF004-1300",
+      "name_en": "GASKET,OIL DRAIN",
+      "name_ar": "وردة تصريف الزيت",
+      "price_ex_vat_sar": 13,
+      "price_incl_vat_sar": 15,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-H15002-1000-AB",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "H15002-1000-AB",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 24,
+      "price_incl_vat_sar": 28,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-C281F210501-0201",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "C281F210501-0201",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 78,
+      "price_incl_vat_sar": 90,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-D20T012-0700",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "D20T012-0700",
+      "name_en": "SPARK PLUG (4pc)",
+      "name_ar": "البواجي إلكترونيه ( طقم 4 قطع )",
+      "price_ex_vat_sar": 336,
+      "price_incl_vat_sar": 386,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-C281F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "C281F280103-2601",
+      "name_en": "AC FILTER",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-D20T014-1940",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "D20T014-1940",
+      "name_en": "Drive Belt",
+      "name_ar": "سير المحرك",
+      "price_ex_vat_sar": 99,
+      "price_incl_vat_sar": 114,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-C928F260301-1001-/-C928F260301-1802",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "C928F260301-1001 / C928F260301-1802",
+      "name_en": "FRONT- BRAKE PAD ASSY, LH",
+      "name_ar": "فحمات أمامية يسار",
+      "price_ex_vat_sar": 546,
+      "price_incl_vat_sar": 628,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "CS75-Plus-2026-C928F260303-3102-/-C928F260303-3203",
+      "kind": "spare_part",
+      "vehicle_group": "CS75 Plus 2026",
+      "part_number": "C928F260303-3102 / C928F260303-3203",
+      "name_en": "REAR BRAKE PAD LH",
+      "name_ar": "فحمات خلفية يسار",
+      "price_ex_vat_sar": 652,
+      "price_incl_vat_sar": 750,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-EA008-1900-AB",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "EA008-1900-AB",
+      "name_en": "FILTER ASS’Y,OIL",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 22,
+      "price_incl_vat_sar": 25,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-EA012-0400",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "EA012-0400",
+      "name_en": "SPARK PLUG",
+      "name_ar": "البواجي ( طقم 4 قطع )",
+      "price_ex_vat_sar": 140,
+      "price_incl_vat_sar": 161,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C385F210501-0200",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C385F210501-0200",
+      "name_en": "FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 65,
+      "price_incl_vat_sar": 75,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C385F280103-2412",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C385F280103-2412",
+      "name_en": "AIR FILTER AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 60,
+      "price_incl_vat_sar": 69,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F260301-1201",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F260301-1201",
+      "name_en": "BRAKE PAD BRANCH UNIT,FR-RH",
+      "name_ar": "فحمات أمامية",
+      "price_ex_vat_sar": 494,
+      "price_incl_vat_sar": 568,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F260301-0901",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F260301-0901",
+      "name_en": "BRAKE PAD BRANCH UNIT,FR-LH",
+      "name_ar": "فحمات أمامية",
+      "price_ex_vat_sar": 494,
+      "price_incl_vat_sar": 568,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F260303-0801-AB",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F260303-0801-AB",
+      "name_en": "BRAKE PAD BRANCH UNIT,LH-RR",
+      "name_ar": "فحمات خلفية",
+      "price_ex_vat_sar": 283,
+      "price_incl_vat_sar": 325,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F260303-1100-AB",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F260303-1100-AB",
+      "name_en": "BRAKE PAD BRANCH UNIT,RR-RH",
+      "name_ar": "فحمات خلفية",
+      "price_ex_vat_sar": 283,
+      "price_incl_vat_sar": 325,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F271801-0700",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F271801-0700",
+      "name_en": "WIPER BLADE ASSY,RH",
+      "name_ar": "مساحات",
+      "price_ex_vat_sar": 70,
+      "price_incl_vat_sar": 81,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C673F271801-0500",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C673F271801-0500",
+      "name_en": "WIPER BLADE ASSY,LH",
+      "name_ar": "مساحات",
+      "price_ex_vat_sar": 74,
+      "price_incl_vat_sar": 85,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C211F280104-1900",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C211F280104-1900",
+      "name_en": "ENGINE COOLANT",
+      "name_ar": "ماء تبريد",
+      "price_ex_vat_sar": 103,
+      "price_incl_vat_sar": 118,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F260301-0800",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F260301-0800",
+      "name_en": "BRAKE PAD BRANCH UNIT,FR-LH",
+      "name_ar": "فحمات أمامية",
+      "price_ex_vat_sar": 159,
+      "price_incl_vat_sar": 183,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F260301-1400",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F260301-1400",
+      "name_en": "BRAKE PAD BRANCH UNIT,FR-RH",
+      "name_ar": "فحمات أمامية",
+      "price_ex_vat_sar": 159,
+      "price_incl_vat_sar": 183,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F260303-1000",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F260303-1000",
+      "name_en": "BRAKE PAD BRANCH UNIT,RR-LH",
+      "name_ar": "فحمات خلفية",
+      "price_ex_vat_sar": 245,
+      "price_incl_vat_sar": 282,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F260303-1400",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F260303-1400",
+      "name_en": "BRAKE PAD BRANCH UNIT,RR-RH",
+      "name_ar": "فحمات خلفية",
+      "price_ex_vat_sar": 245,
+      "price_incl_vat_sar": 282,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F271801-0400",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F271801-0400",
+      "name_en": "WIPER BLADE ASSY,LH",
+      "name_ar": "مساحات أمامية",
+      "price_ex_vat_sar": 63,
+      "price_incl_vat_sar": 72,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F271801-0600",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F271801-0600",
+      "name_en": "WIPER BLADE ASSY,RH",
+      "name_ar": "مساحات أمامية",
+      "price_ex_vat_sar": 61,
+      "price_incl_vat_sar": 70,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F271801-0603",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F271801-0603",
+      "name_en": "WIPER ARM ASSY,RR",
+      "name_ar": "ذراع مساحة خلفية",
+      "price_ex_vat_sar": 46,
+      "price_incl_vat_sar": 53,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-C857F271801-0704",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "C857F271801-0704",
+      "name_en": "WIPER BLADE ASSY,RR",
+      "name_ar": "مساحات خلفية",
+      "price_ex_vat_sar": 29,
+      "price_incl_vat_sar": 33,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Deepal-S07-EU-EV17-3020",
+      "kind": "spare_part",
+      "vehicle_group": "Deepal S07",
+      "part_number": "EU-EV17-3020",
+      "name_en": "LUBRICANT MTF-1",
+      "name_ar": "زيت الجير",
+      "price_ex_vat_sar": 131,
+      "price_incl_vat_sar": 151,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-P201F210001-2044",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "P201F210001-2044",
+      "name_en": "OIL FILER",
+      "name_ar": "فلتر الزيت",
+      "price_ex_vat_sar": 85,
+      "price_incl_vat_sar": 98,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-PJ201019-0201",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "PJ201019-0201",
+      "name_en": "AIR FILTER",
+      "name_ar": "فلتر الهواء",
+      "price_ex_vat_sar": 130,
+      "price_incl_vat_sar": 150,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-PJ201024-2011",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "PJ201024-2011",
+      "name_en": "Diesel Filter",
+      "name_ar": "فلتر ديزل",
+      "price_ex_vat_sar": 219,
+      "price_incl_vat_sar": 252,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-P201F280103-2601",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "P201F280103-2601",
+      "name_en": "FILTER ASST AC",
+      "name_ar": "فلتر المكيف",
+      "price_ex_vat_sar": 144,
+      "price_incl_vat_sar": 165,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-PJ201013-2901",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "PJ201013-2901",
+      "name_en": "Glow plug parts",
+      "name_ar": "بواجي",
+      "price_ex_vat_sar": 214,
+      "price_incl_vat_sar": 246,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-P201MCA1EF260301-1601",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "P201MCA1EF260301-1601",
+      "name_en": "PAD ASSY, FR BRAKE, LH & RH (Complete)",
+      "name_ar": "فحمات أماميه",
+      "price_ex_vat_sar": 146,
+      "price_incl_vat_sar": 168,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    },
+    {
+      "id": "Hunter-Plus-2.5T-P201MCA1EF260303-0501",
+      "kind": "spare_part",
+      "vehicle_group": "Hunter Plus 2.5T",
+      "part_number": "P201MCA1EF260303-0501",
+      "name_en": "REAR BRAKE PAD,LH & RH",
+      "name_ar": "فحمات خلفيه ( يمين + يسار )",
+      "price_ex_vat_sar": 205,
+      "price_incl_vat_sar": 236,
+      "price_status": "published",
+      "source_url": "https://changan-ksa.com/parts"
+    }
+  ],
+  "validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [
+      "ALSVIN: fewer than 2 grades.",
+      "UNI-K: fewer than 2 grades."
+    ]
+  }
+}
