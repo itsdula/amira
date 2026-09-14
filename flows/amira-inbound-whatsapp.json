@@ -2,18 +2,20 @@
   "name": "Amira Inbound WhatsApp",
   "type": "SHARED",
   "summary": "Inbound WhatsApp handler: store first, then route on next_action.",
-  "description": "Catch Webhook (channel webhookUrl) -> record_inbound (indexes the message, opens the 24h window, returns the lead pack) -> route: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
+  "description": "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
   "tags": [
     "whatsapp",
     "inbound",
     "store"
   ],
   "blogUrl": "",
-  "metadata": {},
+  "metadata": {
+    "externalId": "bf5f015f9e52c77046804"
+  },
   "author": "amira",
   "categories": [],
   "pieces": [
-    "@activepieces/piece-webhook",
+    "@activepieces/piece-manual-trigger",
     "@activepieces/piece-http"
   ],
   "flows": [
@@ -22,76 +24,70 @@
       "trigger": {
         "name": "trigger",
         "valid": true,
-        "displayName": "Catch Webhook",
+        "displayName": "Manual Trigger",
         "type": "PIECE_TRIGGER",
+        "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
         "settings": {
-          "pieceName": "@activepieces/piece-webhook",
-          "pieceVersion": "0.1.36",
-          "triggerName": "catch_webhook",
-          "input": {
-            "authType": "none",
-            "authFields": {}
-          },
+          "sampleData": {},
           "propertySettings": {
-            "authType": {
-              "type": "MANUAL"
-            },
-            "authFields": {
-              "type": "MANUAL",
-              "schema": {}
-            },
-            "liveMarkdown": {
-              "type": "MANUAL"
-            },
-            "syncMarkdown": {
-              "type": "MANUAL"
-            },
-            "testMarkdown": {
+            "markdown": {
               "type": "MANUAL"
             }
-          }
+          },
+          "pieceName": "@activepieces/piece-manual-trigger",
+          "pieceVersion": "0.0.5",
+          "triggerName": "manual_trigger",
+          "input": {}
         },
         "nextAction": {
-          "name": "route_event",
+          "name": "prep_inbound",
           "skip": false,
-          "type": "ROUTER",
+          "type": "CODE",
           "valid": true,
-          "displayName": "Route on eventType",
-          "children": [
-            {
-              "name": "prep_inbound",
-              "skip": false,
-              "type": "CODE",
-              "valid": true,
-              "displayName": "Prepare record_inbound",
-              "settings": {
-                "input": {
-                  "mobile": "{{trigger['output']['body']['senderIdentifier']}}",
-                  "text": "{{trigger['output']['body']['text']}}",
-                  "messageType": "{{trigger['output']['body']['messageType']}}",
-                  "eventId": "{{trigger['output']['body']['eventId']}}",
-                  "messageId": "{{trigger['output']['body']['messageId']}}",
-                  "windowState": "{{trigger['output']['body']['windowState']}}"
-                },
-                "sourceCode": {
-                  "packageJson": "{}",
-                  "code": "export const code = async (inputs) => {\n  const mt = String(inputs.messageType ?? \"text\");\n  let text = String(inputs.text ?? \"\").trim();\n  if (!text) text = \"[\" + mt + \" message]\";\n  return {\n    body: {\n      p_mobile: String(inputs.mobile ?? \"\"),\n      p_text: text,\n      p_channel: \"whatsapp\",\n      p_meta: {\n        event_id: inputs.eventId ?? null,\n        message_id: inputs.messageId ?? null,\n        message_type: mt,\n        window_state: inputs.windowState ?? null,\n      },\n    },\n  };\n};\n"
-                },
-                "errorHandlingOptions": {
-                  "retryOnFailure": {
-                    "value": false
-                  },
-                  "continueOnFailure": {
-                    "value": false
-                  }
-                }
+          "displayName": "Normalize webhook event",
+          "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+          "settings": {
+            "input": {
+              "evt": "{{trigger['body']}}",
+              "evtAlt": "{{trigger['output']['body']}}"
+            },
+            "sourceCode": {
+              "packageJson": "{}",
+              "code": "export const code = async (inputs) => {\n  const pick = (v) => (v && typeof v === \"object\" && !Array.isArray(v)) ? v : null;\n  const e = pick(inputs.evt) || pick(inputs.evtAlt) || {};\n  const mt = String(e.messageType ?? \"text\");\n  let text = String(e.text ?? \"\").trim();\n  if (!text) text = \"[\" + mt + \" message]\";\n  const mobile = String(e.senderIdentifier ?? \"\");\n  return {\n    eventType: String(e.eventType ?? \"\"),\n    mobile,\n    text,\n    body: {\n      p_mobile: mobile,\n      p_text: text,\n      p_channel: \"whatsapp\",\n      p_meta: {\n        event_id: e.eventId ?? null,\n        message_id: e.messageId ?? null,\n        message_type: mt,\n        window_state: e.windowState ?? null,\n      },\n    },\n  };\n};\n"
+            },
+            "sampleData": {},
+            "propertySettings": {
+              "evt": {
+                "type": "MANUAL"
               },
-              "nextAction": {
+              "evtAlt": {
+                "type": "MANUAL"
+              }
+            },
+            "errorHandlingOptions": {
+              "retryOnFailure": {
+                "value": false
+              },
+              "continueOnFailure": {
+                "value": false
+              }
+            }
+          },
+          "nextAction": {
+            "name": "route_event",
+            "skip": false,
+            "type": "ROUTER",
+            "valid": true,
+            "displayName": "Route on eventType",
+            "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+            "children": [
+              {
                 "name": "store_inbound",
                 "skip": false,
                 "type": "PIECE",
                 "valid": true,
                 "displayName": "Store: record inbound",
+                "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                 "settings": {
                   "pieceName": "@activepieces/piece-http",
                   "actionName": "send_request",
@@ -186,6 +182,7 @@
                   "type": "ROUTER",
                   "valid": true,
                   "displayName": "Route on next_action",
+                  "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                   "children": [
                     {
                       "name": "parse_channel",
@@ -193,15 +190,28 @@
                       "type": "CODE",
                       "valid": true,
                       "displayName": "Parse channel reply",
+                      "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                       "settings": {
                         "input": {
                           "pack": "{{store_inbound['output']['body']}}",
-                          "text": "{{trigger['output']['body']['text']}}",
-                          "mobile": "{{trigger['output']['body']['senderIdentifier']}}"
+                          "text": "{{prep_inbound['output']['text']}}",
+                          "mobile": "{{prep_inbound['output']['mobile']}}"
                         },
                         "sourceCode": {
                           "packageJson": "{}",
                           "code": "export const code = async (inputs) => {\n  const pack = inputs.pack || {};\n  const lead = pack.lead || {};\n  const latest = pack.latest_submission || {};\n  const ar = lead.language === \"ar\";\n  const raw = String(inputs.text ?? \"\").toLowerCase().trim();\n  const names = {\"ALSVIN\":\"ALSVIN\",\"CS-35-PLUS\":\"CS 35 Plus\",\"CS-75-PLUS\":\"CS 75 Plus\",\"CS-95\":\"CS 95\",\"EADO-PLUS\":\"EADO Plus\",\"HUNTER-PLUS\":\"Hunter\",\"UNI-K\":\"UNI-K\",\"UNI-S\":\"UNI S\",\"UNI-T\":\"UNI-T\",\"UNI-V\":\"UNI V\"};\n  const vehicle = names[latest.vehicle] || latest.vehicle || (ar ? \"\\u0633\\u064a\\u0627\\u0631\\u062a\\u0643\" : \"your car\");\n  const firstName = String(lead.full_name || \"\").trim().split(/\\s+/)[0] || \"\";\n  const has = (words) => words.some((w) => raw.includes(w));\n\n  const cancelled = has([\"cancel\", \"\\u0627\\u0644\\u063a\\u0627\\u0621\", \"\\u0625\\u0644\\u063a\\u0627\\u0621\", \"\\u0644\\u0627 \\u0627\\u0628\\u064a\", \"\\u0644\\u0627 \\u0623\\u0628\\u064a\"]);\n  const schedule = !cancelled && (raw === \"3\" || has([\"schedule\", \"later\", \"\\u0628\\u0639\\u062f\\u064a\\u0646\", \"\\u0645\\u0648\\u0639\\u062f\", \"\\u0628\\u0627\\u0643\\u0631\", \"\\u0628\\u0643\\u0631\\u0647\", \"\\u0628\\u0643\\u0631\\u0629\", \"\\u0648\\u0642\\u062a\"]));\n  const callNow = !cancelled && !schedule && (raw === \"2\" || has([\"call\", \"\\u0627\\u062a\\u0635\\u0644\", \"\\u0627\\u062a\\u0635\\u0627\\u0644\", \"\\u0643\\u0644\\u0645\\u0646\\u064a\", \"\\u0643\\u0644\\u0645\\u0648\\u0646\\u064a\", \"\\u0631\\u0646\"]));\n  const whatsapp = !cancelled && !schedule && !callNow && (raw === \"1\" || has([\"whatsapp\", \"chat\", \"text\", \"message\", \"\\u0648\\u0627\\u062a\\u0633\", \"\\u0647\\u0646\\u0627\", \"\\u0646\\u0643\\u0645\\u0644\", \"\\u0627\\u0643\\u0645\\u0644\", \"\\u0623\\u0643\\u0645\\u0644\", \"\\u0643\\u062a\\u0627\\u0628\\u0647\", \"\\u0643\\u062a\\u0627\\u0628\\u0629\"]));\n\n  const to = String(inputs.mobile ?? \"\");\n  const send = (body) => ({ channelId: \"160e6c61-174a-4de1-b338-ce2e27666c37\", to, type: \"text\", text: { body, previewUrl: false } });\n  const log = (body, kind) => ({ p_mobile: to, p_text: body, p_channel: \"whatsapp\", p_step: \"channel\", p_handler: \"inbound\", p_meta: { kind } });\n\n  let mode = \"ask\";\n  let choice = null;\n  let copy = null;\n  if (whatsapp) { mode = \"set_choice\"; choice = \"whatsapp\"; }\n  else if (callNow) { mode = \"set_choice\"; choice = \"call_now\"; }\n  else if (schedule) { mode = \"set_choice\"; choice = \"schedule\"; }\n  else if (cancelled) {\n    copy = ar\n      ? \"\\u062a\\u0645 \\u0625\\u0644\\u063a\\u0627\\u0621 \\u0637\\u0644\\u0628\\u0643\\u060c \\u0648\\u0644\\u0627 \\u064a\\u0647\\u0645\\u0643. \\u0625\\u0630\\u0627 \\u062d\\u0628\\u064a\\u062a \\u062a\\u0631\\u062c\\u0639 \\u0644\\u0646\\u0627\\u060c \\u0623\\u0631\\u0633\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0623\\u064a \\u0648\\u0642\\u062a.\"\n      : \"Your request has been cancelled. If you change your mind, just message us here anytime.\";\n  } else {\n    copy = ar\n      ? (\"\\u0647\\u0644\\u0627\" + (firstName ? \" \" + firstName : \"\") + \"\\u060c \\u0648\\u0635\\u0644\\u0646\\u0627 \\u0637\\u0644\\u0628\\u0643 \\u0639\\u0644\\u0649 \" + vehicle + \". \\u062a\\u062d\\u0628 \\u0646\\u0643\\u0645\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0627\\u0644\\u0648\\u0627\\u062a\\u0633\\u0627\\u0628\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0627\\u0644\\u062d\\u064a\\u0646\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062d\\u062f\\u062f \\u0644\\u0643 \\u0645\\u0648\\u0639\\u062f \\u0644\\u0644\\u0627\\u062a\\u0635\\u0627\\u0644\\u061f\")\n      : (\"Hi\" + (firstName ? \" \" + firstName : \"\") + \", we got your request for the \" + vehicle + \". Would you like to continue here on WhatsApp, get a call now, or set a time for a call?\");\n  }\n\n  return {\n    mode,\n    choice,\n    rpcBody: { p_mobile: to, p_choice: choice, p_preferred_call_at: null },\n    sendBody: copy ? send(copy) : null,\n    logBody: copy ? log(copy, cancelled ? \"cancel_ack\" : \"channel_question\") : null,\n  };\n};\n"
+                        },
+                        "sampleData": {},
+                        "propertySettings": {
+                          "pack": {
+                            "type": "MANUAL"
+                          },
+                          "text": {
+                            "type": "MANUAL"
+                          },
+                          "mobile": {
+                            "type": "MANUAL"
+                          }
                         },
                         "errorHandlingOptions": {
                           "retryOnFailure": {
@@ -218,6 +228,7 @@
                         "type": "ROUTER",
                         "valid": true,
                         "displayName": "Choice made?",
+                        "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                         "children": [
                           {
                             "name": "rpc_set_choice",
@@ -225,6 +236,7 @@
                             "type": "PIECE",
                             "valid": true,
                             "displayName": "Store: set channel choice",
+                            "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                             "settings": {
                               "pieceName": "@activepieces/piece-http",
                               "actionName": "send_request",
@@ -319,15 +331,28 @@
                               "type": "CODE",
                               "valid": true,
                               "displayName": "Build confirmation copy",
+                              "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                               "settings": {
                                 "input": {
                                   "pack": "{{rpc_set_choice['output']['body']}}",
                                   "choice": "{{parse_channel['output']['choice']}}",
-                                  "mobile": "{{trigger['output']['body']['senderIdentifier']}}"
+                                  "mobile": "{{prep_inbound['output']['mobile']}}"
                                 },
                                 "sourceCode": {
                                   "packageJson": "{}",
                                   "code": "export const code = async (inputs) => {\n  const pack = inputs.pack || {};\n  const lead = pack.lead || {};\n  const latest = pack.latest_submission || {};\n  const ar = lead.language === \"ar\";\n  const names = {\"ALSVIN\":\"ALSVIN\",\"CS-35-PLUS\":\"CS 35 Plus\",\"CS-75-PLUS\":\"CS 75 Plus\",\"CS-95\":\"CS 95\",\"EADO-PLUS\":\"EADO Plus\",\"HUNTER-PLUS\":\"Hunter\",\"UNI-K\":\"UNI-K\",\"UNI-S\":\"UNI S\",\"UNI-T\":\"UNI-T\",\"UNI-V\":\"UNI V\"};\n  const vehicle = names[latest.vehicle] || latest.vehicle || (ar ? \"\\u0633\\u064a\\u0627\\u0631\\u062a\\u0643\" : \"your car\");\n  const choice = String(inputs.choice ?? \"\");\n  const windowOpen = pack.call_window === \"open\";\n\n  let copy;\n  if (choice === \"whatsapp\") {\n    copy = ar\n      ? \"\\u062a\\u0645\\u0627\\u0645\\u060c \\u0646\\u0643\\u0645\\u0644 \\u0647\\u0646\\u0627. \\u0628\\u0633 \\u0623\\u062a\\u0623\\u0643\\u062f \\u0645\\u0646\\u0643 \\u0623\\u0648\\u0644\\u060c \\u0637\\u0644\\u0628\\u0643 \\u0639\\u0644\\u0649 \" + vehicle + \" \\u0635\\u062d\\u061f\"\n      : \"Great, we will continue here. First, just to confirm - your request is for the \" + vehicle + \", right?\";\n  } else if (choice === \"call_now\") {\n    copy = windowOpen\n      ? (ar ? \"\\u0623\\u0628\\u0634\\u0631\\u060c \\u0628\\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0627\\u0644\\u062d\\u064a\\u0646 \\u0639\\u0644\\u0649 \\u0647\\u0627\\u0644\\u0631\\u0642\\u0645.\" : \"Sure - we will call you now on this number.\")\n      : (ar ? \"\\u0623\\u0628\\u0634\\u0631\\u060c \\u0628\\u0633 \\u0627\\u0644\\u062d\\u064a\\u0646 \\u0628\\u0631\\u0627 \\u0623\\u0648\\u0642\\u0627\\u062a \\u0627\\u0644\\u0627\\u062a\\u0635\\u0627\\u0644 (\\u0645\\u0646 \\u0669 \\u0627\\u0644\\u0635\\u0628\\u062d \\u0625\\u0644\\u0649 \\u0669 \\u0628\\u0627\\u0644\\u0644\\u064a\\u0644). \\u0628\\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0623\\u0648\\u0644 \\u0645\\u0627 \\u0646\\u0628\\u062f\\u0623 \\u0627\\u0644\\u0633\\u0627\\u0639\\u0629 \\u0669 \\u0627\\u0644\\u0635\\u0628\\u062d\\u060c \\u064a\\u0646\\u0627\\u0633\\u0628\\u0643\\u061f\" : \"Sure - we are outside calling hours right now (9am to 9pm). We will call you when lines open at 9am, does that work?\");\n  } else {\n    copy = ar\n      ? \"\\u0623\\u0628\\u0634\\u0631. \\u0648\\u0634 \\u0627\\u0644\\u0648\\u0642\\u062a \\u0627\\u0644\\u0644\\u064a \\u064a\\u0646\\u0627\\u0633\\u0628\\u0643 \\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0641\\u064a\\u0647\\u061f \\u0645\\u062a\\u0627\\u062d\\u064a\\u0646 \\u0645\\u0646 \\u0669 \\u0627\\u0644\\u0635\\u0628\\u062d \\u0625\\u0644\\u0649 \\u0669 \\u0628\\u0627\\u0644\\u0644\\u064a\\u0644.\"\n      : \"Sure. What time works best for the call? We are available 9am to 9pm.\";\n  }\n\n  const to = String(inputs.mobile ?? \"\");\n  return {\n    sendBody: { channelId: \"160e6c61-174a-4de1-b338-ce2e27666c37\", to, type: \"text\", text: { body: copy, previewUrl: false } },\n    logBody: { p_mobile: to, p_text: copy, p_channel: \"whatsapp\", p_step: \"channel\", p_handler: \"inbound\", p_meta: { kind: \"channel_\" + choice } },\n  };\n};\n"
+                                },
+                                "sampleData": {},
+                                "propertySettings": {
+                                  "pack": {
+                                    "type": "MANUAL"
+                                  },
+                                  "choice": {
+                                    "type": "MANUAL"
+                                  },
+                                  "mobile": {
+                                    "type": "MANUAL"
+                                  }
                                 },
                                 "errorHandlingOptions": {
                                   "retryOnFailure": {
@@ -344,6 +369,7 @@
                                 "type": "PIECE",
                                 "valid": true,
                                 "displayName": "WA: choice confirmation",
+                                "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                                 "settings": {
                                   "pieceName": "@activepieces/piece-http",
                                   "actionName": "send_request",
@@ -437,6 +463,7 @@
                                   "type": "PIECE",
                                   "valid": true,
                                   "displayName": "Store: log confirmation",
+                                  "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                                   "settings": {
                                     "pieceName": "@activepieces/piece-http",
                                     "actionName": "send_request",
@@ -535,6 +562,7 @@
                             "type": "PIECE",
                             "valid": true,
                             "displayName": "WA: channel question / cancel ack",
+                            "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                             "settings": {
                               "pieceName": "@activepieces/piece-http",
                               "actionName": "send_request",
@@ -628,6 +656,7 @@
                               "type": "PIECE",
                               "valid": true,
                               "displayName": "Store: log question",
+                              "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                               "settings": {
                                 "pieceName": "@activepieces/piece-http",
                                 "actionName": "send_request",
@@ -751,6 +780,7 @@
                       "type": "PIECE",
                       "valid": true,
                       "displayName": "Chat: generate reply",
+                      "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                       "settings": {
                         "pieceName": "@activepieces/piece-http",
                         "actionName": "send_request",
@@ -768,8 +798,8 @@
                           "body": {
                             "data": {
                               "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
-                              "threadKey": "{{trigger['output']['body']['senderIdentifier']}}",
-                              "content": "{{trigger['output']['body']['text']}}",
+                              "threadKey": "{{prep_inbound['output']['mobile']}}",
+                              "content": "{{prep_inbound['output']['text']}}",
                               "assistantId": "{{variables['AMIRA_CHAT_ASSISTANT_ID']}}"
                             }
                           },
@@ -849,6 +879,7 @@
                         "type": "PIECE",
                         "valid": true,
                         "displayName": "WA: send reply",
+                        "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                         "settings": {
                           "pieceName": "@activepieces/piece-http",
                           "actionName": "send_request",
@@ -866,7 +897,7 @@
                             "body": {
                               "data": {
                                 "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
-                                "to": "{{trigger['output']['body']['senderIdentifier']}}",
+                                "to": "{{prep_inbound['output']['mobile']}}",
                                 "type": "text",
                                 "text": {
                                   "body": "{{chat_generate['output']['body']['data']['message']['content']}}",
@@ -950,6 +981,7 @@
                           "type": "PIECE",
                           "valid": true,
                           "displayName": "Store: log reply",
+                          "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                           "settings": {
                             "pieceName": "@activepieces/piece-http",
                             "actionName": "send_request",
@@ -967,7 +999,7 @@
                               "body_type": "json",
                               "body": {
                                 "data": {
-                                  "p_mobile": "{{trigger['output']['body']['senderIdentifier']}}",
+                                  "p_mobile": "{{prep_inbound['output']['mobile']}}",
                                   "p_text": "{{chat_generate['output']['body']['data']['message']['content']}}",
                                   "p_channel": "whatsapp",
                                   "p_handler": "inbound",
@@ -1090,145 +1122,146 @@
                     "executionType": "EXECUTE_FIRST_MATCH"
                   }
                 }
-              }
-            },
-            {
-              "name": "mark_opted_out",
-              "skip": false,
-              "type": "PIECE",
-              "valid": true,
-              "displayName": "Store: mark opted out",
-              "settings": {
-                "pieceName": "@activepieces/piece-http",
-                "actionName": "send_request",
-                "pieceVersion": "0.11.10",
-                "sampleData": {},
-                "input": {
-                  "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/leads?mobile_e164=eq.{{trigger['output']['body']['senderIdentifier']}}",
-                  "method": "PATCH",
-                  "headers": {
-                    "Content-Type": "application/json",
-                    "apikey": "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
-                    "Authorization": "Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
-                    "Prefer": "return=minimal"
-                  },
-                  "authType": "NONE",
-                  "body_type": "json",
-                  "body": {
-                    "data": {
-                      "opted_out": true
-                    }
-                  },
-                  "use_proxy": false,
-                  "followRedirects": false,
-                  "response_is_binary": false,
-                  "failureMode": "continue_none",
-                  "authFields": {},
-                  "queryParams": {},
-                  "proxy_settings": {}
-                },
-                "propertySettings": {
-                  "url": {
-                    "type": "MANUAL"
-                  },
-                  "method": {
-                    "type": "MANUAL"
-                  },
-                  "headers": {
-                    "type": "MANUAL"
-                  },
-                  "timeout": {
-                    "type": "MANUAL"
-                  },
-                  "authType": {
-                    "type": "MANUAL"
-                  },
-                  "body_type": {
-                    "type": "MANUAL"
-                  },
-                  "use_proxy": {
-                    "type": "MANUAL"
-                  },
-                  "followRedirects": {
-                    "type": "MANUAL"
-                  },
-                  "response_is_binary": {
-                    "type": "MANUAL"
-                  },
-                  "failureMode": {
-                    "type": "MANUAL"
-                  },
-                  "body": {
-                    "type": "MANUAL",
-                    "schema": {
+              },
+              {
+                "name": "mark_opted_out",
+                "skip": false,
+                "type": "PIECE",
+                "valid": true,
+                "displayName": "Store: mark opted out",
+                "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+                "settings": {
+                  "pieceName": "@activepieces/piece-http",
+                  "actionName": "send_request",
+                  "pieceVersion": "0.11.10",
+                  "sampleData": {},
+                  "input": {
+                    "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/leads?mobile_e164=eq.{{prep_inbound['output']['mobile']}}",
+                    "method": "PATCH",
+                    "headers": {
+                      "Content-Type": "application/json",
+                      "apikey": "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
+                      "Authorization": "Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
+                      "Prefer": "return=minimal"
+                    },
+                    "authType": "NONE",
+                    "body_type": "json",
+                    "body": {
                       "data": {
-                        "type": "JSON",
-                        "required": true,
-                        "displayName": "JSON Body"
+                        "opted_out": true
                       }
+                    },
+                    "use_proxy": false,
+                    "followRedirects": false,
+                    "response_is_binary": false,
+                    "failureMode": "continue_none",
+                    "authFields": {},
+                    "queryParams": {},
+                    "proxy_settings": {}
+                  },
+                  "propertySettings": {
+                    "url": {
+                      "type": "MANUAL"
+                    },
+                    "method": {
+                      "type": "MANUAL"
+                    },
+                    "headers": {
+                      "type": "MANUAL"
+                    },
+                    "timeout": {
+                      "type": "MANUAL"
+                    },
+                    "authType": {
+                      "type": "MANUAL"
+                    },
+                    "body_type": {
+                      "type": "MANUAL"
+                    },
+                    "use_proxy": {
+                      "type": "MANUAL"
+                    },
+                    "followRedirects": {
+                      "type": "MANUAL"
+                    },
+                    "response_is_binary": {
+                      "type": "MANUAL"
+                    },
+                    "failureMode": {
+                      "type": "MANUAL"
+                    },
+                    "body": {
+                      "type": "MANUAL",
+                      "schema": {
+                        "data": {
+                          "type": "JSON",
+                          "required": true,
+                          "displayName": "JSON Body"
+                        }
+                      }
+                    },
+                    "authFields": {
+                      "type": "MANUAL",
+                      "schema": {}
+                    },
+                    "queryParams": {
+                      "type": "MANUAL"
+                    },
+                    "proxy_settings": {
+                      "type": "MANUAL",
+                      "schema": {}
                     }
                   },
-                  "authFields": {
-                    "type": "MANUAL",
-                    "schema": {}
-                  },
-                  "queryParams": {
-                    "type": "MANUAL"
-                  },
-                  "proxy_settings": {
-                    "type": "MANUAL",
-                    "schema": {}
-                  }
-                },
-                "errorHandlingOptions": {
-                  "retryOnFailure": {
-                    "value": false
-                  },
-                  "continueOnFailure": {
-                    "value": false
+                  "errorHandlingOptions": {
+                    "retryOnFailure": {
+                      "value": false
+                    },
+                    "continueOnFailure": {
+                      "value": false
+                    }
                   }
                 }
-              }
-            },
-            null
-          ],
-          "settings": {
-            "branches": [
-              {
-                "branchName": "message received",
-                "branchType": "CONDITION",
-                "conditions": [
-                  [
-                    {
-                      "operator": "TEXT_EXACTLY_MATCHES",
-                      "firstValue": "{{trigger['output']['body']['eventType']}}",
-                      "secondValue": "message.received",
-                      "caseSensitive": false
-                    }
-                  ]
-                ]
               },
-              {
-                "branchName": "contact opted out",
-                "branchType": "CONDITION",
-                "conditions": [
-                  [
-                    {
-                      "operator": "TEXT_EXACTLY_MATCHES",
-                      "firstValue": "{{trigger['output']['body']['eventType']}}",
-                      "secondValue": "contact.opted_out",
-                      "caseSensitive": false
-                    }
-                  ]
-                ]
-              },
-              {
-                "branchName": "Otherwise",
-                "branchType": "FALLBACK"
-              }
+              null
             ],
-            "sampleData": {},
-            "executionType": "EXECUTE_FIRST_MATCH"
+            "settings": {
+              "branches": [
+                {
+                  "branchName": "message received",
+                  "branchType": "CONDITION",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "TEXT_EXACTLY_MATCHES",
+                        "firstValue": "{{prep_inbound['output']['eventType']}}",
+                        "secondValue": "message.received",
+                        "caseSensitive": false
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchName": "contact opted out",
+                  "branchType": "CONDITION",
+                  "conditions": [
+                    [
+                      {
+                        "operator": "TEXT_EXACTLY_MATCHES",
+                        "firstValue": "{{prep_inbound['output']['eventType']}}",
+                        "secondValue": "contact.opted_out",
+                        "caseSensitive": false
+                      }
+                    ]
+                  ]
+                },
+                {
+                  "branchName": "Otherwise",
+                  "branchType": "FALLBACK"
+                }
+              ],
+              "sampleData": {},
+              "executionType": "EXECUTE_FIRST_MATCH"
+            }
           }
         }
       },

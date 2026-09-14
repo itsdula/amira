@@ -1,17 +1,23 @@
 export const code = async (inputs) => {
-  const mt = String(inputs.messageType ?? "text");
-  let text = String(inputs.text ?? "").trim();
+  const pick = (v) => (v && typeof v === "object" && !Array.isArray(v)) ? v : null;
+  const e = pick(inputs.evt) || pick(inputs.evtAlt) || {};
+  const mt = String(e.messageType ?? "text");
+  let text = String(e.text ?? "").trim();
   if (!text) text = "[" + mt + " message]";
+  const mobile = String(e.senderIdentifier ?? "");
   return {
+    eventType: String(e.eventType ?? ""),
+    mobile,
+    text,
     body: {
-      p_mobile: String(inputs.mobile ?? ""),
+      p_mobile: mobile,
       p_text: text,
       p_channel: "whatsapp",
       p_meta: {
-        event_id: inputs.eventId ?? null,
-        message_id: inputs.messageId ?? null,
+        event_id: e.eventId ?? null,
+        message_id: e.messageId ?? null,
         message_type: mt,
-        window_state: inputs.windowState ?? null,
+        window_state: e.windowState ?? null,
       },
     },
   };

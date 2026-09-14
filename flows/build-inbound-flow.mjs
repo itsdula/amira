@@ -1,19 +1,30 @@
 #!/usr/bin/env node
 // Deterministic builder for the Amira inbound WhatsApp flow.
-// Emits flows/amira-inbound-whatsapp.json (AgenticFlow import, schema 22).
+// Emits flows/amira-inbound-whatsapp.json (SHARED template wrapper, schema 22).
 // Rebuild after edits:  node flows/build-inbound-flow.mjs
+// Validate:             python3 flows/validate_flow.py flows/amira-inbound-whatsapp.json
+//
+// Import rules follow AC-Group2/agenticflow-studio → activepieces-flow-builder
+// ("every rule was learned from a real import failure"):
+//   - SHARED wrapper with flows[] + metadata.externalId
+//   - FIRST PIECE IS A MANUAL TRIGGER (webhook-first flows import with an empty
+//     trigger) — swap to Catch Webhook in the UI after import, then publish
+//   - every step (CODE and ROUTER too): lastUpdatedDate + settings.sampleData
+//     + settings.propertySettings (one MANUAL entry per input key)
+//   - code runs in isolated-vm: pure JS only, no fetch/npm/Node APIs
 
 import { writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const SUPABASE_URL = "https://tmewbswbhnmuuomdfewq.supabase.co";
 const AF_URL = "https://api.ae.agenticflow.studio";
 const CHANNEL_ID = "160e6c61-174a-4de1-b338-ce2e27666c37";
-// Match the versions that demonstrably import/export in THIS workspace
-// (whatsapp-messaging.json, whatsapp-send-template.json). 0.11.19 was rejected.
+// Versions verified to import cleanly (AC-Group2 pieces.md, July 2026).
 const HTTP_VERSION = "0.11.10";
-const WEBHOOK_VERSION = "0.1.36";
+const MANUAL_TRIGGER_VERSION = "0.0.5";
+const STAMP = "2026-01-01T00:00:00.000Z";
 
 const SERVICE_KEY_VAR = "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}";
 const AF_KEY_VAR = "{{variables['AgenticFlow_API_KEY']}}";
@@ -49,6 +60,7 @@ function httpNode(name, displayName, { url, method = "POST", headers, bodyData }
     type: "PIECE",
     valid: true,
     displayName,
+    lastUpdatedDate: STAMP,
     settings: {
       pieceName: "@activepieces/piece-http",
       actionName: "send_request",
@@ -96,9 +108,12 @@ function codeNode(name, displayName, input, code, nextAction = null) {
     type: "CODE",
     valid: true,
     displayName,
+    lastUpdatedDate: STAMP,
     settings: {
       input,
       sourceCode: { packageJson: "{}", code },
+      sampleData: {},
+      propertySettings: MANUAL(Object.keys(input)),
       errorHandlingOptions: errorDefaults,
     },
   };
@@ -113,6 +128,7 @@ function router(name, displayName, branches, children, nextAction = null) {
     type: "ROUTER",
     valid: true,
     displayName,
+    lastUpdatedDate: STAMP,
     children,
     settings: { branches, sampleData: {}, executionType: "EXECUTE_FIRST_MATCH" },
   };
@@ -142,19 +158,25 @@ const afHeaders = {
 // ---------------------------------------------------------------- code steps
 
 const prepInboundCode = `export const code = async (inputs) => {
-  const mt = String(inputs.messageType ?? "text");
-  let text = String(inputs.text ?? "").trim();
+  const pick = (v) => (v && typeof v === "object" && !Array.isArray(v)) ? v : null;
+  const e = pick(inputs.evt) || pick(inputs.evtAlt) || {};
+  const mt = String(e.messageType ?? "text");
+  let text = String(e.text ?? "").trim();
   if (!text) text = "[" + mt + " message]";
+  const mobile = String(e.senderIdentifier ?? "");
   return {
+    eventType: String(e.eventType ?? ""),
+    mobile,
+    text,
     body: {
-      p_mobile: String(inputs.mobile ?? ""),
+      p_mobile: mobile,
       p_text: text,
       p_channel: "whatsapp",
       p_meta: {
-        event_id: inputs.eventId ?? null,
-        message_id: inputs.messageId ?? null,
+        event_id: e.eventId ?? null,
+        message_id: e.messageId ?? null,
         message_type: mt,
-        window_state: inputs.windowState ?? null,
+        window_state: e.windowState ?? null,
       },
     },
   };
@@ -241,9 +263,12 @@ const buildConfirmCode = `export const code = async (inputs) => {
 `;
 
 // ---------------------------------------------------------------- refs
+// Only prep_inbound reads the trigger (dual ref: docs say trigger['body'],
+// the old workspace export said trigger['output']['body'] — code picks the
+// one that resolves). Everything downstream reads prep_inbound.
 
-const T = (path) => `{{trigger['output']['body']['${path}']}}`;
-const SENDER = T("senderIdentifier");
+const SENDER = "{{prep_inbound['output']['mobile']}}";
+const INBOUND_TEXT = "{{prep_inbound['output']['text']}}";
 
 // ---------------------------------------------------------------- ask_channel branch
 
@@ -290,7 +315,7 @@ const routeChoice = router("route_choice", "Choice made?", [
 
 const parseChannel = codeNode("parse_channel", "Parse channel reply", {
   pack: "{{store_inbound['output']['body']}}",
-  text: T("text"),
+  text: INBOUND_TEXT,
   mobile: SENDER,
 }, parseChannelCode, routeChoice);
 
@@ -328,7 +353,7 @@ const chatGenerate = httpNode("chat_generate", "Chat: generate reply", {
   bodyData: {
     channelId: CHANNEL_ID,
     threadKey: SENDER,
-    content: T("text"),
+    content: INBOUND_TEXT,
     assistantId: ASSISTANT_VAR,
   },
 }, sendReply);
@@ -347,15 +372,6 @@ const storeInbound = httpNode("store_inbound", "Store: record inbound", {
   bodyData: "{{prep_inbound['output']['body']}}",
 }, routeAction);
 
-const prepInbound = codeNode("prep_inbound", "Prepare record_inbound", {
-  mobile: SENDER,
-  text: T("text"),
-  messageType: T("messageType"),
-  eventId: T("eventId"),
-  messageId: T("messageId"),
-  windowState: T("windowState"),
-}, prepInboundCode, storeInbound);
-
 // ---------------------------------------------------------------- opt-out branch
 
 const markOptedOut = httpNode("mark_opted_out", "Store: mark opted out", {
@@ -365,48 +381,51 @@ const markOptedOut = httpNode("mark_opted_out", "Store: mark opted out", {
   bodyData: { opted_out: true },
 });
 
-// ---------------------------------------------------------------- trigger
+// ---------------------------------------------------------------- trigger chain
 
 const routeEvent = router("route_event", "Route on eventType", [
-  textMatch("message received", T("eventType"), "message.received"),
-  textMatch("contact opted out", T("eventType"), "contact.opted_out"),
+  textMatch("message received", "{{prep_inbound['output']['eventType']}}", "message.received"),
+  textMatch("contact opted out", "{{prep_inbound['output']['eventType']}}", "contact.opted_out"),
   fallback,
-], [prepInbound, markOptedOut, null]);
+], [storeInbound, markOptedOut, null]);
+
+const prepInbound = codeNode("prep_inbound", "Normalize webhook event", {
+  evt: "{{trigger['body']}}",
+  evtAlt: "{{trigger['output']['body']}}",
+}, prepInboundCode, routeEvent);
+
+const FLOW_NAME = "Amira Inbound WhatsApp";
 
 const flow = {
-  name: "Amira Inbound WhatsApp",
+  name: FLOW_NAME,
   type: "SHARED",
   summary: "Inbound WhatsApp handler: store first, then route on next_action.",
   description:
-    "Catch Webhook (channel webhookUrl) -> record_inbound (indexes the message, opens the 24h window, returns the lead pack) -> route: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
+    "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
   tags: ["whatsapp", "inbound", "store"],
   blogUrl: "",
-  metadata: {},
+  metadata: { externalId: createHash("md5").update(FLOW_NAME).digest("hex").slice(0, 21) },
   author: "amira",
   categories: [],
-  pieces: ["@activepieces/piece-webhook", "@activepieces/piece-http"],
+  pieces: ["@activepieces/piece-manual-trigger", "@activepieces/piece-http"],
   flows: [
     {
-      displayName: "Amira Inbound WhatsApp",
+      displayName: FLOW_NAME,
       trigger: {
         name: "trigger",
         valid: true,
-        displayName: "Catch Webhook",
+        displayName: "Manual Trigger",
         type: "PIECE_TRIGGER",
+        lastUpdatedDate: STAMP,
         settings: {
-          pieceName: "@activepieces/piece-webhook",
-          pieceVersion: WEBHOOK_VERSION,
-          triggerName: "catch_webhook",
-          input: { authType: "none", authFields: {} },
-          propertySettings: {
-            authType: { type: "MANUAL" },
-            authFields: { type: "MANUAL", schema: {} },
-            liveMarkdown: { type: "MANUAL" },
-            syncMarkdown: { type: "MANUAL" },
-            testMarkdown: { type: "MANUAL" },
-          },
+          sampleData: {},
+          propertySettings: { markdown: { type: "MANUAL" } },
+          pieceName: "@activepieces/piece-manual-trigger",
+          pieceVersion: MANUAL_TRIGGER_VERSION,
+          triggerName: "manual_trigger",
+          input: {},
         },
-        nextAction: routeEvent,
+        nextAction: prepInbound,
       },
       valid: true,
       schemaVersion: "22",
@@ -418,17 +437,10 @@ const flow = {
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-// Template-gallery wrapper (marketplace "SHARED" shape, like whatsapp-messaging.json).
+// SHARED template wrapper — the only format the importer accepts.
 const out = join(here, "amira-inbound-whatsapp.json");
 writeFileSync(out, JSON.stringify(flow, null, 2) + "\n");
 console.log("wrote", out);
-
-// Single-flow export shape — what the dashboard's Import Flow button expects:
-// the FlowVersion object itself, no flows[] wrapper. Use THIS file to import.
-const flowVersion = flow.flows[0];
-const outFlow = join(here, "amira-inbound-whatsapp.flow.json");
-writeFileSync(outFlow, JSON.stringify(flowVersion, null, 2) + "\n");
-console.log("wrote", outFlow);
 
 // Paste-ready Code node sources for manual rebuild (decoded Arabic).
 import { mkdirSync } from "node:fs";
