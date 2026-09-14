@@ -95,7 +95,7 @@
                 "settings": {
                   "pieceName": "@activepieces/piece-http",
                   "actionName": "send_request",
-                  "pieceVersion": "0.11.19",
+                  "pieceVersion": "0.11.10",
                   "sampleData": {},
                   "input": {
                     "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_inbound",
@@ -126,6 +126,9 @@
                       "type": "MANUAL"
                     },
                     "headers": {
+                      "type": "MANUAL"
+                    },
+                    "timeout": {
                       "type": "MANUAL"
                     },
                     "authType": {
@@ -225,7 +228,7 @@
                             "settings": {
                               "pieceName": "@activepieces/piece-http",
                               "actionName": "send_request",
-                              "pieceVersion": "0.11.19",
+                              "pieceVersion": "0.11.10",
                               "sampleData": {},
                               "input": {
                                 "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/set_channel_choice",
@@ -256,6 +259,9 @@
                                   "type": "MANUAL"
                                 },
                                 "headers": {
+                                  "type": "MANUAL"
+                                },
+                                "timeout": {
                                   "type": "MANUAL"
                                 },
                                 "authType": {
@@ -341,7 +347,7 @@
                                 "settings": {
                                   "pieceName": "@activepieces/piece-http",
                                   "actionName": "send_request",
-                                  "pieceVersion": "0.11.19",
+                                  "pieceVersion": "0.11.10",
                                   "sampleData": {},
                                   "input": {
                                     "url": "https://api.ae.agenticflow.studio/messaging/messages",
@@ -371,6 +377,9 @@
                                       "type": "MANUAL"
                                     },
                                     "headers": {
+                                      "type": "MANUAL"
+                                    },
+                                    "timeout": {
                                       "type": "MANUAL"
                                     },
                                     "authType": {
@@ -431,7 +440,7 @@
                                   "settings": {
                                     "pieceName": "@activepieces/piece-http",
                                     "actionName": "send_request",
-                                    "pieceVersion": "0.11.19",
+                                    "pieceVersion": "0.11.10",
                                     "sampleData": {},
                                     "input": {
                                       "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_outbound",
@@ -462,6 +471,9 @@
                                         "type": "MANUAL"
                                       },
                                       "headers": {
+                                        "type": "MANUAL"
+                                      },
+                                      "timeout": {
                                         "type": "MANUAL"
                                       },
                                       "authType": {
@@ -526,7 +538,7 @@
                             "settings": {
                               "pieceName": "@activepieces/piece-http",
                               "actionName": "send_request",
-                              "pieceVersion": "0.11.19",
+                              "pieceVersion": "0.11.10",
                               "sampleData": {},
                               "input": {
                                 "url": "https://api.ae.agenticflow.studio/messaging/messages",
@@ -556,6 +568,9 @@
                                   "type": "MANUAL"
                                 },
                                 "headers": {
+                                  "type": "MANUAL"
+                                },
+                                "timeout": {
                                   "type": "MANUAL"
                                 },
                                 "authType": {
@@ -616,7 +631,7 @@
                               "settings": {
                                 "pieceName": "@activepieces/piece-http",
                                 "actionName": "send_request",
-                                "pieceVersion": "0.11.19",
+                                "pieceVersion": "0.11.10",
                                 "sampleData": {},
                                 "input": {
                                   "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_outbound",
@@ -647,6 +662,9 @@
                                     "type": "MANUAL"
                                   },
                                   "headers": {
+                                    "type": "MANUAL"
+                                  },
+                                  "timeout": {
                                     "type": "MANUAL"
                                   },
                                   "authType": {
@@ -736,7 +754,7 @@
                       "settings": {
                         "pieceName": "@activepieces/piece-http",
                         "actionName": "send_request",
-                        "pieceVersion": "0.11.19",
+                        "pieceVersion": "0.11.10",
                         "sampleData": {},
                         "input": {
                           "url": "https://api.ae.agenticflow.studio/chat/message",
@@ -771,6 +789,9 @@
                             "type": "MANUAL"
                           },
                           "headers": {
+                            "type": "MANUAL"
+                          },
+                          "timeout": {
                             "type": "MANUAL"
                           },
                           "authType": {
@@ -831,7 +852,7 @@
                         "settings": {
                           "pieceName": "@activepieces/piece-http",
                           "actionName": "send_request",
-                          "pieceVersion": "0.11.19",
+                          "pieceVersion": "0.11.10",
                           "sampleData": {},
                           "input": {
                             "url": "https://api.ae.agenticflow.studio/messaging/messages",
@@ -869,6 +890,9 @@
                               "type": "MANUAL"
                             },
                             "headers": {
+                              "type": "MANUAL"
+                            },
+                            "timeout": {
                               "type": "MANUAL"
                             },
                             "authType": {
@@ -929,7 +953,7 @@
                           "settings": {
                             "pieceName": "@activepieces/piece-http",
                             "actionName": "send_request",
-                            "pieceVersion": "0.11.19",
+                            "pieceVersion": "0.11.10",
                             "sampleData": {},
                             "input": {
                               "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_outbound",
@@ -968,6 +992,9 @@
                                 "type": "MANUAL"
                               },
                               "headers": {
+                                "type": "MANUAL"
+                              },
+                              "timeout": {
                                 "type": "MANUAL"
                               },
                               "authType": {
@@ -1074,7 +1101,7 @@
               "settings": {
                 "pieceName": "@activepieces/piece-http",
                 "actionName": "send_request",
-                "pieceVersion": "0.11.19",
+                "pieceVersion": "0.11.10",
                 "sampleData": {},
                 "input": {
                   "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/leads?mobile_e164=eq.{{trigger['output']['body']['senderIdentifier']}}",
@@ -1108,6 +1135,9 @@
                     "type": "MANUAL"
                   },
                   "headers": {
+                    "type": "MANUAL"
+                  },
+                  "timeout": {
                     "type": "MANUAL"
                   },
                   "authType": {

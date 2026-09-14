@@ -10,7 +10,9 @@ import { fileURLToPath } from "node:url";
 const SUPABASE_URL = "https://tmewbswbhnmuuomdfewq.supabase.co";
 const AF_URL = "https://api.ae.agenticflow.studio";
 const CHANNEL_ID = "160e6c61-174a-4de1-b338-ce2e27666c37";
-const HTTP_VERSION = "0.11.19";
+// Match the versions that demonstrably import/export in THIS workspace
+// (whatsapp-messaging.json, whatsapp-send-template.json). 0.11.19 was rejected.
+const HTTP_VERSION = "0.11.10";
 const WEBHOOK_VERSION = "0.1.36";
 
 const SERVICE_KEY_VAR = "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}";
@@ -69,7 +71,7 @@ function httpNode(name, displayName, { url, method = "POST", headers, bodyData }
       },
       propertySettings: {
         ...MANUAL([
-          "url", "method", "headers", "authType", "body_type",
+          "url", "method", "headers", "timeout", "authType", "body_type",
           "use_proxy", "followRedirects", "response_is_binary", "failureMode",
         ]),
         body: {
@@ -414,6 +416,21 @@ const flow = {
   status: "PUBLISHED",
 };
 
-const out = join(dirname(fileURLToPath(import.meta.url)), "amira-inbound-whatsapp.json");
+const here = dirname(fileURLToPath(import.meta.url));
+const out = join(here, "amira-inbound-whatsapp.json");
 writeFileSync(out, JSON.stringify(flow, null, 2) + "\n");
 console.log("wrote", out);
+
+// Paste-ready Code node sources for manual rebuild (decoded Arabic).
+import { mkdirSync } from "node:fs";
+const decode = (s) =>
+  s.replace(/\\u([0-9a-fA-F]{4})/g, (_, h) => String.fromCharCode(parseInt(h, 16)));
+mkdirSync(join(here, "snippets"), { recursive: true });
+for (const [file, code] of [
+  ["prep_inbound.js", prepInboundCode],
+  ["parse_channel.js", parseChannelCode],
+  ["build_confirm.js", buildConfirmCode],
+]) {
+  writeFileSync(join(here, "snippets", file), decode(code));
+  console.log("wrote", join(here, "snippets", file));
+}

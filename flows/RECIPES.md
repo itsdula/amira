@@ -7,7 +7,9 @@ Two flows run the product today:
 | Send WA Template (init) | `whatsapp-send-template.json` (live in AF already) | Called with `{ name, phone, vehicle, language }` from the form webhook |
 | Amira Inbound WhatsApp | `flows/amira-inbound-whatsapp.json` | Catch Webhook — set as the WhatsApp channel `webhookUrl` |
 
-`flows/amira-inbound-whatsapp.json` is generated — edit `flows/build-inbound-flow.mjs` and rerun `node flows/build-inbound-flow.mjs`. Do not hand-edit the JSON.
+`flows/amira-inbound-whatsapp.json` is generated — edit `flows/build-inbound-flow.mjs` and rerun `node flows/build-inbound-flow.mjs`. Do not hand-edit the JSON. The generator also writes `flows/snippets/*.js` — the three Code node sources, paste-ready.
+
+**If import says invalid:** AF's importer is stricter than stock Activepieces and rejects piece versions the workspace doesn't have. The JSON is pinned to the versions from this workspace's own exports (`http 0.11.10`, `webhook 0.1.36`, schema `22`). If it still refuses, don't fight it — rebuild by hand from the node list below; the only typing is field values, and the Code bodies come from `flows/snippets/`. If the import partially works but nodes show invalid, open each red node: it is almost always an unresolved `{{variables['…']}}` (create the three variables first) or a piece-version prompt (accept the upgrade AF offers).
 
 ## Workspace variables (Dashboard → Variables)
 
@@ -41,11 +43,11 @@ Shape: `Catch Webhook → Router(eventType) → [message.received → Code prep_
 **Store HTTP headers** (every Supabase call): `Content-Type: application/json`, `apikey: {{variables['SUPABASE_SERVICE_ROLE_KEY']}}`, `Authorization: Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}`.
 **AF HTTP headers** (messaging/chat): `Content-Type: application/json`, `X-Api-Key: {{variables['AgenticFlow_API_KEY']}}`.
 
-1. **prep_inbound** (Code) — inputs `mobile={{trigger…senderIdentifier}}`, `text`, `messageType`, `eventId`, `messageId`, `windowState`. Returns `{ body: { p_mobile, p_text, p_channel: "whatsapp", p_meta } }` with a `[type message]` fallback for empty text. Copy the code from the generated JSON.
+1. **prep_inbound** (Code) — inputs `mobile={{trigger…senderIdentifier}}`, `text`, `messageType`, `eventId`, `messageId`, `windowState`. Returns `{ body: { p_mobile, p_text, p_channel: "whatsapp", p_meta } }` with a `[type message]` fallback for empty text. Code: `flows/snippets/prep_inbound.js`.
 2. **store_inbound** (HTTP POST) — `https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_inbound`, JSON Body `{{prep_inbound['output']['body']}}`. Response body is the lead pack.
 3. **route_action** (Router, first match) — on `{{store_inbound['output']['body']['next_action']}}`:
-   - `ask_channel` → **parse_channel** (Code): parses 1/2/3, WhatsApp/call/schedule keywords (AR + EN + Arabizi-ish), cancel words. Outputs `mode`, `choice`, `rpcBody`, `sendBody`, `logBody`.
-     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code: copy per choice + language; uses `call_window` from the RPC for the outside-hours variant) → **send_confirm** (HTTP POST `https://api.ae.agenticflow.studio/messaging/messages`, body `{{build_confirm['output']['sendBody']}}`) → **log_confirm** (HTTP POST `…/rpc/record_outbound`, body `{{build_confirm['output']['logBody']}}`).
+   - `ask_channel` → **parse_channel** (Code, `flows/snippets/parse_channel.js`): parses 1/2/3, WhatsApp/call/schedule keywords (AR + EN + Arabizi-ish), cancel words. Inputs: `pack={{store_inbound['output']['body']}}`, `text={{trigger…text}}`, `mobile={{trigger…senderIdentifier}}`. Outputs `mode`, `choice`, `rpcBody`, `sendBody`, `logBody`.
+     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code, `flows/snippets/build_confirm.js`; inputs `pack={{rpc_set_choice['output']['body']}}`, `choice={{parse_channel['output']['choice']}}`, `mobile` — copy per choice + language, outside-hours variant from `call_window`) → **send_confirm** (HTTP POST `https://api.ae.agenticflow.studio/messaging/messages`, body `{{build_confirm['output']['sendBody']}}`) → **log_confirm** (HTTP POST `…/rpc/record_outbound`, body `{{build_confirm['output']['logBody']}}`).
      - Otherwise → **send_question** (messaging send, body `{{parse_channel['output']['sendBody']}}` — the canned channel question or cancel ack) → **log_question** (`record_outbound`, `{{parse_channel['output']['logBody']}}`).
    - `gather` → **chat_generate** (HTTP POST `https://api.ae.agenticflow.studio/chat/message`, body `{ channelId: 160e6c61-…, threadKey: {{trigger…senderIdentifier}}, content: {{trigger…text}}, assistantId: {{variables['AMIRA_CHAT_ASSISTANT_ID']}} }`) → **send_reply** (messaging send, `text.body = {{chat_generate['output']['body']['data']['message']['content']}}`) → **log_reply** (`record_outbound`).
    - Otherwise (`stop_opted_out`, `already_closed`) → end. Nothing is sent.
