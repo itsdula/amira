@@ -417,9 +417,18 @@ const flow = {
 };
 
 const here = dirname(fileURLToPath(import.meta.url));
+
+// Template-gallery wrapper (marketplace "SHARED" shape, like whatsapp-messaging.json).
 const out = join(here, "amira-inbound-whatsapp.json");
 writeFileSync(out, JSON.stringify(flow, null, 2) + "\n");
 console.log("wrote", out);
+
+// Single-flow export shape — what the dashboard's Import Flow button expects:
+// the FlowVersion object itself, no flows[] wrapper. Use THIS file to import.
+const flowVersion = flow.flows[0];
+const outFlow = join(here, "amira-inbound-whatsapp.flow.json");
+writeFileSync(outFlow, JSON.stringify(flowVersion, null, 2) + "\n");
+console.log("wrote", outFlow);
 
 // Paste-ready Code node sources for manual rebuild (decoded Arabic).
 import { mkdirSync } from "node:fs";

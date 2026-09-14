@@ -5,11 +5,13 @@ Two flows run the product today:
 | Flow | File | Trigger |
 | --- | --- | --- |
 | Send WA Template (init) | `whatsapp-send-template.json` (live in AF already) | Called with `{ name, phone, vehicle, language }` from the form webhook |
-| Amira Inbound WhatsApp | `flows/amira-inbound-whatsapp.json` | Catch Webhook — set as the WhatsApp channel `webhookUrl` |
+| Amira Inbound WhatsApp | **`flows/amira-inbound-whatsapp.flow.json`** ← import this one | Catch Webhook — set as the WhatsApp channel `webhookUrl` |
+
+Two files, two formats. The dashboard **Import Flow** button takes the flow-version object directly (`displayName / trigger / valid / schemaVersion / notes`) — that is `…flow.json`. Importing the wrapped `…whatsapp.json` (template-gallery shape, `flows: [...]` like the reference exports) makes AF create the flow but leave an **empty trigger**, because it can't find `trigger` at the top level.
 
 `flows/amira-inbound-whatsapp.json` is generated — edit `flows/build-inbound-flow.mjs` and rerun `node flows/build-inbound-flow.mjs`. Do not hand-edit the JSON. The generator also writes `flows/snippets/*.js` — the three Code node sources, paste-ready.
 
-**If import says invalid:** AF's importer is stricter than stock Activepieces and rejects piece versions the workspace doesn't have. The JSON is pinned to the versions from this workspace's own exports (`http 0.11.10`, `webhook 0.1.36`, schema `22`). If it still refuses, don't fight it — rebuild by hand from the node list below; the only typing is field values, and the Code bodies come from `flows/snippets/`. If the import partially works but nodes show invalid, open each red node: it is almost always an unresolved `{{variables['…']}}` (create the three variables first) or a piece-version prompt (accept the upgrade AF offers).
+**If import says invalid:** piece versions are pinned to this workspace's own exports (`http 0.11.10`, `webhook 0.1.36`, schema `22`). Empty trigger after import = wrong wrapper (use `…flow.json`, see above). Red nodes after import = unresolved `{{variables['…']}}` (create the three variables first) or a piece-version prompt (accept the upgrade AF offers). If the importer still refuses outright, rebuild by hand from the node list below — the Code bodies are paste-ready in `flows/snippets/`. Best debug gift for the repo: export any working flow from *this* workspace's dashboard and commit it, so the generator can mirror AF's exact export shape.
 
 ## Workspace variables (Dashboard → Variables)
 
