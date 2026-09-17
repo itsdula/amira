@@ -27,10 +27,12 @@ function serviceKey(): string {
   throw new Error("Missing service role key");
 }
 
-// A project has two valid privileged key formats (legacy JWT + sb_secret_*).
-// Accept a caller presenting ANY runtime-known key — exact-matching one
-// format 401s callers holding the other, even though PostgREST accepts both.
-function validKeys(): Set<string> {
+// A project has multiple valid privileged key formats (legacy JWT +
+// sb_secret_*), and the Edge runtime env does not expose all of them.
+// String-matching env keys 401s valid callers, so verify FUNCTIONALLY:
+// probe PostgREST with the caller's own key against a locked table —
+// only a service-level key passes (anon/publishable have no grants).
+function envKeys(): Set<string> {
   const keys = new Set<string>();
   const legacy = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if (legacy) keys.add(legacy);
@@ -43,6 +45,25 @@ function validKeys(): Set<string> {
     } catch (_) { /* malformed env — fall through to legacy only */ }
   }
   return keys;
+}
+
+const keyVerdicts = new Map<string, boolean>();
+
+async function isPrivileged(k: string): Promise<boolean> {
+  if (!k) return false;
+  if (envKeys().has(k)) return true; // fast path, no probe
+  const cached = keyVerdicts.get(k);
+  if (cached !== undefined) return cached;
+  try {
+    const res = await fetch(
+      `${Deno.env.get("SUPABASE_URL")}/rest/v1/leads?select=id&limit=1`,
+      { method: "HEAD", headers: { apikey: k, Authorization: `Bearer ${k}` } },
+    );
+    keyVerdicts.set(k, res.ok);
+    return res.ok;
+  } catch (_) {
+    return false;
+  }
 }
 
 function json(status: number, body: unknown) {
@@ -301,10 +322,9 @@ Deno.serve(async (req) => {
   const t0 = performance.now();
   if (req.method !== "POST") return json(405, { error: "POST only" });
 
-  const keys = validKeys();
   const bearer = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
   const apikey = req.headers.get("apikey") ?? "";
-  if (!keys.has(bearer) && !keys.has(apikey)) {
+  if (!(await isPrivileged(apikey)) && !(await isPrivileged(bearer))) {
     return json(401, { error: "unauthorized" });
   }
   const key = serviceKey();
