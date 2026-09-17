@@ -1,84 +1,140 @@
-# Amira — bilingual WhatsApp + voice assistant (Changan KSA)
+# Amira — bilingual WhatsApp + voice assistant for KSA automotive retail
 
-Qualifies "request a call" leads for Changan Saudi Arabia over WhatsApp and outbound voice, in Najdi Arabic and English, on AgenticFlow with a Supabase lead store. Built against the practical-assessment brief in `requirements/`.
+Amira qualifies Changan Saudi Arabia leads over WhatsApp and phone calls, in
+Najdi Arabic or English: channel choice → vehicle → payment → colours → order
+gate → accessories → timing → close. Built as small services around one shared
+lead store, not one giant flow.
 
-Live form: [itsdula.github.io/amira](https://itsdula.github.io/amira/) (source: [github.com/itsdula/amira](https://github.com/itsdula/amira)).
+**Spec (source of truth):** `requirements/Practical assessment — bilingual WhatsApp + voice assistant for KSA automotive retail.md`
+and the data contract `requirements/store-micro-context.md`.
+**Agent onboarding:** `AGENT-HANDOFF.md`. **Concerns / bugs:** file them in `tickets/`.
 
-## How it runs
+## How it runs (30 seconds)
 
 ```
-form (web/) ──POST──▶ Edge Function request-call
-                        │  ingest_form_submission()          Supabase (store)
-                        │  → leads / submissions / facts     leads · submissions · facts
-                        └─▶ AF init flow ──▶ WA template     step_contexts · messages
-                                                             RPCs: get_lead_pack, record_inbound,
-customer replies                                             set_channel_choice, record_outbound,
-  │                                                          upsert_fact, ingest_form_submission
-  ▼
-WA channel webhookUrl ──▶ AF inbound flow
-  1. record_inbound()   — index message first, open 24h window, get lead pack
-  2. route next_action  — ask_channel (deterministic) | gather (assistant) | stop
-  3. send + record_outbound()
+Form (web/) ──► request-call fn ──► ingest_form_submission ──► WA template (AF init flow)
+Customer replies on WhatsApp ──► AF inbound flow ──► record_inbound (store first)
+   ├─ keyword channel choice ──► set_channel_choice ──► confirm text ──► dial if call_now
+   └─ anything semantic ──────► inbound-brain fn: model → validate actions → write store → reply
+"Call now" (in 09:00–21:00 Riyadh) ──► POST /call ──► Voice Assistant rings the customer
+Call ends ──► AF end-of-call report ──► voice-hub fn: transcript + validated facts → store
 ```
 
-Three services, kept separate on purpose: **init** (form → template), **inbound** (everything the customer sends), **ghost/reschedule** (scheduler → follow-up template; not built yet). One store row per phone is the shared memory for WhatsApp *and* voice — requirement D.
+Two LLM surfaces, both tuned **only** in the AgenticFlow dashboard system
+messages (each prompt is split "tune freely" / "machine contract — don't
+edit"): **WhatsApp Assistant** (`8ef58e44-…`, drives `inbound-brain`) and
+**Voice Assistant** (`bb7401d6-…`, realtime calls). The Edge Functions inject
+per-turn state (`[CONTEXT]`, call variables), never style.
 
-## Repo layout
+## Repo map — every folder and file
 
-| Path | What |
+### Root
+
+| File | What it is |
 | --- | --- |
-| `requirements/` | The brief + the store/data contract (`store-micro-context.md`) |
-| `supabase/` | Migrations (schema + RPCs) and the `request-call` Edge Function |
-| `flows/` | AF flow JSONs, `build-inbound-flow.mjs` generator, node recipes, test samples |
-| `tools/catalogue/` | Changan KSA scraper → `out/catalogue.json` (10 models, 202 priced spare parts) |
-| `knowledge/` | KB sources uploaded to AF (`company.md`, `catalogue-vehicles.md`) |
-| `web/` | Form page — separate repo, GitHub Pages (ignored here; see `.gitignore`) |
-| `whatsapp-send-template.json` | Init template-send box (live in AF) |
-| `whatsapp-messaging.json`, `widget-simple.json` | Reference exports used to learn AF node shapes |
+| `README.md` | This file. |
+| `AGENT-HANDOFF.md` | Working context for the next AI agent: locked decisions, AF platform facts learned the hard way, built inventory, next work. Read before touching anything. |
+| `.env.example` | Documents every secret: local `.env` keys (AF API key/base URL, form webhook) and the Supabase Edge Function secrets (never in files). |
+| `.gitignore` | Ignores `.env`, `node_modules/`, `supabase/.temp/`, and `web/` (own repo). |
+| `.env` | Local secrets (untracked, never commit). |
 
-## Store
+### `requirements/` — the spec
 
-Supabase project `amira` (`tmewbswbhnmuuomdfewq`). Data API is closed (RLS, no anon grants); everything goes through service-role RPC calls — one round-trip per event, not four table reads. Contract, tables, and write rules: `requirements/store-micro-context.md`.
+| File | What it is |
+| --- | --- |
+| `Practical assessment — ….md` | The assessment brief (A–H requirements). The product definition. |
+| `store-micro-context.md` | The data contract: tables, RPCs, step/fact ownership, micro-context rules. Any process change lands here first. |
 
-Apply schema to a fresh project: `supabase db push` (or run `supabase/migrations/*.sql` in order).
+### `supabase/` — the store and the brains
 
-## AgenticFlow
+| Path | What it is |
+| --- | --- |
+| `config.toml` | Local CLI config; declares `verify_jwt=false` for the three functions (each does its own auth). |
+| `migrations/20260913090000_create_request_calls.sql` | First slice: raw form submissions table (kept for history/backfill). |
+| `migrations/20260914120000_lead_store.sql` | The lead store: `leads`, `submissions`, `facts`, `step_contexts`, `messages`, view `lead_latest_submission`, RPCs `record_inbound`, `get_lead_pack`, `upsert_fact`, `ingest_form_submission`, `lead_next_action`, `lead_pack_for`. RLS on everything; service-role only. |
+| `migrations/20260914160000_channel_choice_outbound.sql` | RPCs `set_channel_choice` (channel + 09:00–21:00 Riyadh clamp + `dial_now` flag) and `record_outbound` (log what we sent). |
+| `migrations/20260917210000_normalize_mobile.sql` | `normalize_mobile()` folded into every RPC — inbound `966…` becomes `+966…` before any constraint sees it. |
+| `functions/request-call/index.ts` | **Init service.** Receives the public form POST, calls `ingest_form_submission`, fires the AF template flow when consent allows. |
+| `functions/inbound-brain/index.ts` | **The WhatsApp brain.** `{pack, text}` → model (AF assistant first, OpenAI-compatible fallback, deterministic questions if neither) → `validateActions` → write store synchronously → reply. Also owns the **dialer**: a validated `call_now` choice inside hours triggers `POST /call`. Auth: functional service-key probe. Every turn writes a `brain_audit` row (provider, applied/rejected, latency). |
+| `functions/inbound-brain/ASSISTANT_PROMPT.md` | The WhatsApp Assistant's installed system prompt (tune/contract halves), assistant ids, recreate instructions. |
+| `functions/voice-hub/index.ts` | **Voice ingest.** Receives the assistant's end-of-call report (HMAC-verified), logs transcript+summary to `messages` (channel `voice`), writes `analysis.structuredData` facts through the same `checkFactValue` validation as chat, sets name+gender if new. |
+| `functions/voice-hub/VOICE_ASSISTANT.md` | The Voice Assistant's installed prompt, config table, extraction schema, dial-path explanation. |
+| `functions/_shared/brain-contract.ts` | The action contract: types, per-step fact allowlists (`FACTS_OWNED`), legal step transitions, catalogue-grounded value checks. Pure functions — the LLM proposes, this decides. |
+| `functions/_shared/catalogue.ts` | GENERATED from the scrape (`tools/catalogue/emit-module.mjs`). Models/grades/prices/colours + lookup helpers. Do not hand-edit. |
+| `functions/_shared/gender.ts` | `guessGender(name)` — list + suffix heuristics, honest `unknown`. |
 
-- WhatsApp channel `160e6c61-174a-4de1-b338-ce2e27666c37` (+49 681 93784711).
-- Knowledge base **Amira** (`c92002e3-d26a-46e7-b72c-3c3fbcae19c7`): company facts + vehicle catalogue summary. The full `catalogue.json` is deliberately *not* in the KB — spare-part prices must not leak into car quotes.
-- Import/wiring/test instructions: `flows/RECIPES.md`. Workspace variables required: `AgenticFlow_API_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, `AMIRA_CHAT_ASSISTANT_ID`.
+Deploys go through the Supabase MCP (`deploy_edge_function`) or CLI. Function
+secrets (dashboard → Edge Functions → Secrets): `AGENTICFLOW_API_KEY`,
+`BRAIN_AF_ASSISTANT_ID`, `VOICE_ASSISTANT_ID`, `VOICE_HUB_SECRET`
+(+ optional `BRAIN_API_KEY`/`BRAIN_MODEL`/`BRAIN_API_URL` fallback).
 
-## Fire the trigger (no form needed)
+### `flows/` — AgenticFlow automation
 
-```bash
-curl -X POST https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/request-call \
-  -H "Content-Type: application/json" \
-  -d '{"fullName":"Mohammed Alotaibi","mobileE164":"+9665XXXXXXXX","vehicle":"CS-35-PLUS","language":"en","consentWhatsapp":true}'
-```
+| Path | What it is |
+| --- | --- |
+| `build-inbound-flow.mjs` | Deterministic generator for the inbound flow JSON. Edit this, never the JSON. Bakes channel/assistant/phone-number ids. |
+| `amira-inbound-whatsapp.json` | GENERATED import file (SHARED wrapper, Manual-Trigger-first per AF import rules). Re-import after regeneration. |
+| `RECIPES.md` | Import steps, wiring, node-by-node rebuild recipes, mermaid diagram, test curls, reset-test-data SQL. Start here for anything flow-related. |
+| `validate_flow.py` | Vendored import validator (from the assessing team's repo). Run before delivering any flow file. |
+| `snippets/prep_inbound.js`, `parse_channel.js`, `build_confirm.js` | Paste-ready Code-node sources (Arabic decoded) for manual rebuilds. Generated. |
+| `samples/message-received.text-ar.json`, `.text-en.json`, `.button-confirm.json` | Inbound webhook test payloads (Arabic text, English "call me", template button tap). |
+| `samples/contact-opted-out.json` | Platform opt-out event payload. |
+| `samples/form-webhook.ar.json`, `.en.json` | What `request-call` POSTs to the init flow — paste into its test panel. |
 
-Sends reach real phones — use your own number. Flow-test payloads (paste instead of typing): `flows/samples/`.
+### `knowledge/` — RAG sources
 
-## Templates (Meta)
+| File | What it is |
+| --- | --- |
+| `company.md` | Company facts for the KB **Amira** (`c92002e3-…`). |
+| `catalogue-vehicles.md` | Vehicle summary for the KB — deliberately *not* the raw JSON, so spare-part prices can't leak into car quotes. |
 
-| Name | Category | Languages | State |
-| --- | --- | --- | --- |
-| `callback_request_confirm` | UTILITY | `en_US`, `ar` | confirm name/state in dashboard |
-| follow-up nudge (ghost) | UTILITY | `en_US`, `ar` | **not submitted — blocks ghost service** |
-| closing recap | UTILITY | `en_US`, `ar` | **not submitted — blocks out-of-window recap** |
+### `tools/` — build-time tooling
 
-## Catalogue
+| Path | What it is |
+| --- | --- |
+| `catalogue/scrape.mjs` + `lib/` | Polite scraper for changan-ksa.com (robots-aware, sitemap-driven). `README.md` inside explains the pass. |
+| `catalogue/out/catalogue.json` | The scraped catalogue — the single source of truth for prices. |
+| `catalogue/raw/2026-09-13/` | The raw fetched pages + fetch log from the scrape date (provenance for every quoted price). |
+| `catalogue/emit-module.mjs` | Regenerates `supabase/functions/_shared/catalogue.ts` from the JSON. |
+| `agenticflow-mcp/index.mjs` + `catalog.json` | Local MCP server wrapping the AgenticFlow API + docs (this is the `project-0-amira-agenticflow` MCP in Cursor). `generate-catalog.mjs` rebuilds the operations catalog. |
 
-```bash
-cd tools/catalogue && npm install && npm run scrape   # polite, rate-limited, raw pages saved
-```
+### `tickets/` — the ticketing system
 
-Grounding rule: every price/grade/colour the assistant says must exist in `out/catalogue.json`. Showroom option packs have no published price — the data says so; the assistant says so.
+File a concern, the next agent picks it up. `tickets/README.md` explains the
+workflow and carries the **routing map** (symptom → which component to look
+at); `tickets/TEMPLATE.md` is the form. One file per ticket, numbered.
 
-## Secrets
+### `.cursor/` — agent configuration
 
-None committed. `.env` is ignored (`.env.example` lists the keys). AF keys live in workspace variables; Supabase keys in Edge Function secrets. Rotate anything that ever leaked before pushing this repo anywhere public.
+| Path | What it is |
+| --- | --- |
+| `rules/confirmed-process-steps.mdc` | Locked process: services stay split, spec files are the source of truth. |
+| `rules/store-micro-context.mdc` | Data-contract rules every agent must follow (write-as-you-go, facts are coverage, no invented tools). |
+| `rules/tickets.mdc` | Points every agent session at `tickets/`. |
+| `skills/amira-create-wa-template-flow/` | Skill that generates WA template-send subflows (`SKILL.md`, flow template, input schema, generator script). |
+| `mcp.json` | Wires the local AgenticFlow MCP into Cursor. |
 
-## Status / gaps
+### `index.html` — the public form (GitHub Pages)
 
-Done: catalogue + KB, store schema + RPCs, form → template init path, inbound flow (import + wire pending).
-Not built: dialer (voice), ghost scheduler, close/recap service, fact extraction during gather, schedule-time capture, Najdi gate, evals, latency reporting. Tracked in `AGENT-HANDOFF.md`.
+The lead form, served by GitHub Pages straight from this repo's root. POSTs to
+the `request-call` function with the publishable key (intentional). The local
+`web/` folder is the old standalone checkout of the same page — gitignored;
+edit the root `index.html`.
+
+## Live runtime inventory (not in this repo)
+
+- **Supabase project** `amira` (`tmewbswbhnmuuomdfewq`, ap-south-1): the store + three Edge Functions.
+- **AgenticFlow workspace** (UAE region, `api.ae.agenticflow.studio`): WhatsApp channel `160e6c61-…` (+49 681 93784711), init template flow, imported inbound flow, KB **Amira**, assistants **WhatsApp Assistant** `8ef58e44-…` + **Voice Assistant** `bb7401d6-…`, phone number `a76efc61-…`.
+- **Meta templates**: `callback_request_confirm` (en_US / ar). Follow-up + closing recap templates not yet submitted.
+
+## Testing
+
+`flows/RECIPES.md` has the full loop: reset SQL (`truncate public.leads cascade`),
+sample payload curls, and the verification queries (`brain_audit` rows carry
+provider, applied/rejected actions, and latency per turn).
+
+## What's not built yet
+
+Ghost scheduler (re-engage silent leads, dial `preferred_call_at`), close
+service (recap + hot/cold handoff), Najdi register gate + eval replay, native
+WhatsApp tappable buttons. Current open items live in `tickets/`.

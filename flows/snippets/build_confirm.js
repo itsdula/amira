@@ -24,7 +24,32 @@ export const code = async (inputs) => {
   }
 
   const to = String(inputs.mobile ?? "");
+
+  // dial_now=true (call_now inside 09:00-21:00 Riyadh): the flow places the
+  // call itself on this deterministic path. The brain path dials in its
+  // executor instead - the two never overlap on one turn.
+  const facts = pack.facts || {};
+  const covered = Object.keys(facts)
+    .map((k) => k + "=" + (facts[k].declined ? "declined" : JSON.stringify(facts[k].value)))
+    .join(", ") || "none";
+  const customer = { number: to, externalId: lead.id };
+  if (lead.full_name) customer.name = lead.full_name;
+
   return {
+    dial: pack.dial_now === true ? "yes" : "no",
+    callBody: {
+      assistantId: "bb7401d6-b4ba-45e1-98b2-948a74448ed5",
+      phoneNumberId: "a76efc61-6055-4fd0-8943-d79e067cc2d4",
+      customer,
+      metadata: { lead_id: lead.id },
+      variables: {
+        customer_name: lead.full_name || "",
+        gender_form: lead.gender_form || "unknown",
+        language: lead.language || "ar",
+        vehicle: String((facts.vehicle || {}).value || ""),
+        covered_facts: covered,
+      },
+    },
     sendBody: { channelId: "160e6c61-174a-4de1-b338-ce2e27666c37", to, type: "text", text: { body: copy, previewUrl: false } },
     logBody: { p_mobile: to, p_text: copy, p_channel: "whatsapp", p_step: "channel", p_handler: "inbound", p_meta: { kind: "channel_" + choice } },
   };

@@ -1,0 +1,14 @@
+---
+description: Ticketing system — check tickets/ before starting work
+alwaysApply: true
+---
+
+# Tickets
+
+`tickets/` is the concern queue. Before starting any task, check for `status:
+open` / `in-progress` tickets relevant to the request. When Dula describes a
+problem in chat, triage it with the routing map in `tickets/README.md`
+(symptom → owning component), and file/update the ticket file as part of the
+work: status, root cause, component, fix commit. Evidence first: pull the
+lead's `messages` rows (`brain_audit`, `voice_call_report` meta kinds) before
+changing anything.

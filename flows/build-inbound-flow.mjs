@@ -21,6 +21,9 @@ import { fileURLToPath } from "node:url";
 const SUPABASE_URL = "https://tmewbswbhnmuuomdfewq.supabase.co";
 const AF_URL = "https://api.ae.agenticflow.studio";
 const CHANNEL_ID = "160e6c61-174a-4de1-b338-ce2e27666c37";
+// Voice slice (baked like CHANNEL_ID — regen the flow if these ever change).
+const VOICE_ASSISTANT_ID = "bb7401d6-b4ba-45e1-98b2-948a74448ed5";
+const VOICE_PHONE_NUMBER_ID = "a76efc61-6055-4fd0-8943-d79e067cc2d4";
 // Versions verified to import cleanly (AC-Group2 pieces.md, July 2026).
 const HTTP_VERSION = "0.11.10";
 const MANUAL_TRIGGER_VERSION = "0.0.5";
@@ -255,7 +258,32 @@ const buildConfirmCode = `export const code = async (inputs) => {
   }
 
   const to = String(inputs.mobile ?? "");
+
+  // dial_now=true (call_now inside 09:00-21:00 Riyadh): the flow places the
+  // call itself on this deterministic path. The brain path dials in its
+  // executor instead - the two never overlap on one turn.
+  const facts = pack.facts || {};
+  const covered = Object.keys(facts)
+    .map((k) => k + "=" + (facts[k].declined ? "declined" : JSON.stringify(facts[k].value)))
+    .join(", ") || "none";
+  const customer = { number: to, externalId: lead.id };
+  if (lead.full_name) customer.name = lead.full_name;
+
   return {
+    dial: pack.dial_now === true ? "yes" : "no",
+    callBody: {
+      assistantId: "${VOICE_ASSISTANT_ID}",
+      phoneNumberId: "${VOICE_PHONE_NUMBER_ID}",
+      customer,
+      metadata: { lead_id: lead.id },
+      variables: {
+        customer_name: lead.full_name || "",
+        gender_form: lead.gender_form || "unknown",
+        language: lead.language || "ar",
+        vehicle: String((facts.vehicle || {}).value || ""),
+        covered_facts: covered,
+      },
+    },
     sendBody: { channelId: "${CHANNEL_ID}", to, type: "text", text: { body: copy, previewUrl: false } },
     logBody: { p_mobile: to, p_text: copy, p_channel: "whatsapp", p_step: "channel", p_handler: "inbound", p_meta: { kind: "channel_" + choice } },
   };
@@ -319,11 +347,23 @@ const askBrain = httpNode("ask_brain", "Brain: semantic channel turn", {
   },
 }, sendAskReply);
 
+// Fast-path dialer: fires only when set_channel_choice said dial_now=true.
+const placeCall = httpNode("place_call", "Voice: place outbound call", {
+  url: `${AF_URL}/call`,
+  headers: afHeaders,
+  bodyData: "{{build_confirm['output']['callBody']}}",
+});
+
+const routeDial = router("route_dial", "Dial now?", [
+  textMatch("dial", "{{build_confirm['output']['dial']}}", "yes"),
+  fallback,
+], [placeCall, null]);
+
 const logConfirm = httpNode("log_confirm", "Store: log confirmation", {
   url: `${SUPABASE_URL}/rest/v1/rpc/record_outbound`,
   headers: storeHeaders,
   bodyData: "{{build_confirm['output']['logBody']}}",
-});
+}, routeDial);
 
 const sendConfirm = httpNode("send_confirm", "WA: choice confirmation", {
   url: `${AF_URL}/messaging/messages`,
@@ -436,7 +476,7 @@ const flow = {
   type: "SHARED",
   summary: "Inbound WhatsApp handler: store first, then route on next_action.",
   description:
-    "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (button/keyword fast path, inbound-brain for everything semantic), gather (inbound-brain), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY.",
+    "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (button/keyword fast path, inbound-brain for everything semantic), gather (inbound-brain), stop. Keyword call_now inside calling hours dials the Voice Assistant via POST /call (place_call node); the brain path dials from its executor. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY.",
   tags: ["whatsapp", "inbound", "store"],
   blogUrl: "",
   metadata: { externalId: createHash("md5").update(FLOW_NAME).digest("hex").slice(0, 21) },

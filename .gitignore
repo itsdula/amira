@@ -9,6 +9,6 @@ node_modules/
 # supabase CLI scratch
 supabase/.temp/
 
-# web page lives in its own repo (github.com/itsdula/amira).
-# To fold it into this repo: remove web/.git and delete this line.
+# Old standalone checkout of the form page. The canonical form is now
+# /index.html at the repo root (merged 2026-09-17); this folder is vestigial.
 web/

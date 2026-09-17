@@ -4,8 +4,13 @@ Two flows run the product today:
 
 | Flow | File | Trigger |
 | --- | --- | --- |
-| Send WA Template (init) | `whatsapp-send-template.json` (live in AF already) | Called with `{ name, phone, vehicle, language }` from the form webhook |
+| Send WA Template (init) | live in AF already (regenerate with `.cursor/skills/amira-create-wa-template-flow/` if ever lost) | Called with `{ name, phone, vehicle, language }` from the form webhook |
 | Amira Inbound WhatsApp | `flows/amira-inbound-whatsapp.json` | Imports with a **Manual Trigger** — swap to Catch Webhook in the UI after import |
+
+> Re-import needed (2026-09-17): the generated flow gained a dial branch
+> (`route_dial` → `place_call`) so the keyword fast path actually places the
+> call it promises. Import the fresh JSON, swap the trigger, re-point the
+> channel `webhookUrl`.
 
 Import rules come from the team's own skill repo ([AC-Group2/agenticflow-studio](https://github.com/AC-Group2/agenticflow-studio), `activepieces-flow-builder`): SHARED wrapper with `flows[]` + `metadata.externalId`, schema `22`, and **the imported first piece must be a Manual Trigger** — webhook-first flows import with an empty trigger (exactly what we saw). Every step, code and routers included, carries `lastUpdatedDate`, `sampleData`, and per-input `propertySettings`. Validate before importing:
 
@@ -77,9 +82,11 @@ flowchart TD
     rpc_set_choice["rpc_set_choice (HTTP)<br/>POST rpc/set_channel_choice<br/>set channel + hours clamp + fact"]
     %% build_confirm — confirmation copy per choice + language; call_window from the RPC
     %% picks the outside-hours variant.
-    build_confirm["build_confirm (CODE)<br/>confirmation copy per choice + language"]
+    build_confirm["build_confirm (CODE)<br/>confirmation copy per choice + language<br/>+ dial flag + POST /call body"]
     send_confirm["send_confirm (HTTP)<br/>POST /messaging/messages"]
     log_confirm["log_confirm (HTTP)<br/>POST rpc/record_outbound"]
+    route_dial{"route_dial (ROUTER)<br/>dial_now?"}
+    place_call["place_call (HTTP)<br/>POST /call — Voice Assistant<br/>rings the customer"]
     send_question["send_question (HTTP)<br/>canned cancel ack"]
     log_question["log_question (HTTP)<br/>POST rpc/record_outbound"]
     %% ask_brain — inbound-brain Edge Function: model → validate → write → reply.
@@ -104,7 +111,9 @@ flowchart TD
   route_action -->|"ask_channel"| parse_channel --> route_choice
   route_action -->|"gather"| gather_brain --> send_reply --> log_reply
   route_action -->|"stop_opted_out · already_closed"| endB((end — nothing sent))
-  route_choice -->|"set_choice"| rpc_set_choice --> build_confirm --> send_confirm --> log_confirm
+  route_choice -->|"set_choice"| rpc_set_choice --> build_confirm --> send_confirm --> log_confirm --> route_dial
+  route_dial -->|"dial = yes (call_now, in hours)"| place_call
+  route_dial -->|"otherwise"| endC((end))
   route_choice -->|"cancel"| send_question --> log_question
   route_choice -->|"no keyword hit"| ask_brain --> send_ask_reply --> log_ask_reply
 
@@ -115,8 +124,8 @@ flowchart TD
   classDef brainN fill:#fef9c3,stroke:#eab308,color:#713f12;
   class prep_inbound,parse_channel,build_confirm codeN;
   class store_inbound,rpc_set_choice,log_confirm,log_question,log_reply,log_ask_reply,mark_opted_out storeN;
-  class send_confirm,send_question,send_reply,send_ask_reply sendN;
-  class route_event,route_action,route_choice routerN;
+  class send_confirm,send_question,send_reply,send_ask_reply,place_call sendN;
+  class route_event,route_action,route_choice,route_dial routerN;
   class ask_brain,gather_brain brainN;
 ```
 
@@ -144,7 +153,7 @@ supabase secrets set BRAIN_AF_ASSISTANT_ID=8ef58e44-6de1-48ec-8d76-189e8595fd7f
 
 Fallback provider (only used when the AF pair is unset): any OpenAI-compatible endpoint via `BRAIN_API_KEY` (+ optional `BRAIN_MODEL`, `BRAIN_API_URL`).
 
-**Voice slice secrets** (brain v11 dials on call_now-in-hours; `voice-hub` receives the end-of-call report):
+**Voice slice secrets** (the brain dials on call_now-in-hours; `voice-hub` receives the end-of-call report):
 
 ```bash
 supabase secrets set VOICE_ASSISTANT_ID=bb7401d6-b4ba-45e1-98b2-948a74448ed5
@@ -187,7 +196,7 @@ Only `prep_inbound` reads the trigger; every later node reads `prep_inbound['out
 3. **store_inbound** (HTTP POST) — `https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_inbound`, JSON Body `{{prep_inbound['output']['body']}}`. Response body is the lead pack.
 4. **route_action** (Router, first match) — on `{{store_inbound['output']['body']['next_action']}}`:
    - `ask_channel` → **parse_channel** (Code, `flows/snippets/parse_channel.js`): fast path — 1/2/3, WhatsApp/call/schedule keywords (AR + EN + Arabizi-ish), cancel words. Inputs: `pack={{store_inbound['output']['body']}}`, `text={{prep_inbound['output']['text']}}`, `mobile={{prep_inbound['output']['mobile']}}`. Outputs `mode` (`set_choice` \| `cancel` \| `ask`), `choice`, `rpcBody`, `sendBody`, `logBody`.
-     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code, `flows/snippets/build_confirm.js`) → **send_confirm** (messaging send) → **log_confirm** (`record_outbound`).
+     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code, `flows/snippets/build_confirm.js`; also emits `dial` yes/no + the ready `callBody`) → **send_confirm** (messaging send) → **log_confirm** (`record_outbound`) → **route_dial** (Router on `{{build_confirm['output']['dial']}}` = `yes`) → **place_call** (HTTP POST `https://api.ae.agenticflow.studio/call`, AF headers, JSON Body `{{build_confirm['output']['callBody']}}` — assistant + phone number ids are baked into the generated body).
      - `mode == cancel` → **send_question** (canned cancel ack, `{{parse_channel['output']['sendBody']}}`) → **log_question** (`record_outbound`).
      - Otherwise (no keyword hit — off-topic, essays, implied choices, missed opt-outs) → **ask_brain** (HTTP POST `…/functions/v1/inbound-brain`, store headers, body `{ pack: {{store_inbound…body}}, text, message_id }`) → **send_ask_reply** (messaging send, `text.body = {{ask_brain['output']['body']['reply']}}`) → **log_ask_reply** (`record_outbound`).
    - `gather` → **gather_brain** (HTTP POST `…/functions/v1/inbound-brain`, same body) → **send_reply** (messaging send, `text.body = {{gather_brain['output']['body']['reply']}}`) → **log_reply** (`record_outbound`).
@@ -201,4 +210,5 @@ No `can-send` call on this path: the customer just messaged us, so the 24h windo
 - The model never runs before `record_inbound` — the inbound text is indexed first, per the store contract.
 - Deterministic floors stay outside the model: opt-out regex + platform events, 24h window, hours clamp, channel fast path. The brain decides meaning; the executor validates; the store is written before the reply leaves the function.
 - Store round-trips per turn: 1 read+write (`record_inbound`) + brain writes (inside the function) + 1 log write.
-- Known gaps: schedule-a-call time capture is model-dependent (`preferred_call_at` still null unless the brain emits it); cancel ack doesn't close the lead; dialer doesn't exist, so `call_now` records the choice but no call fires; the brain's Najdi register needs the gate/evals before demo.
+- The dial fires exactly once per choice, from whichever path recorded it: keyword fast path → `place_call` node; semantic brain path → `placeCall` inside the brain's executor. The two paths never both run on one turn.
+- Known gaps: schedule-a-call time capture is model-dependent (`preferred_call_at` still null unless the brain emits it); cancel ack doesn't close the lead; scheduled/out-of-hours calls wait on the ghost scheduler (nothing dials at `preferred_call_at` yet); the brain's Najdi register needs the gate/evals before demo.

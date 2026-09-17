@@ -280,7 +280,14 @@ async function outboundPhoneNumberId(afKey: string): Promise<string | null> {
     const res = await fetch(`${AF_BASE}${path}`, { headers: { "X-Api-Key": afKey } });
     if (!res.ok) continue;
     const data = await res.json();
-    const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+    // Response shape: { data: { phoneNumbers: [...] } } (verified live).
+    const list = Array.isArray(data?.data?.phoneNumbers)
+      ? data.data.phoneNumbers
+      : Array.isArray(data?.data)
+        ? data.data
+        : Array.isArray(data)
+          ? data
+          : [];
     const first = list[0];
     if (first?.id) {
       cachedPhoneNumberId = String(first.id);
