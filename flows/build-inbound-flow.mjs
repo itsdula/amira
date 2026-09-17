@@ -162,7 +162,9 @@ const prepInboundCode = `export const code = async (inputs) => {
   const mt = String(e.messageType ?? "text");
   let text = String(e.text ?? "").trim();
   if (!text) text = "[" + mt + " message]";
-  const mobile = String(e.senderIdentifier ?? "");
+  // AF delivers senderIdentifier WITHOUT the leading + — normalize to E.164.
+  let mobile = String(e.senderIdentifier ?? "").trim();
+  if (mobile && !mobile.startsWith("+")) mobile = "+" + mobile;
   return {
     eventType: String(e.eventType ?? ""),
     mobile,
