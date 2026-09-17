@@ -2,7 +2,7 @@
 
 You are supporting **Dula** on **Amira**: a bilingual (AR/EN) WhatsApp + voice assistant for **KSA automotive retail (Changan)**. Toyota/ALJ is excluded. Workspace: `/Users/dula/Dev/amira`.
 
-Speak like a peer. He knows RAG vs per-lead memory; do not re-explain that. Do not dump secrets or `.env`. Do not run long-lived localhost servers that can list the repo (`.env` leak risk). The monorepo **is** a git repo now and will be pushed to GitHub — keep it credential-clean (`.gitignore` covers `.env`, `web/`). Do not use Vercel unless he asks. Do not invent later-step facts or new external tools without adding them to `requirements/store-micro-context.md`.
+Speak like a peer. He knows RAG vs per-lead memory; do not re-explain that. Do not dump secrets or `.env`. Do not run long-lived localhost servers that can list the repo (`.env` leak risk). The monorepo **is** on GitHub (public) — keep it credential-clean (`.gitignore` covers `.env`; never commit keys). Do not use Vercel unless he asks. Do not invent later-step facts or new external tools without adding them to `requirements/store-micro-context.md`.
 
 ## Locked process
 
@@ -61,7 +61,7 @@ Intended names (drift — confirm in dashboard before sending):
 
 ## Form + hosting
 
-- Public form is **`web/`** (own git repo, `https://github.com/itsdula/amira`, GitHub Pages). Not an Edge Function HTML (Supabase GET `text/html` rewrite). Not the Amira monorepo.
+- Public form is **`web/index.html`** in this repo, served by the GitHub Pages workflow → [itsdula.github.io/amira](https://itsdula.github.io/amira/). Not an Edge Function HTML (Supabase GET `text/html` rewrite).
 - POSTs JSON to `https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/request-call` with publishable key on the page (intentional).
 - Function upserts `request_calls`, then if consent POSTs to `FORM_WEBHOOK_URL` (AF catch/callable). Payload includes `fullName`, `mobileE164`, `vehicle`, `language`, `template`, `templateLanguage`. Test payloads to the box sometimes used `{ name, phone, vehicle, language }` — map carefully.
 - `verify_jwt = false` on that function. Do not fail the form 200 if the webhook fails.
@@ -99,11 +99,11 @@ Tables: `leads`, `submissions`, `facts`, `step_contexts`, `messages`. View: `lea
 ## Working agreements
 
 - Eraser is retired. Brief + `requirements/store-micro-context.md` are the spec.
-- The monorepo lives on GitHub at **itsdula/amira** (public — the same repo that serves the form via GitHub Pages; histories merged 2026-09-17). The live form is `/index.html` at the repo root. The local `web/` folder is the old standalone checkout of that same repo — still gitignored, edit the root `index.html` instead.
+- The monorepo lives on GitHub at **itsdula/amira** (public; histories merged 2026-09-17). The live form is `web/index.html`, deployed by `.github/workflows/pages.yml` → [itsdula.github.io/amira](https://itsdula.github.io/amira/). `web/` is a normal tracked folder (the old nested `.git` was removed).
 - **Check `tickets/` first**: Dula files concerns there; `tickets/README.md` has the symptom → component routing map. Update ticket status as you work.
 - Prefer exact AF node recipes over invalid import JSON; import is flaky.
 - Never commit API keys. Prefer workspace variables.
-- Do not start extra hosting. Push `web/` only when he asks.
+- Do not start extra hosting. The form deploys itself on push (Pages workflow).
 - Delete leftover deployed `request-call-form` in dashboard if it still exists (CLI undeploy needed login).
 - Treat Dula’s AF JSON as a **tool to learn**, not a finished product to nitpick against the brief unless he asks.
 

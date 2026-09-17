@@ -5,6 +5,7 @@ Najdi Arabic or English: channel choice → vehicle → payment → colours → 
 gate → accessories → timing → close. Built as small services around one shared
 lead store, not one giant flow.
 
+**Live lead form:** [itsdula.github.io/amira](https://itsdula.github.io/amira/)
 **Spec (source of truth):** `requirements/Practical assessment — bilingual WhatsApp + voice assistant for KSA automotive retail.md`
 and the data contract `requirements/store-micro-context.md`.
 **Agent onboarding:** `AGENT-HANDOFF.md`. **Concerns / bugs:** file them in `tickets/`.
@@ -114,12 +115,14 @@ at); `tickets/TEMPLATE.md` is the form. One file per ticket, numbered.
 | `skills/amira-create-wa-template-flow/` | Skill that generates WA template-send subflows (`SKILL.md`, flow template, input schema, generator script). |
 | `mcp.json` | Wires the local AgenticFlow MCP into Cursor. |
 
-### `index.html` — the public form (GitHub Pages)
+### `web/` — the public form (GitHub Pages)
 
-The lead form, served by GitHub Pages straight from this repo's root. POSTs to
-the `request-call` function with the publishable key (intentional). The local
-`web/` folder is the old standalone checkout of the same page — gitignored;
-edit the root `index.html`.
+**Live: [itsdula.github.io/amira](https://itsdula.github.io/amira/)**
+
+`web/index.html` is the lead form, deployed by `.github/workflows/pages.yml`
+on every push that touches `web/`. It POSTs to the `request-call` function
+with the publishable key (intentional). `web/README.md` is the folder's own
+pointer to the live site.
 
 ## Live runtime inventory (not in this repo)
 
