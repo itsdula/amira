@@ -135,15 +135,16 @@ Colors: blue = Code (isolated-vm JS), green = Supabase store call, orange = Agen
 
 Deployed at `…/functions/v1/inbound-brain`. The flow POSTs `{ pack, text, message_id }` with the service-key headers; the function runs model → validate → write state → return `{ reply, applied, rejected, fallback, latency }`. Source: `supabase/functions/inbound-brain/` + `_shared/brain-contract.ts` (action allowlists, transitions, catalogue-grounded value checks) + `_shared/catalogue.ts` (generated: `node tools/catalogue/emit-module.mjs`).
 
-Model secrets (Supabase → Edge Functions → Secrets):
+**Model provider — AF-first.** Primary: AgenticFlow `/chat/message` through a dedicated chat assistant (workspace models + billing, no personal key). Create the assistant per `supabase/functions/inbound-brain/ASSISTANT_PROMPT.md` (type chat, paste the prompt, optionally attach KB Amira), then set the secrets (Supabase → Edge Functions → Secrets):
 
 ```bash
-supabase secrets set BRAIN_API_KEY=sk-...            # required for real replies
-supabase secrets set BRAIN_MODEL=gpt-4o-mini         # optional, default shown
-supabase secrets set BRAIN_API_URL=...               # optional, any OpenAI-compatible /chat/completions
+supabase secrets set AGENTICFLOW_API_KEY=<workspace API key>
+supabase secrets set BRAIN_AF_ASSISTANT_ID=<the new assistant's id>
 ```
 
-Without `BRAIN_API_KEY` the function still answers — deterministic per-step fallback questions — so the flow is testable before the key exists. Every turn writes an audit row (`messages`, `meta.kind = brain_audit`) with applied/rejected actions and `model_ms`/`total_ms`.
+Fallback provider (only used when the AF pair is unset): any OpenAI-compatible endpoint via `BRAIN_API_KEY` (+ optional `BRAIN_MODEL`, `BRAIN_API_URL`).
+
+With neither configured the function still answers — deterministic per-step fallback questions — so the flow is testable before any model exists. Every turn writes an audit row (`messages`, `meta.kind = brain_audit`) with `provider`, applied/rejected actions, and `model_ms`/`total_ms`.
 
 ## Wire the inbound flow
 

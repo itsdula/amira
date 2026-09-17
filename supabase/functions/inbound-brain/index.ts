@@ -61,31 +61,37 @@ function catalogueSlice(pack: Pack): string {
     "Showroom extras (tint, PPF, nano) have NO published price - never invent one.";
 }
 
-function systemPrompt(pack: Pack, mode: "ask_channel" | "gather"): string {
+// Static rules — in AF mode these live on the assistant (ASSISTANT_PROMPT.md);
+// in OpenAI mode they are part of the system message.
+const STATIC_RULES = [
+  "You are Amira, a Riyadh showroom advisor for Changan Saudi Arabia, on WhatsApp.",
+  "If the lead language in [CONTEXT] is ar: reply in Najdi Arabic - colloquial but professional (showroom advisor, not MSA, not street). Latin letters or Arabizi from the customer do NOT switch you to English. If en: natural business English, no Arabic words mixed in.",
+  "Rules: ONE question per turn. Answer their question first, then ask yours. Never re-ask a fact listed as covered or DECLINED. Never narrate systems (no 'let me save that'). No compliments, no reacting to money. First price mention gets a one-time caveat that prices are preliminary; then quote bare.",
+  "Every figure must come from the catalogue data in [CONTEXT]. If it is not there, say you do not have it and move on.",
+  "Off-topic or hostile messages: one short graceful line, then return to your question. Never a dead end.",
+].join("\n");
+
+// Per-turn context — travels with every call in both modes.
+function dynamicContext(pack: Pack, mode: "ask_channel" | "gather"): string {
   const lead = pack.lead ?? {};
-  const ar = lead.language === "ar";
   const facts = Object.entries(pack.facts ?? {})
     .map(([k, v]) => `${k}=${v.declined ? "DECLINED" : JSON.stringify(v.value)}`)
     .join(", ") || "none";
 
   return [
-    "You are Amira, a Riyadh showroom advisor for Changan Saudi Arabia, on WhatsApp.",
-    ar
-      ? "Reply in Najdi Arabic - colloquial but professional (showroom advisor, not MSA, not street). Latin letters or Arabizi from the customer do NOT switch you to English."
-      : "Reply in natural business English. No Arabic words mixed in.",
-    "Rules: ONE question per turn. Answer their question first, then ask yours. Never re-ask a fact listed as covered or DECLINED. Never narrate systems (no 'let me save that'). No compliments, no reacting to money. First price mention gets a one-time caveat that prices are preliminary; then quote bare.",
-    "Every figure must come from the catalogue data below. If it is not there, say you do not have it and move on.",
+    `Lead language: ${lead.language ?? "ar"}.`,
     `Covered facts: ${facts}`,
     `Current step: ${lead.current_step}. Qualification order: vehicle -> payment -> colours -> order_gate -> accessories (only if order_now=true) -> timing -> close.`,
     mode === "ask_channel"
       ? "GOAL NOW: the customer has not picked a channel. Briefly handle whatever they said, then ask: continue here on WhatsApp, a call now, or schedule a call time? If their message already implies a choice, emit set_channel. If they clearly want no contact, emit opt_out."
       : "GOAL NOW: qualify. Ask only the next uncovered fact in order. Emit upsert_fact for every answer (including declines: declined=true), update_step_context with a short narrative, and advance_step when the current step's fact is covered.",
-    "Off-topic or hostile messages: one short graceful line, then return to your question. Never a dead end.",
     "--- CATALOGUE ---",
     catalogueSlice(pack),
-    "--- OUTPUT ---",
-    SCHEMA_HINT,
   ].join("\n");
+}
+
+function systemPrompt(pack: Pack, mode: "ask_channel" | "gather"): string {
+  return [STATIC_RULES, dynamicContext(pack, mode), "--- OUTPUT ---", SCHEMA_HINT].join("\n");
 }
 
 function transcript(pack: Pack & { recent_messages?: { direction: string; text: string }[] }, text: string): string {
@@ -120,9 +126,58 @@ function fallbackReply(pack: Pack, mode: "ask_channel" | "gather"): string {
 
 // ---------------------------------------------------------------- model
 
-async function callModel(system: string, user: string): Promise<{ out: BrainOutput | null; ms: number; error?: string }> {
+// Tolerant JSON extraction: harnesses sometimes wrap JSON in prose or fences.
+function extractJson(content: string): BrainOutput | null {
+  const start = content.indexOf("{");
+  const end = content.lastIndexOf("}");
+  if (start < 0 || end <= start) return null;
+  try {
+    const parsed = JSON.parse(content.slice(start, end + 1));
+    if (typeof parsed?.reply !== "string") return null;
+    return { reply: parsed.reply, actions: Array.isArray(parsed.actions) ? parsed.actions : [] };
+  } catch {
+    return null;
+  }
+}
+
+type ModelResult = { out: BrainOutput | null; ms: number; provider: string; error?: string };
+
+// Primary: AgenticFlow /chat/message — the workspace-provisioned models.
+// The static rules + JSON schema live on the assistant (see ASSISTANT_PROMPT.md);
+// per-turn context is prepended to the message content.
+async function callModelAF(dynamicContext: string, user: string, mobile: string): Promise<ModelResult | null> {
+  const afKey = Deno.env.get("AGENTICFLOW_API_KEY");
+  const assistantId = Deno.env.get("BRAIN_AF_ASSISTANT_ID");
+  if (!afKey || !assistantId) return null; // AF mode not configured
+  const channelId = "160e6c61-174a-4de1-b338-ce2e27666c37";
+
+  const t0 = performance.now();
+  try {
+    const res = await fetch("https://api.ae.agenticflow.studio/chat/message", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Api-Key": afKey },
+      body: JSON.stringify({
+        channelId,
+        threadKey: mobile,
+        assistantId,
+        content: `[CONTEXT]\n${dynamicContext}\n[CONVERSATION]\n${user}\n\nRespond with ONLY the JSON object.`,
+      }),
+    });
+    const ms = Math.round(performance.now() - t0);
+    if (!res.ok) return { out: null, ms, provider: "af", error: `af http ${res.status}: ${(await res.text()).slice(0, 200)}` };
+    const data = await res.json();
+    const content = data?.data?.message?.content ?? data?.message?.content ?? "";
+    const out = extractJson(String(content));
+    return { out, ms, provider: "af", error: out ? undefined : "schema: could not parse assistant JSON" };
+  } catch (err) {
+    return { out: null, ms: Math.round(performance.now() - t0), provider: "af", error: String(err).slice(0, 200) };
+  }
+}
+
+// Secondary: any OpenAI-compatible endpoint (BRAIN_API_KEY / BRAIN_API_URL / BRAIN_MODEL).
+async function callModelOpenAI(system: string, user: string): Promise<ModelResult> {
   const key = Deno.env.get("BRAIN_API_KEY");
-  if (!key) return { out: null, ms: 0, error: "BRAIN_API_KEY not set" };
+  if (!key) return { out: null, ms: 0, provider: "none", error: "no model configured (set BRAIN_AF_ASSISTANT_ID + AGENTICFLOW_API_KEY, or BRAIN_API_KEY)" };
   const url = Deno.env.get("BRAIN_API_URL") ?? "https://api.openai.com/v1/chat/completions";
   const model = Deno.env.get("BRAIN_MODEL") ?? "gpt-4o-mini";
 
@@ -143,15 +198,19 @@ async function callModel(system: string, user: string): Promise<{ out: BrainOutp
       }),
     });
     const ms = Math.round(performance.now() - t0);
-    if (!res.ok) return { out: null, ms, error: `model http ${res.status}: ${(await res.text()).slice(0, 200)}` };
+    if (!res.ok) return { out: null, ms, provider: "openai", error: `model http ${res.status}: ${(await res.text()).slice(0, 200)}` };
     const data = await res.json();
-    const content = data?.choices?.[0]?.message?.content ?? "";
-    const parsed = JSON.parse(content);
-    if (typeof parsed?.reply !== "string") return { out: null, ms, error: "schema: reply missing" };
-    return { out: { reply: parsed.reply, actions: Array.isArray(parsed.actions) ? parsed.actions : [] }, ms };
+    const out = extractJson(String(data?.choices?.[0]?.message?.content ?? ""));
+    return { out, ms, provider: "openai", error: out ? undefined : "schema: reply missing" };
   } catch (err) {
-    return { out: null, ms: Math.round(performance.now() - t0), error: String(err).slice(0, 200) };
+    return { out: null, ms: Math.round(performance.now() - t0), provider: "openai", error: String(err).slice(0, 200) };
   }
+}
+
+async function callModel(system: string, dynamicContext: string, user: string, mobile: string): Promise<ModelResult> {
+  const af = await callModelAF(dynamicContext, user, mobile);
+  if (af) return af; // AF configured: its result stands (retry handled by caller)
+  return await callModelOpenAI(system, user);
 }
 
 // ---------------------------------------------------------------- executor
@@ -246,9 +305,13 @@ Deno.serve(async (req) => {
   const db = createClient(Deno.env.get("SUPABASE_URL") ?? "", key);
 
   // model → validate → write → reply
-  let attempt = await callModel(systemPrompt(pack, mode), transcript(pack as Parameters<typeof transcript>[0], text));
-  if (!attempt.out && !attempt.error?.startsWith("BRAIN_API_KEY")) {
-    attempt = await callModel(systemPrompt(pack, mode), transcript(pack as Parameters<typeof transcript>[0], text));
+  const system = systemPrompt(pack, mode);
+  const context = dynamicContext(pack, mode);
+  const convo = transcript(pack as Parameters<typeof transcript>[0], text);
+  const mobile = pack.lead.mobile_e164 ?? "";
+  let attempt = await callModel(system, context, convo, mobile);
+  if (!attempt.out && !attempt.error?.startsWith("no model configured")) {
+    attempt = await callModel(system, context, convo, mobile);
   }
 
   let reply: string;
@@ -284,7 +347,7 @@ Deno.serve(async (req) => {
     lang: pack.lead.language ?? null,
     step: pack.lead.current_step ?? null,
     handler: "inbound",
-    meta: { kind: "brain_audit", mode, applied, rejected, fallback, model_ms: attempt.ms, total_ms: totalMs, model_error: attempt.error ?? null },
+    meta: { kind: "brain_audit", mode, applied, rejected, fallback, provider: attempt.provider, model_ms: attempt.ms, total_ms: totalMs, model_error: attempt.error ?? null },
   });
 
   return json(200, {
