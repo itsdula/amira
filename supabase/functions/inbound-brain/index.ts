@@ -27,6 +27,24 @@ function serviceKey(): string {
   throw new Error("Missing service role key");
 }
 
+// A project has two valid privileged key formats (legacy JWT + sb_secret_*).
+// Accept a caller presenting ANY runtime-known key — exact-matching one
+// format 401s callers holding the other, even though PostgREST accepts both.
+function validKeys(): Set<string> {
+  const keys = new Set<string>();
+  const legacy = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (legacy) keys.add(legacy);
+  const raw = Deno.env.get("SUPABASE_SECRET_KEYS");
+  if (raw) {
+    try {
+      for (const v of Object.values(JSON.parse(raw))) {
+        if (typeof v === "string" && v) keys.add(v);
+      }
+    } catch (_) { /* malformed env — fall through to legacy only */ }
+  }
+  return keys;
+}
+
 function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
     status,
@@ -283,12 +301,13 @@ Deno.serve(async (req) => {
   const t0 = performance.now();
   if (req.method !== "POST") return json(405, { error: "POST only" });
 
-  const key = serviceKey();
-  const auth = req.headers.get("authorization") ?? "";
+  const keys = validKeys();
+  const bearer = (req.headers.get("authorization") ?? "").replace(/^Bearer\s+/i, "");
   const apikey = req.headers.get("apikey") ?? "";
-  if (auth !== `Bearer ${key}` && apikey !== key) {
+  if (!keys.has(bearer) && !keys.has(apikey)) {
     return json(401, { error: "unauthorized" });
   }
+  const key = serviceKey();
 
   let body: { pack?: Pack; text?: string; message_id?: string | null };
   try {
