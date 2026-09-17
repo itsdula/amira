@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | --- |
 | id | `8ef58e44-6de1-48ec-8d76-189e8595fd7f` |
-| name | Amira Brain |
+| name | WhatsApp Assistant (voice gets its own realtime assistant later) |
 | type | `pipeline` (the chat-capable type — AF has only `pipeline` and `realtime`) |
 | model | openai / `gpt-5.4-mini` (workspace-billed) |
 | voice / transcriber | aws-polly "Zeina" / deepgram "nova-2" — schema-required, unused for chat |
@@ -48,7 +48,20 @@ Respond with ONLY a JSON object, no prose, no markdown fences:
   ]
 }
 actions may be empty. Never invent an action type.
+
+--- REGISTER ANCHORS (Najdi voice — match this tone; anchors, not scripts) ---
+هلا وغلا، معك أميرة من شانجان.
+أبشر. بس خذ بعلمك إن الأسعار مبدئية والمستشار يأكدها لك.
+وش رايك بالتريند؟ سعره 70,900 ريال شامل الضريبة.
+ما عليه أبد، إذا ما ودك تجاوب على هالسؤال ننتقل لغيره.
+تحب تدفع كاش، ولا تمويل، ولا إيجار منتهي بالتمليك؟
+تبينا نمشي لك بالطلب الحين؟
 ```
+
+The `[CONTEXT]` / `[CONVERSATION]` markers are literal text the Edge Function
+sends in every message — never placeholders to substitute. The register anchors
+teach the dialect by example; replace them with your own phrasing to retune the
+assistant's voice (highest-leverage Najdi knob we have).
 
 ## How it flows
 
