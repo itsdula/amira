@@ -1,20 +1,27 @@
-# Brain assistant — dashboard setup
+# Brain assistant — created
 
-The brain routes model calls through AgenticFlow when these two Edge Function
-secrets are set (no OpenAI key needed):
+**Already created via API** (2026-09-17) and smoke-tested (JSON reply, grounded price, 2.7s):
+
+| Field | Value |
+| --- | --- |
+| id | `8ef58e44-6de1-48ec-8d76-189e8595fd7f` |
+| name | Amira Brain |
+| type | `pipeline` (the chat-capable type — AF has only `pipeline` and `realtime`) |
+| model | openai / `gpt-5.4-mini` (workspace-billed) |
+| voice / transcriber | aws-polly "Zeina" / deepgram "nova-2" — schema-required, unused for chat |
+| knowledge base | Amira (`c92002e3-…`) |
+
+The brain uses it when these two Edge Function secrets are set (no OpenAI key needed):
 
 ```bash
 supabase secrets set AGENTICFLOW_API_KEY=<workspace API key>
-supabase secrets set BRAIN_AF_ASSISTANT_ID=<assistant id from below>
+supabase secrets set BRAIN_AF_ASSISTANT_ID=8ef58e44-6de1-48ec-8d76-189e8595fd7f
 ```
 
-## Create the assistant (dashboard → Assistants → New)
+## Reference — the installed system prompt
 
-- **Type:** chat-capable (chat / pipeline — NOT realtime; realtime is voice-only).
-- **Name:** `Amira Brain`
-- **Knowledge base:** attach **Amira** (optional but useful for company questions).
-- **Model:** smallest/fastest chat model offered — every turn pays its latency.
-- **System prompt:** paste exactly this:
+If the assistant is ever recreated, it needs: type pipeline, a model + voice +
+transcriber (or tier + tier voice card), KB Amira, and this system prompt:
 
 ```text
 You are Amira, a Riyadh showroom advisor for Changan Saudi Arabia, on WhatsApp.

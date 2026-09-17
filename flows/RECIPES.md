@@ -135,11 +135,11 @@ Colors: blue = Code (isolated-vm JS), green = Supabase store call, orange = Agen
 
 Deployed at `…/functions/v1/inbound-brain`. The flow POSTs `{ pack, text, message_id }` with the service-key headers; the function runs model → validate → write state → return `{ reply, applied, rejected, fallback, latency }`. Source: `supabase/functions/inbound-brain/` + `_shared/brain-contract.ts` (action allowlists, transitions, catalogue-grounded value checks) + `_shared/catalogue.ts` (generated: `node tools/catalogue/emit-module.mjs`).
 
-**Model provider — AF-first.** Primary: AgenticFlow `/chat/message` through a dedicated chat assistant (workspace models + billing, no personal key). Create the assistant per `supabase/functions/inbound-brain/ASSISTANT_PROMPT.md` (type chat, paste the prompt, optionally attach KB Amira), then set the secrets (Supabase → Edge Functions → Secrets):
+**Model provider — AF-first.** Primary: AgenticFlow `/chat/message` through assistant **Amira Brain** (`8ef58e44-6de1-48ec-8d76-189e8595fd7f`, type pipeline, gpt-5.4-mini, KB Amira attached — already created and smoke-tested; details in `supabase/functions/inbound-brain/ASSISTANT_PROMPT.md`). Set the secrets (Supabase → Edge Functions → Secrets):
 
 ```bash
 supabase secrets set AGENTICFLOW_API_KEY=<workspace API key>
-supabase secrets set BRAIN_AF_ASSISTANT_ID=<the new assistant's id>
+supabase secrets set BRAIN_AF_ASSISTANT_ID=8ef58e44-6de1-48ec-8d76-189e8595fd7f
 ```
 
 Fallback provider (only used when the AF pair is unset): any OpenAI-compatible endpoint via `BRAIN_API_KEY` (+ optional `BRAIN_MODEL`, `BRAIN_API_URL`).
