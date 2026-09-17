@@ -7,6 +7,7 @@ import { findGrade, findModel } from "./catalogue.ts";
 export type Action =
   | { type: "set_channel"; choice: "whatsapp" | "call_now" | "schedule"; preferred_call_at?: string | null }
   | { type: "opt_out" }
+  | { type: "set_name"; full_name: string }
   | { type: "upsert_fact"; key: string; value: unknown; declined?: boolean }
   | { type: "update_step_context"; narrative?: string; open_threads?: string[] }
   | { type: "advance_step"; step: string };
@@ -25,6 +26,7 @@ export type Pack = {
     opted_out?: boolean;
     status?: string;
     full_name?: string | null;
+    gender_form?: string;
   };
   latest_submission?: { vehicle?: string | null };
   facts?: Record<string, { value: unknown; declined: boolean }>;
@@ -109,6 +111,12 @@ export function validateActions(pack: Pack, actions: Action[]): { accepted: Acti
       case "opt_out":
         accepted.push(action); // add-only, always legal
         break;
+      case "set_name": {
+        const name = String(action.full_name ?? "").trim();
+        if (name.length >= 2 && name.length <= 80) accepted.push(action);
+        else rejected.push({ action, reason: "full_name must be 2-80 chars" });
+        break;
+      }
       case "set_channel":
         if (pack.lead?.current_channel !== "unset") {
           rejected.push({ action, reason: "channel already chosen" });

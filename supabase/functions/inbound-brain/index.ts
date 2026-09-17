@@ -10,6 +10,7 @@
 
 import { createClient, SupabaseClient } from "npm:@supabase/supabase-js@2";
 import { findModel } from "../_shared/catalogue.ts";
+import { guessGender } from "../_shared/gender.ts";
 import {
   Action,
   BrainOutput,
@@ -81,6 +82,7 @@ const SCHEMA_HINT = `Respond with ONLY a JSON object:
   "actions": [
     {"type": "set_channel", "choice": "whatsapp|call_now|schedule"},
     {"type": "opt_out"},
+    {"type": "set_name", "full_name": "..."},
     {"type": "upsert_fact", "key": "vehicle|grade|payment|colours|order_now|accessories|timing", "value": ..., "declined": false},
     {"type": "update_step_context", "narrative": "1-2 sentences", "open_threads": ["..."]},
     {"type": "advance_step", "step": "vehicle|payment|colours|order_gate|accessories|timing|close"}
@@ -103,9 +105,13 @@ function catalogueSlice(pack: Pack): string {
 // Static rules — in AF mode these live on the assistant (ASSISTANT_PROMPT.md);
 // in OpenAI mode they are part of the system message.
 const STATIC_RULES = [
-  "You are Amira, a Riyadh showroom advisor for Changan Saudi Arabia, on WhatsApp.",
+  "You are Amira, a Riyadh showroom advisor for Changan Saudi Arabia, on WhatsApp. Warm, unhurried, professional - the customer should feel hosted, never processed.",
   "If the lead language in [CONTEXT] is ar: reply in Najdi Arabic - colloquial but professional (showroom advisor, not MSA, not street). Latin letters or Arabizi from the customer do NOT switch you to English. If en: natural business English, no Arabic words mixed in.",
-  "Rules: ONE question per turn. Answer their question first, then ask yours. Never re-ask a fact listed as covered or DECLINED. Never narrate systems (no 'let me save that'). No compliments, no reacting to money. First price mention gets a one-time caveat that prices are preliminary; then quote bare.",
+  "Rules: ONE question per turn. Never re-ask a fact listed as covered or DECLINED. Never narrate systems (no 'let me save that'). No compliments, no reacting to money. First price mention gets a one-time caveat that prices are preliminary; then quote bare.",
+  "ANSWER, THEN ASK - as separate lines: when the customer asks anything, give a complete, warm answer first as its own sentence or list. Then a blank line. Then your one question. Never weld the question onto the answer's tail, and never fire a bare question with no acknowledgment of what they just said.",
+  "WHATSAPP FORMATTING: options and choices go as a short dash list (- item), one per line. Use *bold* for the key figure or choice word. Keep messages 2-6 short lines. A blank line separates answer from question.",
+  "NAME: if [CONTEXT] shows the customer's name is unknown, your one question this turn is warmly asking who you have the pleasure of speaking with - before channel or qualification questions. When they give it, emit set_name (also when they correct it later). Use their first name occasionally, not every message.",
+  "GENDER: address by gender_form in [CONTEXT] - m: masculine (تبي/تحب), f: feminine (تبين/تحبين), unknown: neutral phrasing that avoids gendered verbs until known.",
   "Every figure must come from the catalogue data in [CONTEXT]. If it is not there, say you do not have it and move on.",
   "Off-topic or hostile messages: one short graceful line, then return to your question. Never a dead end.",
 ].join("\n");
@@ -119,6 +125,7 @@ function dynamicContext(pack: Pack, mode: "ask_channel" | "gather"): string {
 
   return [
     `Lead language: ${lead.language ?? "ar"}.`,
+    `Customer name: ${lead.full_name?.trim() ? lead.full_name : "UNKNOWN - ask for it warmly before anything else"}. gender_form: ${lead.gender_form ?? "unknown"}.`,
     `Covered facts: ${facts}`,
     `Current step: ${lead.current_step}. Qualification order: vehicle -> payment -> colours -> order_gate -> accessories (only if order_now=true) -> timing -> close.`,
     mode === "ask_channel"
@@ -280,6 +287,26 @@ async function execute(
       case "opt_out": {
         const { error } = await db.from("leads").update({ opted_out: true }).eq("id", leadId);
         if (!error) applied.push("opt_out");
+        break;
+      }
+      case "set_name": {
+        const fullName = String(action.full_name).trim();
+        const gender = guessGender(fullName);
+        const { error } = await db.from("leads")
+          .update({ full_name: fullName, gender_form: gender })
+          .eq("id", leadId);
+        if (!error) {
+          await db.rpc("upsert_fact", {
+            p_lead_id: leadId,
+            p_key: "full_name",
+            p_value: fullName,
+            p_declined: false,
+            p_step: step,
+            p_channel: "whatsapp",
+            p_message_id: messageId,
+          });
+          applied.push(`set_name:${gender}`);
+        }
         break;
       }
       case "upsert_fact": {
