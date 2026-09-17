@@ -25,20 +25,19 @@ export const code = async (inputs) => {
   else if (callNow) { mode = "set_choice"; choice = "call_now"; }
   else if (schedule) { mode = "set_choice"; choice = "schedule"; }
   else if (cancelled) {
+    mode = "cancel";
     copy = ar
       ? "تم إلغاء طلبك، ولا يهمك. إذا حبيت ترجع لنا، أرسل هنا بأي وقت."
       : "Your request has been cancelled. If you change your mind, just message us here anytime.";
-  } else {
-    copy = ar
-      ? ("هلا" + (firstName ? " " + firstName : "") + "، وصلنا طلبك على " + vehicle + ". تحب نكمل هنا بالواتساب، ولا نتصل عليك الحين، ولا نحدد لك موعد للاتصال؟")
-      : ("Hi" + (firstName ? " " + firstName : "") + ", we got your request for the " + vehicle + ". Would you like to continue here on WhatsApp, get a call now, or set a time for a call?");
   }
+  // mode "ask" (no keyword hit, not a cancel): the inbound-brain node answers
+  // semantically — off-topic replies, implied choices, missed opt-outs.
 
   return {
     mode,
     choice,
     rpcBody: { p_mobile: to, p_choice: choice, p_preferred_call_at: null },
     sendBody: copy ? send(copy) : null,
-    logBody: copy ? log(copy, cancelled ? "cancel_ack" : "channel_question") : null,
+    logBody: copy ? log(copy, "cancel_ack") : null,
   };
 };

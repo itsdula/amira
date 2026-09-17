@@ -44,10 +44,10 @@ flowchart TD
   %% mark_opted_out — platform said the contact opted out; mirror it in our store.
   mark_opted_out["mark_opted_out (HTTP)<br/>PATCH leads set opted_out=true"]
 
-  subgraph ask ["ask_channel branch — deterministic, no model"]
-    %% parse_channel — parses the reply for a channel choice (1/2/3, AR/EN/Arabizi keywords,
-    %% cancel words). No match → emits the canned channel question in the lead's language.
-    parse_channel["parse_channel (CODE)<br/>detect whatsapp / call_now / schedule /<br/>cancel; else build channel question"]
+  subgraph ask ["ask_channel branch — fast path deterministic, miss path = brain"]
+    %% parse_channel — fast path: channel choice via 1/2/3, AR/EN/Arabizi keywords, cancel
+    %% words. No match → the brain handles it semantically.
+    parse_channel["parse_channel (CODE)<br/>fast path: detect whatsapp /<br/>call_now / schedule / cancel"]
     route_choice{"route_choice (ROUTER)<br/>mode?"}
     %% rpc_set_choice — transactional: lead channel/status/preferred_call_at (clamped to
     %% 09:00–21:00 Riyadh), preferred_channel fact, channel step_context, system message.
@@ -57,14 +57,19 @@ flowchart TD
     build_confirm["build_confirm (CODE)<br/>confirmation copy per choice + language"]
     send_confirm["send_confirm (HTTP)<br/>POST /messaging/messages"]
     log_confirm["log_confirm (HTTP)<br/>POST rpc/record_outbound"]
-    send_question["send_question (HTTP)<br/>send channel question / cancel ack"]
+    send_question["send_question (HTTP)<br/>canned cancel ack"]
     log_question["log_question (HTTP)<br/>POST rpc/record_outbound"]
+    %% ask_brain — inbound-brain Edge Function: model → validate → write → reply.
+    %% Handles off-topic, essays, implied choices, opt-out intent the regex missed.
+    ask_brain["ask_brain (HTTP)<br/>POST functions/v1/inbound-brain<br/>model → validate → write → reply"]
+    send_ask_reply["send_ask_reply (HTTP)<br/>deliver brain reply"]
+    log_ask_reply["log_ask_reply (HTTP)<br/>POST rpc/record_outbound"]
   end
 
-  subgraph gather ["gather branch — the assistant"]
-    %% chat_generate — AF harness generates the reply; threadKey = mobile keeps one billed
-    %% conversation. assistantId comes from the AMIRA_CHAT_ASSISTANT_ID variable.
-    chat_generate["chat_generate (HTTP)<br/>POST /chat/message<br/>threadKey = mobile"]
+  subgraph gather ["gather branch — the brain qualifies"]
+    %% gather_brain — same Edge Function, gather mode: asks the next uncovered fact,
+    %% writes facts/step context via validated actions before replying.
+    gather_brain["gather_brain (HTTP)<br/>POST functions/v1/inbound-brain<br/>model → validate → write → reply"]
     send_reply["send_reply (HTTP)<br/>deliver reply text to customer"]
     log_reply["log_reply (HTTP)<br/>POST rpc/record_outbound"]
   end
@@ -74,30 +79,48 @@ flowchart TD
   route_event -->|"contact.opted_out"| mark_opted_out
   route_event -->|"otherwise"| endA((end))
   route_action -->|"ask_channel"| parse_channel --> route_choice
-  route_action -->|"gather"| chat_generate --> send_reply --> log_reply
+  route_action -->|"gather"| gather_brain --> send_reply --> log_reply
   route_action -->|"stop_opted_out · already_closed"| endB((end — nothing sent))
   route_choice -->|"set_choice"| rpc_set_choice --> build_confirm --> send_confirm --> log_confirm
-  route_choice -->|"ask · cancel"| send_question --> log_question
+  route_choice -->|"cancel"| send_question --> log_question
+  route_choice -->|"no keyword hit"| ask_brain --> send_ask_reply --> log_ask_reply
 
   classDef codeN fill:#dbeafe,stroke:#3b82f6,color:#1e3a5f;
   classDef storeN fill:#dcfce7,stroke:#22c55e,color:#14532d;
   classDef sendN fill:#ffedd5,stroke:#f97316,color:#7c2d12;
   classDef routerN fill:#f3e8ff,stroke:#a855f7,color:#581c87;
+  classDef brainN fill:#fef9c3,stroke:#eab308,color:#713f12;
   class prep_inbound,parse_channel,build_confirm codeN;
-  class store_inbound,rpc_set_choice,log_confirm,log_question,log_reply,mark_opted_out storeN;
-  class send_confirm,send_question,chat_generate,send_reply sendN;
+  class store_inbound,rpc_set_choice,log_confirm,log_question,log_reply,log_ask_reply,mark_opted_out storeN;
+  class send_confirm,send_question,send_reply,send_ask_reply sendN;
   class route_event,route_action,route_choice routerN;
+  class ask_brain,gather_brain brainN;
 ```
 
-Colors: blue = Code (isolated-vm JS), green = Supabase store call, orange = AgenticFlow send/chat, purple = router.
+Colors: blue = Code (isolated-vm JS), green = Supabase store call, orange = AgenticFlow send, **yellow = inbound-brain (model → validate → write → reply)**, purple = router.
 
 ## Workspace variables (Dashboard → Variables)
 
 | Variable | Value |
 | --- | --- |
 | `AgenticFlow_API_KEY` | workspace API key (already exists) |
-| `SUPABASE_SERVICE_ROLE_KEY` | amira project service-role key. Store writes only. |
-| `AMIRA_CHAT_ASSISTANT_ID` | chat-capable assistant with KB **Amira** attached (create it, then paste the id) |
+| `SUPABASE_SERVICE_ROLE_KEY` | amira project service-role key. Store writes + auth for `inbound-brain`. |
+
+(`AMIRA_CHAT_ASSISTANT_ID` is gone — the AF chat assistant was replaced by our own `inbound-brain` Edge Function.)
+
+## inbound-brain (the model turn)
+
+Deployed at `…/functions/v1/inbound-brain`. The flow POSTs `{ pack, text, message_id }` with the service-key headers; the function runs model → validate → write state → return `{ reply, applied, rejected, fallback, latency }`. Source: `supabase/functions/inbound-brain/` + `_shared/brain-contract.ts` (action allowlists, transitions, catalogue-grounded value checks) + `_shared/catalogue.ts` (generated: `node tools/catalogue/emit-module.mjs`).
+
+Model secrets (Supabase → Edge Functions → Secrets):
+
+```bash
+supabase secrets set BRAIN_API_KEY=sk-...            # required for real replies
+supabase secrets set BRAIN_MODEL=gpt-4o-mini         # optional, default shown
+supabase secrets set BRAIN_API_URL=...               # optional, any OpenAI-compatible /chat/completions
+```
+
+Without `BRAIN_API_KEY` the function still answers — deterministic per-step fallback questions — so the flow is testable before the key exists. Every turn writes an audit row (`messages`, `meta.kind = brain_audit`) with applied/rejected actions and `model_ms`/`total_ms`.
 
 ## Wire the inbound flow
 
@@ -130,10 +153,11 @@ Only `prep_inbound` reads the trigger; every later node reads `prep_inbound['out
 2. **route_event** (Router, first match) — on `{{prep_inbound['output']['eventType']}}`: `message.received` → store_inbound…, `contact.opted_out` → mark_opted_out, Otherwise → end.
 3. **store_inbound** (HTTP POST) — `https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_inbound`, JSON Body `{{prep_inbound['output']['body']}}`. Response body is the lead pack.
 4. **route_action** (Router, first match) — on `{{store_inbound['output']['body']['next_action']}}`:
-   - `ask_channel` → **parse_channel** (Code, `flows/snippets/parse_channel.js`): parses 1/2/3, WhatsApp/call/schedule keywords (AR + EN + Arabizi-ish), cancel words. Inputs: `pack={{store_inbound['output']['body']}}`, `text={{prep_inbound['output']['text']}}`, `mobile={{prep_inbound['output']['mobile']}}`. Outputs `mode`, `choice`, `rpcBody`, `sendBody`, `logBody`.
-     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code, `flows/snippets/build_confirm.js`; inputs `pack={{rpc_set_choice['output']['body']}}`, `choice={{parse_channel['output']['choice']}}`, `mobile` — copy per choice + language, outside-hours variant from `call_window`) → **send_confirm** (HTTP POST `https://api.ae.agenticflow.studio/messaging/messages`, body `{{build_confirm['output']['sendBody']}}`) → **log_confirm** (HTTP POST `…/rpc/record_outbound`, body `{{build_confirm['output']['logBody']}}`).
-     - Otherwise → **send_question** (messaging send, body `{{parse_channel['output']['sendBody']}}` — the canned channel question or cancel ack) → **log_question** (`record_outbound`, `{{parse_channel['output']['logBody']}}`).
-   - `gather` → **chat_generate** (HTTP POST `https://api.ae.agenticflow.studio/chat/message`, body `{ channelId: 160e6c61-…, threadKey: {{prep_inbound['output']['mobile']}}, content: {{prep_inbound['output']['text']}}, assistantId: {{variables['AMIRA_CHAT_ASSISTANT_ID']}} }`) → **send_reply** (messaging send, `text.body = {{chat_generate['output']['body']['data']['message']['content']}}`) → **log_reply** (`record_outbound`).
+   - `ask_channel` → **parse_channel** (Code, `flows/snippets/parse_channel.js`): fast path — 1/2/3, WhatsApp/call/schedule keywords (AR + EN + Arabizi-ish), cancel words. Inputs: `pack={{store_inbound['output']['body']}}`, `text={{prep_inbound['output']['text']}}`, `mobile={{prep_inbound['output']['mobile']}}`. Outputs `mode` (`set_choice` \| `cancel` \| `ask`), `choice`, `rpcBody`, `sendBody`, `logBody`.
+     - Router `mode == set_choice` → **rpc_set_choice** (HTTP POST `…/rpc/set_channel_choice`, body `{{parse_channel['output']['rpcBody']}}`) → **build_confirm** (Code, `flows/snippets/build_confirm.js`) → **send_confirm** (messaging send) → **log_confirm** (`record_outbound`).
+     - `mode == cancel` → **send_question** (canned cancel ack, `{{parse_channel['output']['sendBody']}}`) → **log_question** (`record_outbound`).
+     - Otherwise (no keyword hit — off-topic, essays, implied choices, missed opt-outs) → **ask_brain** (HTTP POST `…/functions/v1/inbound-brain`, store headers, body `{ pack: {{store_inbound…body}}, text, message_id }`) → **send_ask_reply** (messaging send, `text.body = {{ask_brain['output']['body']['reply']}}`) → **log_ask_reply** (`record_outbound`).
+   - `gather` → **gather_brain** (HTTP POST `…/functions/v1/inbound-brain`, same body) → **send_reply** (messaging send, `text.body = {{gather_brain['output']['body']['reply']}}`) → **log_reply** (`record_outbound`).
    - Otherwise (`stop_opted_out`, `already_closed`) → end. Nothing is sent.
 5. **mark_opted_out** (HTTP PATCH) — `…/rest/v1/leads?mobile_e164=eq.{{prep_inbound['output']['mobile']}}`, header `Prefer: return=minimal`, body `{ "opted_out": true }`.
 
@@ -142,6 +166,6 @@ No `can-send` call on this path: the customer just messaged us, so the 24h windo
 ## Design notes
 
 - The model never runs before `record_inbound` — the inbound text is indexed first, per the store contract.
-- `ask_channel` is deterministic. The chat assistant only sees `gather` turns.
-- Store round-trips per turn: 1 read+write (`record_inbound`) + 1 log write. `set_channel_choice` adds one more only on the choice turn.
-- Known gaps: schedule-a-call captures no time yet (`preferred_call_at` null, open thread "call time pending"); cancel ack doesn't close the lead; dialer doesn't exist, so `call_now` records the choice but no call fires; facts beyond `preferred_channel` are not extracted during gather.
+- Deterministic floors stay outside the model: opt-out regex + platform events, 24h window, hours clamp, channel fast path. The brain decides meaning; the executor validates; the store is written before the reply leaves the function.
+- Store round-trips per turn: 1 read+write (`record_inbound`) + brain writes (inside the function) + 1 log write.
+- Known gaps: schedule-a-call time capture is model-dependent (`preferred_call_at` still null unless the brain emits it); cancel ack doesn't close the lead; dialer doesn't exist, so `call_now` records the choice but no call fires; the brain's Najdi register needs the gate/evals before demo.

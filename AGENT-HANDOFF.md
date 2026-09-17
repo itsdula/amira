@@ -108,9 +108,12 @@ Tables: `leads`, `submissions`, `facts`, `step_contexts`, `messages`. View: `lea
 - Delete leftover deployed `request-call-form` in dashboard if it still exists (CLI undeploy needed login).
 - Treat Dula’s AF JSON as a **tool to learn**, not a finished product to nitpick against the brief unless he asks.
 
+## inbound-brain (built)
+
+Edge Function `inbound-brain` (deployed, v1): the model turn for ask_channel misses + all gather turns. `{pack, text, message_id}` → model (OpenAI-compatible, secrets `BRAIN_API_KEY`/`BRAIN_MODEL`/`BRAIN_API_URL`) behind a JSON schema → executor validates actions (`_shared/brain-contract.ts`: step fact allowlists, legal transitions, catalogue-grounded values via generated `_shared/catalogue.ts`) → writes state sync → returns reply. Rejections audit-logged (`messages.meta.kind=brain_audit` + `model_ms`/`total_ms` — the latency evidence for G). Without `BRAIN_API_KEY`: deterministic fallback questions, flow still works. Auth = service-role key header; `verify_jwt=false`. AF chat assistant path (`AMIRA_CHAT_ASSISTANT_ID`) is retired.
+
 ## Suggested next work (when he says go)
 
-1. Import `flows/amira-inbound-whatsapp.json`, set variables, wire channel `webhookUrl` (see `flows/RECIPES.md`).
+1. Import the regenerated flow, swap trigger, wire channel `webhookUrl`; set secret `BRAIN_API_KEY` (see `flows/RECIPES.md`).
 2. Submit the two missing Meta UTILITY templates (follow-up nudge + closing recap) — review time blocks ghost and recap.
-3. Create the chat assistant (KB Amira, Najdi prompt), paste its id into `AMIRA_CHAT_ASSISTANT_ID`.
-4. Gather fact-writing (assistant tools or own harness), then dialer/voice, ghost scheduler, close service, evals, latency report.
+3. Then: dialer/voice (same brain pattern, voice budgets), ghost scheduler, close service, Najdi gate + evals (replay `brain_audit` rows), latency report from `messages.meta`.

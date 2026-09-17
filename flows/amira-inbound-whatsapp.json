@@ -2,7 +2,7 @@
   "name": "Amira Inbound WhatsApp",
   "type": "SHARED",
   "summary": "Inbound WhatsApp handler: store first, then route on next_action.",
-  "description": "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
+  "description": "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (button/keyword fast path, inbound-brain for everything semantic), gather (inbound-brain), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY.",
   "tags": [
     "whatsapp",
     "inbound",
@@ -199,7 +199,7 @@
                         },
                         "sourceCode": {
                           "packageJson": "{}",
-                          "code": "export const code = async (inputs) => {\n  const pack = inputs.pack || {};\n  const lead = pack.lead || {};\n  const latest = pack.latest_submission || {};\n  const ar = lead.language === \"ar\";\n  const raw = String(inputs.text ?? \"\").toLowerCase().trim();\n  const names = {\"ALSVIN\":\"ALSVIN\",\"CS-35-PLUS\":\"CS 35 Plus\",\"CS-75-PLUS\":\"CS 75 Plus\",\"CS-95\":\"CS 95\",\"EADO-PLUS\":\"EADO Plus\",\"HUNTER-PLUS\":\"Hunter\",\"UNI-K\":\"UNI-K\",\"UNI-S\":\"UNI S\",\"UNI-T\":\"UNI-T\",\"UNI-V\":\"UNI V\"};\n  const vehicle = names[latest.vehicle] || latest.vehicle || (ar ? \"\\u0633\\u064a\\u0627\\u0631\\u062a\\u0643\" : \"your car\");\n  const firstName = String(lead.full_name || \"\").trim().split(/\\s+/)[0] || \"\";\n  const has = (words) => words.some((w) => raw.includes(w));\n\n  const cancelled = has([\"cancel\", \"\\u0627\\u0644\\u063a\\u0627\\u0621\", \"\\u0625\\u0644\\u063a\\u0627\\u0621\", \"\\u0644\\u0627 \\u0627\\u0628\\u064a\", \"\\u0644\\u0627 \\u0623\\u0628\\u064a\"]);\n  const schedule = !cancelled && (raw === \"3\" || has([\"schedule\", \"later\", \"\\u0628\\u0639\\u062f\\u064a\\u0646\", \"\\u0645\\u0648\\u0639\\u062f\", \"\\u0628\\u0627\\u0643\\u0631\", \"\\u0628\\u0643\\u0631\\u0647\", \"\\u0628\\u0643\\u0631\\u0629\", \"\\u0648\\u0642\\u062a\"]));\n  const callNow = !cancelled && !schedule && (raw === \"2\" || has([\"call\", \"\\u0627\\u062a\\u0635\\u0644\", \"\\u0627\\u062a\\u0635\\u0627\\u0644\", \"\\u0643\\u0644\\u0645\\u0646\\u064a\", \"\\u0643\\u0644\\u0645\\u0648\\u0646\\u064a\", \"\\u0631\\u0646\"]));\n  const whatsapp = !cancelled && !schedule && !callNow && (raw === \"1\" || has([\"whatsapp\", \"chat\", \"text\", \"message\", \"\\u0648\\u0627\\u062a\\u0633\", \"\\u0647\\u0646\\u0627\", \"\\u0646\\u0643\\u0645\\u0644\", \"\\u0627\\u0643\\u0645\\u0644\", \"\\u0623\\u0643\\u0645\\u0644\", \"\\u0643\\u062a\\u0627\\u0628\\u0647\", \"\\u0643\\u062a\\u0627\\u0628\\u0629\"]));\n\n  const to = String(inputs.mobile ?? \"\");\n  const send = (body) => ({ channelId: \"160e6c61-174a-4de1-b338-ce2e27666c37\", to, type: \"text\", text: { body, previewUrl: false } });\n  const log = (body, kind) => ({ p_mobile: to, p_text: body, p_channel: \"whatsapp\", p_step: \"channel\", p_handler: \"inbound\", p_meta: { kind } });\n\n  let mode = \"ask\";\n  let choice = null;\n  let copy = null;\n  if (whatsapp) { mode = \"set_choice\"; choice = \"whatsapp\"; }\n  else if (callNow) { mode = \"set_choice\"; choice = \"call_now\"; }\n  else if (schedule) { mode = \"set_choice\"; choice = \"schedule\"; }\n  else if (cancelled) {\n    copy = ar\n      ? \"\\u062a\\u0645 \\u0625\\u0644\\u063a\\u0627\\u0621 \\u0637\\u0644\\u0628\\u0643\\u060c \\u0648\\u0644\\u0627 \\u064a\\u0647\\u0645\\u0643. \\u0625\\u0630\\u0627 \\u062d\\u0628\\u064a\\u062a \\u062a\\u0631\\u062c\\u0639 \\u0644\\u0646\\u0627\\u060c \\u0623\\u0631\\u0633\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0623\\u064a \\u0648\\u0642\\u062a.\"\n      : \"Your request has been cancelled. If you change your mind, just message us here anytime.\";\n  } else {\n    copy = ar\n      ? (\"\\u0647\\u0644\\u0627\" + (firstName ? \" \" + firstName : \"\") + \"\\u060c \\u0648\\u0635\\u0644\\u0646\\u0627 \\u0637\\u0644\\u0628\\u0643 \\u0639\\u0644\\u0649 \" + vehicle + \". \\u062a\\u062d\\u0628 \\u0646\\u0643\\u0645\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0627\\u0644\\u0648\\u0627\\u062a\\u0633\\u0627\\u0628\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0627\\u0644\\u062d\\u064a\\u0646\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062d\\u062f\\u062f \\u0644\\u0643 \\u0645\\u0648\\u0639\\u062f \\u0644\\u0644\\u0627\\u062a\\u0635\\u0627\\u0644\\u061f\")\n      : (\"Hi\" + (firstName ? \" \" + firstName : \"\") + \", we got your request for the \" + vehicle + \". Would you like to continue here on WhatsApp, get a call now, or set a time for a call?\");\n  }\n\n  return {\n    mode,\n    choice,\n    rpcBody: { p_mobile: to, p_choice: choice, p_preferred_call_at: null },\n    sendBody: copy ? send(copy) : null,\n    logBody: copy ? log(copy, cancelled ? \"cancel_ack\" : \"channel_question\") : null,\n  };\n};\n"
+                          "code": "export const code = async (inputs) => {\n  const pack = inputs.pack || {};\n  const lead = pack.lead || {};\n  const latest = pack.latest_submission || {};\n  const ar = lead.language === \"ar\";\n  const raw = String(inputs.text ?? \"\").toLowerCase().trim();\n  const names = {\"ALSVIN\":\"ALSVIN\",\"CS-35-PLUS\":\"CS 35 Plus\",\"CS-75-PLUS\":\"CS 75 Plus\",\"CS-95\":\"CS 95\",\"EADO-PLUS\":\"EADO Plus\",\"HUNTER-PLUS\":\"Hunter\",\"UNI-K\":\"UNI-K\",\"UNI-S\":\"UNI S\",\"UNI-T\":\"UNI-T\",\"UNI-V\":\"UNI V\"};\n  const vehicle = names[latest.vehicle] || latest.vehicle || (ar ? \"\\u0633\\u064a\\u0627\\u0631\\u062a\\u0643\" : \"your car\");\n  const firstName = String(lead.full_name || \"\").trim().split(/\\s+/)[0] || \"\";\n  const has = (words) => words.some((w) => raw.includes(w));\n\n  const cancelled = has([\"cancel\", \"\\u0627\\u0644\\u063a\\u0627\\u0621\", \"\\u0625\\u0644\\u063a\\u0627\\u0621\", \"\\u0644\\u0627 \\u0627\\u0628\\u064a\", \"\\u0644\\u0627 \\u0623\\u0628\\u064a\"]);\n  const schedule = !cancelled && (raw === \"3\" || has([\"schedule\", \"later\", \"\\u0628\\u0639\\u062f\\u064a\\u0646\", \"\\u0645\\u0648\\u0639\\u062f\", \"\\u0628\\u0627\\u0643\\u0631\", \"\\u0628\\u0643\\u0631\\u0647\", \"\\u0628\\u0643\\u0631\\u0629\", \"\\u0648\\u0642\\u062a\"]));\n  const callNow = !cancelled && !schedule && (raw === \"2\" || has([\"call\", \"\\u0627\\u062a\\u0635\\u0644\", \"\\u0627\\u062a\\u0635\\u0627\\u0644\", \"\\u0643\\u0644\\u0645\\u0646\\u064a\", \"\\u0643\\u0644\\u0645\\u0648\\u0646\\u064a\", \"\\u0631\\u0646\"]));\n  const whatsapp = !cancelled && !schedule && !callNow && (raw === \"1\" || has([\"whatsapp\", \"chat\", \"text\", \"message\", \"\\u0648\\u0627\\u062a\\u0633\", \"\\u0647\\u0646\\u0627\", \"\\u0646\\u0643\\u0645\\u0644\", \"\\u0627\\u0643\\u0645\\u0644\", \"\\u0623\\u0643\\u0645\\u0644\", \"\\u0643\\u062a\\u0627\\u0628\\u0647\", \"\\u0643\\u062a\\u0627\\u0628\\u0629\"]));\n\n  const to = String(inputs.mobile ?? \"\");\n  const send = (body) => ({ channelId: \"160e6c61-174a-4de1-b338-ce2e27666c37\", to, type: \"text\", text: { body, previewUrl: false } });\n  const log = (body, kind) => ({ p_mobile: to, p_text: body, p_channel: \"whatsapp\", p_step: \"channel\", p_handler: \"inbound\", p_meta: { kind } });\n\n  let mode = \"ask\";\n  let choice = null;\n  let copy = null;\n  if (whatsapp) { mode = \"set_choice\"; choice = \"whatsapp\"; }\n  else if (callNow) { mode = \"set_choice\"; choice = \"call_now\"; }\n  else if (schedule) { mode = \"set_choice\"; choice = \"schedule\"; }\n  else if (cancelled) {\n    mode = \"cancel\";\n    copy = ar\n      ? \"\\u062a\\u0645 \\u0625\\u0644\\u063a\\u0627\\u0621 \\u0637\\u0644\\u0628\\u0643\\u060c \\u0648\\u0644\\u0627 \\u064a\\u0647\\u0645\\u0643. \\u0625\\u0630\\u0627 \\u062d\\u0628\\u064a\\u062a \\u062a\\u0631\\u062c\\u0639 \\u0644\\u0646\\u0627\\u060c \\u0623\\u0631\\u0633\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0623\\u064a \\u0648\\u0642\\u062a.\"\n      : \"Your request has been cancelled. If you change your mind, just message us here anytime.\";\n  }\n  // mode \"ask\" (no keyword hit, not a cancel): the inbound-brain node answers\n  // semantically — off-topic replies, implied choices, missed opt-outs.\n\n  return {\n    mode,\n    choice,\n    rpcBody: { p_mobile: to, p_choice: choice, p_preferred_call_at: null },\n    sendBody: copy ? send(copy) : null,\n    logBody: copy ? log(copy, \"cancel_ack\") : null,\n  };\n};\n"
                         },
                         "sampleData": {},
                         "propertySettings": {
@@ -561,7 +561,7 @@
                             "skip": false,
                             "type": "PIECE",
                             "valid": true,
-                            "displayName": "WA: channel question / cancel ack",
+                            "displayName": "WA: cancel ack",
                             "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                             "settings": {
                               "pieceName": "@activepieces/piece-http",
@@ -655,7 +655,7 @@
                               "skip": false,
                               "type": "PIECE",
                               "valid": true,
-                              "displayName": "Store: log question",
+                              "displayName": "Store: log cancel ack",
                               "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                               "settings": {
                                 "pieceName": "@activepieces/piece-http",
@@ -746,6 +746,314 @@
                                 }
                               }
                             }
+                          },
+                          {
+                            "name": "ask_brain",
+                            "skip": false,
+                            "type": "PIECE",
+                            "valid": true,
+                            "displayName": "Brain: semantic channel turn",
+                            "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+                            "settings": {
+                              "pieceName": "@activepieces/piece-http",
+                              "actionName": "send_request",
+                              "pieceVersion": "0.11.10",
+                              "sampleData": {},
+                              "input": {
+                                "url": "https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/inbound-brain",
+                                "method": "POST",
+                                "headers": {
+                                  "Content-Type": "application/json",
+                                  "apikey": "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
+                                  "Authorization": "Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}"
+                                },
+                                "authType": "NONE",
+                                "body_type": "json",
+                                "body": {
+                                  "data": {
+                                    "pack": "{{store_inbound['output']['body']}}",
+                                    "text": "{{prep_inbound['output']['text']}}",
+                                    "message_id": "{{store_inbound['output']['body']['message_id']}}"
+                                  }
+                                },
+                                "use_proxy": false,
+                                "followRedirects": false,
+                                "response_is_binary": false,
+                                "failureMode": "continue_none",
+                                "authFields": {},
+                                "queryParams": {},
+                                "proxy_settings": {}
+                              },
+                              "propertySettings": {
+                                "url": {
+                                  "type": "MANUAL"
+                                },
+                                "method": {
+                                  "type": "MANUAL"
+                                },
+                                "headers": {
+                                  "type": "MANUAL"
+                                },
+                                "timeout": {
+                                  "type": "MANUAL"
+                                },
+                                "authType": {
+                                  "type": "MANUAL"
+                                },
+                                "body_type": {
+                                  "type": "MANUAL"
+                                },
+                                "use_proxy": {
+                                  "type": "MANUAL"
+                                },
+                                "followRedirects": {
+                                  "type": "MANUAL"
+                                },
+                                "response_is_binary": {
+                                  "type": "MANUAL"
+                                },
+                                "failureMode": {
+                                  "type": "MANUAL"
+                                },
+                                "body": {
+                                  "type": "MANUAL",
+                                  "schema": {
+                                    "data": {
+                                      "type": "JSON",
+                                      "required": true,
+                                      "displayName": "JSON Body"
+                                    }
+                                  }
+                                },
+                                "authFields": {
+                                  "type": "MANUAL",
+                                  "schema": {}
+                                },
+                                "queryParams": {
+                                  "type": "MANUAL"
+                                },
+                                "proxy_settings": {
+                                  "type": "MANUAL",
+                                  "schema": {}
+                                }
+                              },
+                              "errorHandlingOptions": {
+                                "retryOnFailure": {
+                                  "value": false
+                                },
+                                "continueOnFailure": {
+                                  "value": false
+                                }
+                              }
+                            },
+                            "nextAction": {
+                              "name": "send_ask_reply",
+                              "skip": false,
+                              "type": "PIECE",
+                              "valid": true,
+                              "displayName": "WA: send brain reply",
+                              "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+                              "settings": {
+                                "pieceName": "@activepieces/piece-http",
+                                "actionName": "send_request",
+                                "pieceVersion": "0.11.10",
+                                "sampleData": {},
+                                "input": {
+                                  "url": "https://api.ae.agenticflow.studio/messaging/messages",
+                                  "method": "POST",
+                                  "headers": {
+                                    "Content-Type": "application/json",
+                                    "X-Api-Key": "{{variables['AgenticFlow_API_KEY']}}"
+                                  },
+                                  "authType": "NONE",
+                                  "body_type": "json",
+                                  "body": {
+                                    "data": {
+                                      "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
+                                      "to": "{{prep_inbound['output']['mobile']}}",
+                                      "type": "text",
+                                      "text": {
+                                        "body": "{{ask_brain['output']['body']['reply']}}",
+                                        "previewUrl": false
+                                      }
+                                    }
+                                  },
+                                  "use_proxy": false,
+                                  "followRedirects": false,
+                                  "response_is_binary": false,
+                                  "failureMode": "continue_none",
+                                  "authFields": {},
+                                  "queryParams": {},
+                                  "proxy_settings": {}
+                                },
+                                "propertySettings": {
+                                  "url": {
+                                    "type": "MANUAL"
+                                  },
+                                  "method": {
+                                    "type": "MANUAL"
+                                  },
+                                  "headers": {
+                                    "type": "MANUAL"
+                                  },
+                                  "timeout": {
+                                    "type": "MANUAL"
+                                  },
+                                  "authType": {
+                                    "type": "MANUAL"
+                                  },
+                                  "body_type": {
+                                    "type": "MANUAL"
+                                  },
+                                  "use_proxy": {
+                                    "type": "MANUAL"
+                                  },
+                                  "followRedirects": {
+                                    "type": "MANUAL"
+                                  },
+                                  "response_is_binary": {
+                                    "type": "MANUAL"
+                                  },
+                                  "failureMode": {
+                                    "type": "MANUAL"
+                                  },
+                                  "body": {
+                                    "type": "MANUAL",
+                                    "schema": {
+                                      "data": {
+                                        "type": "JSON",
+                                        "required": true,
+                                        "displayName": "JSON Body"
+                                      }
+                                    }
+                                  },
+                                  "authFields": {
+                                    "type": "MANUAL",
+                                    "schema": {}
+                                  },
+                                  "queryParams": {
+                                    "type": "MANUAL"
+                                  },
+                                  "proxy_settings": {
+                                    "type": "MANUAL",
+                                    "schema": {}
+                                  }
+                                },
+                                "errorHandlingOptions": {
+                                  "retryOnFailure": {
+                                    "value": false
+                                  },
+                                  "continueOnFailure": {
+                                    "value": false
+                                  }
+                                }
+                              },
+                              "nextAction": {
+                                "name": "log_ask_reply",
+                                "skip": false,
+                                "type": "PIECE",
+                                "valid": true,
+                                "displayName": "Store: log brain reply",
+                                "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
+                                "settings": {
+                                  "pieceName": "@activepieces/piece-http",
+                                  "actionName": "send_request",
+                                  "pieceVersion": "0.11.10",
+                                  "sampleData": {},
+                                  "input": {
+                                    "url": "https://tmewbswbhnmuuomdfewq.supabase.co/rest/v1/rpc/record_outbound",
+                                    "method": "POST",
+                                    "headers": {
+                                      "Content-Type": "application/json",
+                                      "apikey": "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
+                                      "Authorization": "Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}"
+                                    },
+                                    "authType": "NONE",
+                                    "body_type": "json",
+                                    "body": {
+                                      "data": {
+                                        "p_mobile": "{{prep_inbound['output']['mobile']}}",
+                                        "p_text": "{{ask_brain['output']['body']['reply']}}",
+                                        "p_channel": "whatsapp",
+                                        "p_step": "channel",
+                                        "p_handler": "inbound",
+                                        "p_meta": {
+                                          "kind": "brain_ask"
+                                        }
+                                      }
+                                    },
+                                    "use_proxy": false,
+                                    "followRedirects": false,
+                                    "response_is_binary": false,
+                                    "failureMode": "continue_none",
+                                    "authFields": {},
+                                    "queryParams": {},
+                                    "proxy_settings": {}
+                                  },
+                                  "propertySettings": {
+                                    "url": {
+                                      "type": "MANUAL"
+                                    },
+                                    "method": {
+                                      "type": "MANUAL"
+                                    },
+                                    "headers": {
+                                      "type": "MANUAL"
+                                    },
+                                    "timeout": {
+                                      "type": "MANUAL"
+                                    },
+                                    "authType": {
+                                      "type": "MANUAL"
+                                    },
+                                    "body_type": {
+                                      "type": "MANUAL"
+                                    },
+                                    "use_proxy": {
+                                      "type": "MANUAL"
+                                    },
+                                    "followRedirects": {
+                                      "type": "MANUAL"
+                                    },
+                                    "response_is_binary": {
+                                      "type": "MANUAL"
+                                    },
+                                    "failureMode": {
+                                      "type": "MANUAL"
+                                    },
+                                    "body": {
+                                      "type": "MANUAL",
+                                      "schema": {
+                                        "data": {
+                                          "type": "JSON",
+                                          "required": true,
+                                          "displayName": "JSON Body"
+                                        }
+                                      }
+                                    },
+                                    "authFields": {
+                                      "type": "MANUAL",
+                                      "schema": {}
+                                    },
+                                    "queryParams": {
+                                      "type": "MANUAL"
+                                    },
+                                    "proxy_settings": {
+                                      "type": "MANUAL",
+                                      "schema": {}
+                                    }
+                                  },
+                                  "errorHandlingOptions": {
+                                    "retryOnFailure": {
+                                      "value": false
+                                    },
+                                    "continueOnFailure": {
+                                      "value": false
+                                    }
+                                  }
+                                }
+                              }
+                            }
                           }
                         ],
                         "settings": {
@@ -765,6 +1073,20 @@
                               ]
                             },
                             {
+                              "branchName": "cancelled",
+                              "branchType": "CONDITION",
+                              "conditions": [
+                                [
+                                  {
+                                    "operator": "TEXT_EXACTLY_MATCHES",
+                                    "firstValue": "{{parse_channel['output']['mode']}}",
+                                    "secondValue": "cancel",
+                                    "caseSensitive": false
+                                  }
+                                ]
+                              ]
+                            },
+                            {
                               "branchName": "Otherwise",
                               "branchType": "FALLBACK"
                             }
@@ -775,11 +1097,11 @@
                       }
                     },
                     {
-                      "name": "chat_generate",
+                      "name": "gather_brain",
                       "skip": false,
                       "type": "PIECE",
                       "valid": true,
-                      "displayName": "Chat: generate reply",
+                      "displayName": "Brain: qualification turn",
                       "lastUpdatedDate": "2026-01-01T00:00:00.000Z",
                       "settings": {
                         "pieceName": "@activepieces/piece-http",
@@ -787,20 +1109,20 @@
                         "pieceVersion": "0.11.10",
                         "sampleData": {},
                         "input": {
-                          "url": "https://api.ae.agenticflow.studio/chat/message",
+                          "url": "https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/inbound-brain",
                           "method": "POST",
                           "headers": {
                             "Content-Type": "application/json",
-                            "X-Api-Key": "{{variables['AgenticFlow_API_KEY']}}"
+                            "apikey": "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}",
+                            "Authorization": "Bearer {{variables['SUPABASE_SERVICE_ROLE_KEY']}}"
                           },
                           "authType": "NONE",
                           "body_type": "json",
                           "body": {
                             "data": {
-                              "channelId": "160e6c61-174a-4de1-b338-ce2e27666c37",
-                              "threadKey": "{{prep_inbound['output']['mobile']}}",
-                              "content": "{{prep_inbound['output']['text']}}",
-                              "assistantId": "{{variables['AMIRA_CHAT_ASSISTANT_ID']}}"
+                              "pack": "{{store_inbound['output']['body']}}",
+                              "text": "{{prep_inbound['output']['text']}}",
+                              "message_id": "{{store_inbound['output']['body']['message_id']}}"
                             }
                           },
                           "use_proxy": false,
@@ -900,7 +1222,7 @@
                                 "to": "{{prep_inbound['output']['mobile']}}",
                                 "type": "text",
                                 "text": {
-                                  "body": "{{chat_generate['output']['body']['data']['message']['content']}}",
+                                  "body": "{{gather_brain['output']['body']['reply']}}",
                                   "previewUrl": false
                                 }
                               }
@@ -1000,11 +1322,11 @@
                               "body": {
                                 "data": {
                                   "p_mobile": "{{prep_inbound['output']['mobile']}}",
-                                  "p_text": "{{chat_generate['output']['body']['data']['message']['content']}}",
+                                  "p_text": "{{gather_brain['output']['body']['reply']}}",
                                   "p_channel": "whatsapp",
                                   "p_handler": "inbound",
                                   "p_meta": {
-                                    "kind": "gather_reply"
+                                    "kind": "brain_gather"
                                   }
                                 }
                               },

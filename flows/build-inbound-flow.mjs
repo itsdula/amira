@@ -28,7 +28,6 @@ const STAMP = "2026-01-01T00:00:00.000Z";
 
 const SERVICE_KEY_VAR = "{{variables['SUPABASE_SERVICE_ROLE_KEY']}}";
 const AF_KEY_VAR = "{{variables['AgenticFlow_API_KEY']}}";
-const ASSISTANT_VAR = "{{variables['AMIRA_CHAT_ASSISTANT_ID']}}";
 
 const VEHICLE_NAMES = {
   "ALSVIN": "ALSVIN",
@@ -210,21 +209,20 @@ const parseChannelCode = `export const code = async (inputs) => {
   else if (callNow) { mode = "set_choice"; choice = "call_now"; }
   else if (schedule) { mode = "set_choice"; choice = "schedule"; }
   else if (cancelled) {
+    mode = "cancel";
     copy = ar
       ? "\\u062a\\u0645 \\u0625\\u0644\\u063a\\u0627\\u0621 \\u0637\\u0644\\u0628\\u0643\\u060c \\u0648\\u0644\\u0627 \\u064a\\u0647\\u0645\\u0643. \\u0625\\u0630\\u0627 \\u062d\\u0628\\u064a\\u062a \\u062a\\u0631\\u062c\\u0639 \\u0644\\u0646\\u0627\\u060c \\u0623\\u0631\\u0633\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0623\\u064a \\u0648\\u0642\\u062a."
       : "Your request has been cancelled. If you change your mind, just message us here anytime.";
-  } else {
-    copy = ar
-      ? ("\\u0647\\u0644\\u0627" + (firstName ? " " + firstName : "") + "\\u060c \\u0648\\u0635\\u0644\\u0646\\u0627 \\u0637\\u0644\\u0628\\u0643 \\u0639\\u0644\\u0649 " + vehicle + ". \\u062a\\u062d\\u0628 \\u0646\\u0643\\u0645\\u0644 \\u0647\\u0646\\u0627 \\u0628\\u0627\\u0644\\u0648\\u0627\\u062a\\u0633\\u0627\\u0628\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062a\\u0635\\u0644 \\u0639\\u0644\\u064a\\u0643 \\u0627\\u0644\\u062d\\u064a\\u0646\\u060c \\u0648\\u0644\\u0627 \\u0646\\u062d\\u062f\\u062f \\u0644\\u0643 \\u0645\\u0648\\u0639\\u062f \\u0644\\u0644\\u0627\\u062a\\u0635\\u0627\\u0644\\u061f")
-      : ("Hi" + (firstName ? " " + firstName : "") + ", we got your request for the " + vehicle + ". Would you like to continue here on WhatsApp, get a call now, or set a time for a call?");
   }
+  // mode "ask" (no keyword hit, not a cancel): the inbound-brain node answers
+  // semantically — off-topic replies, implied choices, missed opt-outs.
 
   return {
     mode,
     choice,
     rpcBody: { p_mobile: to, p_choice: choice, p_preferred_call_at: null },
     sendBody: copy ? send(copy) : null,
-    logBody: copy ? log(copy, cancelled ? "cancel_ack" : "channel_question") : null,
+    logBody: copy ? log(copy, "cancel_ack") : null,
   };
 };
 `;
@@ -272,17 +270,52 @@ const INBOUND_TEXT = "{{prep_inbound['output']['text']}}";
 
 // ---------------------------------------------------------------- ask_channel branch
 
-const logQuestion = httpNode("log_question", "Store: log question", {
+const logQuestion = httpNode("log_question", "Store: log cancel ack", {
   url: `${SUPABASE_URL}/rest/v1/rpc/record_outbound`,
   headers: storeHeaders,
   bodyData: "{{parse_channel['output']['logBody']}}",
 });
 
-const sendQuestion = httpNode("send_question", "WA: channel question / cancel ack", {
+const sendQuestion = httpNode("send_question", "WA: cancel ack", {
   url: `${AF_URL}/messaging/messages`,
   headers: afHeaders,
   bodyData: "{{parse_channel['output']['sendBody']}}",
 }, logQuestion);
+
+// Brain miss-path: semantic handling when keywords don't match.
+const logAskReply = httpNode("log_ask_reply", "Store: log brain reply", {
+  url: `${SUPABASE_URL}/rest/v1/rpc/record_outbound`,
+  headers: storeHeaders,
+  bodyData: {
+    p_mobile: SENDER,
+    p_text: "{{ask_brain['output']['body']['reply']}}",
+    p_channel: "whatsapp",
+    p_step: "channel",
+    p_handler: "inbound",
+    p_meta: { kind: "brain_ask" },
+  },
+});
+
+const sendAskReply = httpNode("send_ask_reply", "WA: send brain reply", {
+  url: `${AF_URL}/messaging/messages`,
+  headers: afHeaders,
+  bodyData: {
+    channelId: CHANNEL_ID,
+    to: SENDER,
+    type: "text",
+    text: { body: "{{ask_brain['output']['body']['reply']}}", previewUrl: false },
+  },
+}, logAskReply);
+
+const askBrain = httpNode("ask_brain", "Brain: semantic channel turn", {
+  url: `${SUPABASE_URL}/functions/v1/inbound-brain`,
+  headers: storeHeaders,
+  bodyData: {
+    pack: "{{store_inbound['output']['body']}}",
+    text: INBOUND_TEXT,
+    message_id: "{{store_inbound['output']['body']['message_id']}}",
+  },
+}, sendAskReply);
 
 const logConfirm = httpNode("log_confirm", "Store: log confirmation", {
   url: `${SUPABASE_URL}/rest/v1/rpc/record_outbound`,
@@ -310,8 +343,9 @@ const rpcSetChoice = httpNode("rpc_set_choice", "Store: set channel choice", {
 
 const routeChoice = router("route_choice", "Choice made?", [
   textMatch("choice made", "{{parse_channel['output']['mode']}}", "set_choice"),
+  textMatch("cancelled", "{{parse_channel['output']['mode']}}", "cancel"),
   fallback,
-], [rpcSetChoice, sendQuestion]);
+], [rpcSetChoice, sendQuestion, askBrain]);
 
 const parseChannel = codeNode("parse_channel", "Parse channel reply", {
   pack: "{{store_inbound['output']['body']}}",
@@ -326,10 +360,10 @@ const logReply = httpNode("log_reply", "Store: log reply", {
   headers: storeHeaders,
   bodyData: {
     p_mobile: SENDER,
-    p_text: "{{chat_generate['output']['body']['data']['message']['content']}}",
+    p_text: "{{gather_brain['output']['body']['reply']}}",
     p_channel: "whatsapp",
     p_handler: "inbound",
-    p_meta: { kind: "gather_reply" },
+    p_meta: { kind: "brain_gather" },
   },
 });
 
@@ -341,20 +375,19 @@ const sendReply = httpNode("send_reply", "WA: send reply", {
     to: SENDER,
     type: "text",
     text: {
-      body: "{{chat_generate['output']['body']['data']['message']['content']}}",
+      body: "{{gather_brain['output']['body']['reply']}}",
       previewUrl: false,
     },
   },
 }, logReply);
 
-const chatGenerate = httpNode("chat_generate", "Chat: generate reply", {
-  url: `${AF_URL}/chat/message`,
-  headers: afHeaders,
+const gatherBrain = httpNode("gather_brain", "Brain: qualification turn", {
+  url: `${SUPABASE_URL}/functions/v1/inbound-brain`,
+  headers: storeHeaders,
   bodyData: {
-    channelId: CHANNEL_ID,
-    threadKey: SENDER,
-    content: INBOUND_TEXT,
-    assistantId: ASSISTANT_VAR,
+    pack: "{{store_inbound['output']['body']}}",
+    text: INBOUND_TEXT,
+    message_id: "{{store_inbound['output']['body']['message_id']}}",
   },
 }, sendReply);
 
@@ -364,7 +397,7 @@ const routeAction = router("route_action", "Route on next_action", [
   textMatch("ask channel", "{{store_inbound['output']['body']['next_action']}}", "ask_channel"),
   textMatch("gather", "{{store_inbound['output']['body']['next_action']}}", "gather"),
   fallback,
-], [parseChannel, chatGenerate, null]);
+], [parseChannel, gatherBrain, null]);
 
 const storeInbound = httpNode("store_inbound", "Store: record inbound", {
   url: `${SUPABASE_URL}/rest/v1/rpc/record_inbound`,
@@ -401,7 +434,7 @@ const flow = {
   type: "SHARED",
   summary: "Inbound WhatsApp handler: store first, then route on next_action.",
   description:
-    "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (deterministic question / choice parsing), gather (chat assistant), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY, AMIRA_CHAT_ASSISTANT_ID.",
+    "Import, then swap the Manual Trigger for Catch Webhook in the UI, publish, and set the flow URL as the WhatsApp channel webhookUrl. record_inbound indexes the message, opens the 24h window, and returns the lead pack; routing: ask_channel (button/keyword fast path, inbound-brain for everything semantic), gather (inbound-brain), stop. contact.opted_out marks the lead suppressed. Variables required: SUPABASE_SERVICE_ROLE_KEY, AgenticFlow_API_KEY.",
   tags: ["whatsapp", "inbound", "store"],
   blogUrl: "",
   metadata: { externalId: createHash("md5").update(FLOW_NAME).digest("hex").slice(0, 21) },
