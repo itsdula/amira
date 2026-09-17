@@ -17,6 +17,29 @@ python3 flows/validate_flow.py flows/amira-inbound-whatsapp.json
 
 **Debugging imports:** "No valid templates found" = wrong wrapper (needs the SHARED `flows[]` shape). Flow created with an **empty trigger** = the imported first piece was a webhook/schedule trigger (must be Manual Trigger, swapped in the UI after). "Template file is invalid" = run `flows/validate_flow.py` — usually a missing per-step key. Red nodes after a successful import = unresolved `{{variables['…']}}` or a piece-version prompt (accept what AF offers). Last resort: rebuild by hand from the node list below; Code bodies are paste-ready in `flows/snippets/`.
 
+## Reset test data
+
+All lead tables cascade from `leads`. Run in the Supabase SQL editor between test rounds:
+
+```sql
+truncate public.leads cascade;   -- also clears submissions, facts, step_contexts, messages
+truncate public.request_calls;
+```
+
+Useful checks after a test conversation:
+
+```sql
+-- lead state machine
+select mobile_e164, status, current_step, current_channel, opted_out, preferred_call_at from leads;
+-- coverage (including declines)
+select key, value, declined, step from facts order by at;
+-- what the model tried vs what the executor allowed, with latency
+select at, text, meta->>'model_ms' as model_ms, meta->>'total_ms' as total_ms
+from messages where meta->>'kind' = 'brain_audit' order by at;
+-- full transcript
+select at, direction, text from messages order by at;
+```
+
 ## Diagram — inbound flow (labels = AF step names)
 
 AF's canvas supports sticky notes (`flows[0].notes[]` in the schema), but they are untested on import and the file finally imports clean — so the flow documentation lives here instead.
