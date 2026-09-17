@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>اطلب مكالمة · Changan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f3f1ec;
+      --card: #fffcf7;
+      --ink: #141414;
+      --muted: #6f6a63;
+      --line: #e4dfd6;
+      --fill: #111111;
+      --ok: #14532d;
+      --ok-bg: #e7f6ec;
+      --ok-line: #b7e0c4;
+      --err: #9b1c1c;
+      --err-bg: #fdecec;
+      --err-line: #f3c4c4;
+      --radius: 1.25rem;
+      font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -10%, #fff 0%, transparent 55%),
+        var(--bg);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 1.5rem;
+    }
+
+    main {
+      width: min(26.5rem, 100%);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.6rem 1.5rem 1.5rem;
+      box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset, 0 18px 40px -28px rgba(20, 20, 20, 0.35);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .brand {
+      display: grid;
+      gap: 0.2rem;
+    }
+
+    .brand strong {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .lang {
+      display: inline-flex;
+      padding: 0.18rem;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #f7f4ee;
+    }
+
+    .lang button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0.38rem 0.7rem;
+      border-radius: 999px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .lang button[aria-pressed="true"] {
+      background: var(--fill);
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 1.65rem;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+      line-height: 1.25;
+      margin: 0 0 0.45rem;
+    }
+
+    .lead {
+      margin: 0 0 1.6rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      height: 2.85rem;
+      padding: 0 0.9rem;
+      border: 1px solid var(--line);
+      border-radius: 0.75rem;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%236f6a63' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      padding-inline-end: 2.2rem;
+    }
+
+    html[dir="rtl"] select {
+      background-position: left 0.85rem center;
+    }
+
+    html[dir="ltr"] select {
+      background-position: right 0.85rem center;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: var(--ink);
+      box-shadow: 0 0 0 3px rgba(20, 20, 20, 0.08);
+    }
+
+    .consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      margin: 1.25rem 0 1.4rem;
+    }
+
+    .consent input {
+      appearance: none;
+      width: 1.1rem;
+      height: 1.1rem;
+      margin-top: 0.12rem;
+      flex: 0 0 1.1rem;
+      border: 1px solid #cfc9bd;
+      border-radius: 0.3rem;
+      background: #fff;
+      cursor: pointer;
+    }
+
+    .consent input:checked {
+      background: var(--fill);
+      border-color: var(--fill);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.4 6.2l2.3 2.3 4.9-5' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .consent label {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 400;
+      line-height: 1.45;
+      cursor: pointer;
+    }
+
+    button.submit {
+      width: 100%;
+      height: 2.95rem;
+      border: 0;
+      border-radius: 0.85rem;
+      background: var(--fill);
+      color: #fff;
+      font: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button.submit:hover {
+      opacity: 0.92;
+    }
+
+    button.submit:active {
+      transform: translateY(1px);
+    }
+
+    button.submit:disabled {
+      cursor: wait;
+      opacity: 0.72;
+      transform: none;
+    }
+
+    button.submit[aria-busy="true"] {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+    }
+
+    button.submit[aria-busy="true"]::before {
+      content: "";
+      width: 0.9rem;
+      height: 0.9rem;
+      border: 2px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #status {
+      display: none;
+      margin: 0.9rem 0 0;
+      padding: 0.8rem 0.95rem;
+      border-radius: 0.8rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+
+    #status.ok,
+    #status.err {
+      display: block;
+    }
+
+    #status.ok {
+      background: var(--ok-bg);
+      color: var(--ok);
+      border: 1px solid var(--ok-line);
+    }
+
+    #status.err {
+      background: var(--err-bg);
+      color: var(--err);
+      border: 1px solid var(--err-line);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <main>
+      <div class="card">
+        <header>
+          <div class="brand">
+            <strong>Changan</strong>
+            <span>KSA</span>
+          </div>
+          <div class="lang" role="group" aria-label="Language">
+            <button type="button" data-lang="ar" aria-pressed="true">العربية</button>
+            <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+        </header>
+
+        <h1 data-i18n="title"></h1>
+        <p class="lead" data-i18n="lead"></p>
+
+        <form id="form">
+          <div class="field">
+            <label for="fullName" data-i18n="fullName"></label>
+            <input id="fullName" name="fullName" type="text" required autocomplete="name" />
+          </div>
+
+          <div class="field">
+            <label for="mobileE164" data-i18n="mobile"></label>
+            <input id="mobileE164" name="mobileE164" type="tel" required inputmode="tel" autocomplete="tel" />
+          </div>
+
+          <div class="field">
+            <label for="vehicle" data-i18n="vehicle"></label>
+            <select id="vehicle" name="vehicle" required>
+              <option value="" selected disabled></option>
+              <option value="ALSVIN">ALSVIN</option>
+              <option value="CS-35-PLUS">CS 35 Plus</option>
+              <option value="CS-75-PLUS">CS 75 Plus</option>
+              <option value="CS-95">CS 95</option>
+              <option value="EADO-PLUS">EADO Plus</option>
+              <option value="HUNTER-PLUS">Hunter</option>
+              <option value="UNI-K">UNI-K</option>
+              <option value="UNI-S">UNI S</option>
+              <option value="UNI-T">UNI-T</option>
+              <option value="UNI-V">UNI V</option>
+            </select>
+          </div>
+
+          <div class="consent">
+            <input id="consentWhatsapp" name="consentWhatsapp" type="checkbox" />
+            <label for="consentWhatsapp" data-i18n="consent"></label>
+          </div>
+
+          <button class="submit" type="submit" data-i18n="submit"></button>
+          <p id="status" role="alert" aria-live="polite"></p>
+        </form>
+      </div>
+    </main>
+  </div>
+  <script>
+    const POST_URL = "https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/request-call";
+    const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtZXdic3diaG5tdXVvbWRmZXdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkyNzM1ODIsImV4cCI6MjEwNDg0OTU4Mn0.NHswq5aroSy4DKV5igmcf7lA3OIS5JLmDJbm9n8-Mhw";
+    const copy = {
+      ar: {
+        dir: "rtl",
+        documentTitle: "اطلب مكالمة · Changan",
+        title: "اطلب مكالمة",
+        lead: "أخبرنا كيف نتواصل معك، وسنعاود الاتصال في وقت مناسب.",
+        fullName: "الاسم الكامل",
+        mobile: "رقم الجوال",
+        mobilePh: "+9665XXXXXXXX",
+        vehicle: "السيارة",
+        vehiclePh: "اختر السيارة",
+        consent: "أوافق على التواصل عبر واتساب",
+        submit: "إرسال",
+        sending: "جارٍ الإرسال…",
+        sent: "تم استلام طلبك. سنتواصل معك قريباً.",
+        failed: "تعذر الإرسال. حاول مرة أخرى.",
+      },
+      en: {
+        dir: "ltr",
+        documentTitle: "Request a call · Changan",
+        title: "Request a call",
+        lead: "Tell us how to reach you, and we will call at a convenient time.",
+        fullName: "Full name",
+        mobile: "Mobile number",
+        mobilePh: "+9665XXXXXXXX",
+        vehicle: "Vehicle",
+        vehiclePh: "Choose a vehicle",
+        consent: "I consent to being contacted on WhatsApp",
+        submit: "Send",
+        sending: "Sending…",
+        sent: "Your request was received. We will be in touch shortly.",
+        failed: "Could not send. Please try again.",
+      },
+    };
+
+    const form = document.getElementById("form");
+    const status = document.getElementById("status");
+    const submitBtn = form.querySelector("button.submit");
+    const vehicle = document.getElementById("vehicle");
+    let language = localStorage.getItem("lang") === "ar" ? "ar" : "en";
+    let busy = false;
+
+    function applyLanguage(next) {
+      language = next;
+      localStorage.setItem("lang", next);
+      const t = copy[next];
+      document.documentElement.lang = next;
+      document.documentElement.dir = t.dir;
+      document.title = t.documentTitle;
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        if (el === submitBtn && busy) return;
+        el.textContent = t[el.dataset.i18n];
+      });
+      document.getElementById("mobileE164").placeholder = t.mobilePh;
+      vehicle.options[0].textContent = t.vehiclePh;
+      document.querySelectorAll(".lang button").forEach((btn) => {
+        btn.setAttribute("aria-pressed", String(btn.dataset.lang === next));
+      });
+    }
+
+    document.querySelectorAll(".lang button").forEach((btn) => {
+      btn.addEventListener("click", () => applyLanguage(btn.dataset.lang));
+    });
+
+    applyLanguage(language);
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (busy) return;
+      const t = copy[language];
+      busy = true;
+      submitBtn.disabled = true;
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.textContent = t.sending;
+      status.textContent = "";
+      status.className = "";
+      const body = {
+        fullName: form.fullName.value.trim(),
+        mobileE164: form.mobileE164.value.trim(),
+        vehicle: form.vehicle.value,
+        language,
+        consentWhatsapp: form.consentWhatsapp.checked,
+      };
+      try {
+        const res = await fetch(POST_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: ANON_KEY,
+            Authorization: "Bearer " + ANON_KEY,
+          },
+          body: JSON.stringify(body),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || t.failed);
+        status.className = "ok";
+        status.textContent = t.sent;
+        form.reset();
+        applyLanguage(language);
+      } catch (err) {
+        status.className = "err";
+        status.textContent = err.message || t.failed;
+      } finally {
+        busy = false;
+        submitBtn.disabled = false;
+        submitBtn.removeAttribute("aria-busy");
+        submitBtn.textContent = copy[language].submit;
+      }
+    });
+  </script>
+</body>
+
+</html>
