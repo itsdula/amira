@@ -110,7 +110,7 @@ const STATIC_RULES = [
   "Rules: ONE question per turn. Never re-ask a fact listed as covered or DECLINED. Never narrate systems (no 'let me save that'). No compliments, no reacting to money. First price mention gets a one-time caveat that prices are preliminary; then quote bare.",
   "ANSWER, THEN ASK - as separate lines: when the customer asks anything, give a complete, warm answer first as its own sentence or list. Then a blank line. Then your one question. Never weld the question onto the answer's tail, and never fire a bare question with no acknowledgment of what they just said.",
   "WHATSAPP FORMATTING: options and choices go as a short dash list (- item), one per line. Use *bold* for the key figure or choice word. Keep messages 2-6 short lines. A blank line separates answer from question.",
-  "NAME: if [CONTEXT] shows the customer's name is unknown, your one question this turn is warmly asking who you have the pleasure of speaking with - before channel or qualification questions. When they give it, emit set_name (also when they correct it later). Use their first name occasionally, not every message.",
+  "NAME: never combine asking for the name with any other question - when the name is the goal, it is the ONLY question in the message. Emit set_name when they give it (also on later corrections). Use their first name occasionally, not every message.",
   "GENDER: address by gender_form in [CONTEXT] - m: masculine (تبي/تحب), f: feminine (تبين/تحبين), unknown: neutral phrasing that avoids gendered verbs until known.",
   "Every figure must come from the catalogue data in [CONTEXT]. If it is not there, say you do not have it and move on.",
   "Off-topic or hostile messages: one short graceful line, then return to your question. Never a dead end.",
@@ -119,18 +119,26 @@ const STATIC_RULES = [
 // Per-turn context — travels with every call in both modes.
 function dynamicContext(pack: Pack, mode: "ask_channel" | "gather"): string {
   const lead = pack.lead ?? {};
+  const nameKnown = Boolean(lead.full_name?.trim());
   const facts = Object.entries(pack.facts ?? {})
     .map(([k, v]) => `${k}=${v.declined ? "DECLINED" : JSON.stringify(v.value)}`)
     .join(", ") || "none";
 
+  // One goal per turn. When the name is unknown, the channel/qualification
+  // goal is deliberately absent from the prompt so the model cannot merge
+  // two questions into one message.
+  const goal = !nameKnown
+    ? "GOAL NOW: greet warmly, briefly handle whatever they said, and ask ONLY for their name (who do you have the pleasure of speaking with). Do NOT mention WhatsApp/call/schedule options or any qualification question this turn. Emit set_name when they answer. If they clearly want no contact, emit opt_out."
+    : mode === "ask_channel"
+      ? "GOAL NOW: the customer has not picked a channel. Briefly handle whatever they said, then ask: continue here on WhatsApp, a call now, or schedule a call time? If their message already implies a choice, emit set_channel. If they clearly want no contact, emit opt_out."
+      : "GOAL NOW: qualify. Ask only the next uncovered fact in order. Emit upsert_fact for every answer (including declines: declined=true), update_step_context with a short narrative, and advance_step when the current step's fact is covered.";
+
   return [
     `Lead language: ${lead.language ?? "ar"}.`,
-    `Customer name: ${lead.full_name?.trim() ? lead.full_name : "UNKNOWN - ask for it warmly before anything else"}. gender_form: ${lead.gender_form ?? "unknown"}.`,
+    `Customer name: ${nameKnown ? lead.full_name : "UNKNOWN"}. gender_form: ${lead.gender_form ?? "unknown"}.`,
     `Covered facts: ${facts}`,
     `Current step: ${lead.current_step}. Qualification order: vehicle -> payment -> colours -> order_gate -> accessories (only if order_now=true) -> timing -> close.`,
-    mode === "ask_channel"
-      ? "GOAL NOW: the customer has not picked a channel. Briefly handle whatever they said, then ask: continue here on WhatsApp, a call now, or schedule a call time? If their message already implies a choice, emit set_channel. If they clearly want no contact, emit opt_out."
-      : "GOAL NOW: qualify. Ask only the next uncovered fact in order. Emit upsert_fact for every answer (including declines: declined=true), update_step_context with a short narrative, and advance_step when the current step's fact is covered.",
+    goal,
     "--- CATALOGUE ---",
     catalogueSlice(pack),
   ].join("\n");
