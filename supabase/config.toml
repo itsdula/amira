@@ -4,3 +4,7 @@ verify_jwt = false
 [functions.inbound-brain]
 # Auth is the service-role key in headers (same as the flow's PostgREST calls).
 verify_jwt = false
+
+[functions.voice-hub]
+# Auth is HMAC over the raw body with VOICE_HUB_SECRET (assistant server.secret).
+verify_jwt = false

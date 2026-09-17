@@ -144,6 +144,15 @@ supabase secrets set BRAIN_AF_ASSISTANT_ID=8ef58e44-6de1-48ec-8d76-189e8595fd7f
 
 Fallback provider (only used when the AF pair is unset): any OpenAI-compatible endpoint via `BRAIN_API_KEY` (+ optional `BRAIN_MODEL`, `BRAIN_API_URL`).
 
+**Voice slice secrets** (brain v11 dials on call_now-in-hours; `voice-hub` receives the end-of-call report):
+
+```bash
+supabase secrets set VOICE_ASSISTANT_ID=bb7401d6-b4ba-45e1-98b2-948a74448ed5
+supabase secrets set VOICE_HUB_SECRET=<printed at assistant creation — also on the assistant server.secret>
+```
+
+Without them the brain logs `dial:skipped` and `voice-hub` 401s everything. Voice prompt + extraction schema: `supabase/functions/voice-hub/VOICE_ASSISTANT.md`.
+
 With neither configured the function still answers — deterministic per-step fallback questions — so the flow is testable before any model exists. Every turn writes an audit row (`messages`, `meta.kind = brain_audit`) with `provider`, applied/rejected actions, and `model_ms`/`total_ms`.
 
 ## Wire the inbound flow

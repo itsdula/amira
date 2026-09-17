@@ -63,7 +63,7 @@ export const TRANSITIONS: Record<string, string[]> = {
 const PAYMENTS = new Set(["cash", "finance", "lease"]);
 const TIMINGS = new Set(["now", "over_month"]);
 
-function checkFactValue(pack: Pack, key: string, value: unknown, declined: boolean): string | null {
+export function checkFactValue(pack: Pack, key: string, value: unknown, declined: boolean): string | null {
   if (declined) return null; // a decline is coverage; no value to check
   switch (key) {
     case "payment":

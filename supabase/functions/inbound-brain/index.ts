@@ -269,6 +269,72 @@ async function callModel(system: string, dynamicContext: string, user: string, m
   return await callModelOpenAI(system, user);
 }
 
+// ---------------------------------------------------------------- dialer
+
+const AF_BASE = "https://api.ae.agenticflow.studio";
+let cachedPhoneNumberId: string | null = null;
+
+async function outboundPhoneNumberId(afKey: string): Promise<string | null> {
+  if (cachedPhoneNumberId) return cachedPhoneNumberId;
+  for (const path of ["/phone-number", "/phone-numbers"]) {
+    const res = await fetch(`${AF_BASE}${path}`, { headers: { "X-Api-Key": afKey } });
+    if (!res.ok) continue;
+    const data = await res.json();
+    const list = Array.isArray(data?.data) ? data.data : Array.isArray(data) ? data : [];
+    const first = list[0];
+    if (first?.id) {
+      cachedPhoneNumberId = String(first.id);
+      return cachedPhoneNumberId;
+    }
+  }
+  return null;
+}
+
+// Fires when set_channel_choice returns dial_now=true (call_now, in hours).
+// The fresh pack from that RPC carries lead + facts for the call variables;
+// lead_id rides call metadata so voice-hub can attribute the report.
+async function placeCall(pack: Pack, fresh: Record<string, unknown>): Promise<string> {
+  const afKey = Deno.env.get("AGENTICFLOW_API_KEY");
+  const assistantId = Deno.env.get("VOICE_ASSISTANT_ID");
+  if (!afKey || !assistantId) return "dial:skipped (no VOICE_ASSISTANT_ID)";
+
+  const lead = (fresh.lead ?? pack.lead ?? {}) as Record<string, unknown>;
+  const facts = (fresh.facts ?? pack.facts ?? {}) as Record<string, { value: unknown; declined: boolean }>;
+  const covered = Object.entries(facts)
+    .map(([k, f]) => `${k}=${f.declined ? "declined" : JSON.stringify(f.value)}`)
+    .join(", ") || "none";
+
+  try {
+    const phoneNumberId = await outboundPhoneNumberId(afKey);
+    if (!phoneNumberId) return "dial:failed (no outbound phone number in workspace)";
+    const res = await fetch(`${AF_BASE}/call`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "X-Api-Key": afKey },
+      body: JSON.stringify({
+        assistantId,
+        phoneNumberId,
+        customer: {
+          number: lead.mobile_e164,
+          name: lead.full_name ?? undefined,
+          externalId: lead.id,
+        },
+        metadata: { lead_id: lead.id },
+        variables: {
+          customer_name: lead.full_name ?? "",
+          gender_form: lead.gender_form ?? "unknown",
+          language: lead.language ?? "ar",
+          vehicle: String(facts.vehicle?.value ?? ""),
+          covered_facts: covered,
+        },
+      }),
+    });
+    if (!res.ok) return `dial:failed (http ${res.status}: ${(await res.text()).slice(0, 120)})`;
+    return "dial:queued";
+  } catch (err) {
+    return `dial:failed (${String(err).slice(0, 120)})`;
+  }
+}
+
 // ---------------------------------------------------------------- executor
 
 async function execute(
@@ -286,12 +352,16 @@ async function execute(
   for (const action of accepted) {
     switch (action.type) {
       case "set_channel": {
-        const { error } = await db.rpc("set_channel_choice", {
+        const { data, error } = await db.rpc("set_channel_choice", {
           p_mobile: mobile,
           p_choice: action.choice,
           p_preferred_call_at: action.preferred_call_at ?? null,
         });
         if (!error) applied.push(`set_channel:${action.choice}`);
+        // In-hours "call now": place the outbound call immediately.
+        if (!error && action.choice === "call_now" && (data as { dial_now?: boolean })?.dial_now) {
+          applied.push(await placeCall(pack, data as Record<string, unknown>));
+        }
         break;
       }
       case "opt_out": {
