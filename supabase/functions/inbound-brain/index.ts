@@ -130,10 +130,10 @@ function dynamicContext(pack: Pack, mode: "ask_channel" | "gather"): string {
   // goal is deliberately absent from the prompt so the model cannot merge
   // two questions into one message.
   const goal = !nameKnown
-    ? "GOAL NOW: the customer's name is unknown. TWO CASES: (a) their latest message GIVES a name -> emit set_name, greet them by it, and ask the channel question as your one question: continue here on WhatsApp, a call now, or schedule a call time (emit set_channel if they also implied a choice). (b) their message does NOT give a name -> briefly handle whatever they said, then ask ONLY for their name; do not mention WhatsApp/call/schedule this turn. Either way the message must end with a question. If they clearly want no contact, emit opt_out."
+    ? "GOAL NOW: the customer's name is unknown. TWO CASES: (a) their latest message GIVES a name -> emit set_name (the ONLY way a name is saved - there is no customer_name fact key), greet them by it, and ask the channel question as your one question: continue here on WhatsApp, a call now, or schedule a call time (emit set_channel if they also implied a choice). (b) their message does NOT give a name -> briefly handle whatever they said, then ask ONLY for their name; do not mention WhatsApp/call/schedule this turn. Either way the message must end with a question. If they clearly want no contact, emit opt_out."
     : mode === "ask_channel"
       ? "GOAL NOW: the customer has not picked a channel. Briefly handle whatever they said, then ask: continue here on WhatsApp, a call now, or schedule a call time? If their message already implies a choice, emit set_channel. If they clearly want no contact, emit opt_out."
-      : "GOAL NOW: qualify. Ask only the next uncovered fact in order. Emit upsert_fact for every answer (including declines: declined=true), update_step_context with a short narrative, and advance_step when the current step's fact is covered.";
+      : "GOAL NOW: qualify. Ask only the next uncovered fact in order. Emit upsert_fact for every answer (including declines: declined=true; names go in set_name, never upsert_fact), update_step_context with a short narrative, and advance_step ONLY in the same turn as (or after) the upsert_fact that covers the current step - a step with its fact still uncovered must not be left.";
 
   return [
     `Lead language: ${lead.language ?? "ar"}.`,

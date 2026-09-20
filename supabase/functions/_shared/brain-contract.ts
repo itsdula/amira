@@ -2,7 +2,7 @@
 // Pure functions of (pack, actions) — no model, no network. Unit-testable,
 // and the eval suite replays adversarial action lists through it.
 
-import { findGrade, findModel } from "./catalogue.ts";
+import { findGrade, findModel, MODELS } from "./catalogue.ts";
 
 export type Action =
   | { type: "set_channel"; choice: "whatsapp" | "call_now" | "schedule"; preferred_call_at?: string | null }
@@ -37,6 +37,20 @@ export type Pack = {
 export const FACTS_OWNED: Record<string, string[]> = {
   channel: ["preferred_channel"],
   vehicle: ["vehicle", "grade"],
+  payment: ["payment"],
+  colours: ["colours"],
+  order_gate: ["order_now"],
+  accessories: ["accessories"],
+  timing: ["timing"],
+  close: [],
+  done: [],
+};
+
+// Facts that MUST be covered (value or decline) before leaving a step.
+// Subset of FACTS_OWNED: optional details (e.g. grade) don't block exit.
+export const REQUIRED_FOR_EXIT: Record<string, string[]> = {
+  channel: ["preferred_channel"],
+  vehicle: ["vehicle"],
   payment: ["payment"],
   colours: ["colours"],
   order_gate: ["order_now"],
@@ -100,11 +114,28 @@ export function checkFactValue(pack: Pack, key: string, value: unknown, declined
   }
 }
 
+// A proposed customer name that is actually a catalogue model/grade is a
+// model slip (e.g. answering the vehicle question got routed into set_name).
+export function looksLikeVehicleName(s: string): boolean {
+  const q = s.trim();
+  if (findModel(q)) return true;
+  const lower = q.toLowerCase();
+  return MODELS.some((m) =>
+    m.grades.some((g) =>
+      (g.name_en ?? "").toLowerCase() === lower || (g.name_ar ?? "") === q
+    )
+  );
+}
+
 export function validateActions(pack: Pack, actions: Action[]): { accepted: Action[]; rejected: Rejection[] } {
   const accepted: Action[] = [];
   const rejected: Rejection[] = [];
   const step = pack.lead?.current_step ?? "channel";
   const owned = FACTS_OWNED[step] ?? [];
+
+  // advance_step is validated in a second pass so the coverage check can see
+  // facts accepted in THIS turn regardless of the model's action ordering.
+  const deferred: Action[] = [];
 
   for (const action of actions ?? []) {
     switch (action.type) {
@@ -113,8 +144,13 @@ export function validateActions(pack: Pack, actions: Action[]): { accepted: Acti
         break;
       case "set_name": {
         const name = String(action.full_name ?? "").trim();
-        if (name.length >= 2 && name.length <= 80) accepted.push(action);
-        else rejected.push({ action, reason: "full_name must be 2-80 chars" });
+        if (name.length < 2 || name.length > 80) {
+          rejected.push({ action, reason: "full_name must be 2-80 chars" });
+        } else if (looksLikeVehicleName(name)) {
+          rejected.push({ action, reason: `"${name}" is a catalogue vehicle, not a customer name` });
+        } else {
+          accepted.push(action);
+        }
         break;
       }
       case "set_channel":
@@ -140,13 +176,33 @@ export function validateActions(pack: Pack, actions: Action[]): { accepted: Acti
         accepted.push(action);
         break;
       case "advance_step":
-        if ((TRANSITIONS[step] ?? []).includes(action.step)) accepted.push(action);
-        else rejected.push({ action, reason: `illegal transition ${step} -> ${action.step}` });
+        deferred.push(action);
         break;
       default:
         rejected.push({ action: action as Action, reason: "unknown action type" });
     }
   }
+
+  // Second pass: a step may only be left once every fact it owns is covered
+  // (stored earlier, or accepted this turn). Prevents the skipped-vehicle
+  // wedge where later steps can never validate.
+  const covered = new Set(Object.keys(pack.facts ?? {}));
+  for (const a of accepted) if (a.type === "upsert_fact") covered.add(a.key);
+
+  for (const action of deferred) {
+    if (action.type !== "advance_step") continue;
+    if (!(TRANSITIONS[step] ?? []).includes(action.step)) {
+      rejected.push({ action, reason: `illegal transition ${step} -> ${action.step}` });
+      continue;
+    }
+    const missing = (REQUIRED_FOR_EXIT[step] ?? []).filter((k) => !covered.has(k));
+    if (missing.length > 0) {
+      rejected.push({ action, reason: `cannot leave ${step}: uncovered facts [${missing.join(", ")}]` });
+    } else {
+      accepted.push(action);
+    }
+  }
+
   return { accepted, rejected };
 }
 

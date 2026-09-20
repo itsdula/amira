@@ -9,7 +9,7 @@
 // X-Webhook-Signature header. Accepts both "hex" and "t=<ts>,v1=<hex>" forms.
 
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { checkFactValue, Pack } from "../_shared/brain-contract.ts";
+import { checkFactValue, looksLikeVehicleName, Pack } from "../_shared/brain-contract.ts";
 import { guessGender } from "../_shared/gender.ts";
 
 function serviceKey(): string {
@@ -166,7 +166,7 @@ Deno.serve(async (req) => {
   }
 
   const fullName = String(sd.full_name ?? "").trim();
-  if (fullName && fullName.toLowerCase() !== "unknown" && !lead.full_name) {
+  if (fullName && fullName.toLowerCase() !== "unknown" && !lead.full_name && !looksLikeVehicleName(fullName)) {
     const gender = guessGender(fullName);
     const { error } = await db.from("leads")
       .update({ full_name: fullName, gender_form: gender }).eq("id", leadId);
