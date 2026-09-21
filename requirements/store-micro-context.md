@@ -57,6 +57,7 @@ Things outside the model. Handlers *are* entrypoints; the rows below are what a 
 | **`get_lead_pack`** | Voice dial / any reload | Lead + latest submission + facts + this step’s micro-context + last N messages + `uncovered` + `next_action`. |
 | **`upsert_fact`** | Gather writes | Overwrite one coverage key. Decline is a write. |
 | **View `lead_latest_submission`** | AF table reads | Latest form seed per `lead_id`. Do not scan `submissions`. |
+| **`reset_test_data`** | Test rounds only (never product logic) | Truncates every public table (`restart identity cascade`), returns pre-wipe counts. Service-role only. Wrapped by `tools/reset-test-data.sh` + skill `amira-reset-test-data`. |
 
 ### Catalogue
 

@@ -55,6 +55,7 @@ per-turn state (`[CONTEXT]`, call variables), never style.
 | `migrations/20260914120000_lead_store.sql` | The lead store: `leads`, `submissions`, `facts`, `step_contexts`, `messages`, view `lead_latest_submission`, RPCs `record_inbound`, `get_lead_pack`, `upsert_fact`, `ingest_form_submission`, `lead_next_action`, `lead_pack_for`. RLS on everything; service-role only. |
 | `migrations/20260914160000_channel_choice_outbound.sql` | RPCs `set_channel_choice` (channel + 09:00–21:00 Riyadh clamp + `dial_now` flag) and `record_outbound` (log what we sent). |
 | `migrations/20260917210000_normalize_mobile.sql` | `normalize_mobile()` folded into every RPC — inbound `966…` becomes `+966…` before any constraint sees it. |
+| `migrations/20260921120000_reset_test_data.sql` | `reset_test_data()` — truncates every public table, returns pre-wipe counts. Test resets only; service-role only. |
 | `functions/request-call/index.ts` | **Init service.** Receives the public form POST, calls `ingest_form_submission`, fires the AF template flow when consent allows. |
 | `functions/inbound-brain/index.ts` | **The WhatsApp brain.** `{pack, text}` → model (AF assistant first, OpenAI-compatible fallback, deterministic questions if neither) → `validateActions` → write store synchronously → reply. Also owns the **dialer**: a validated `call_now` choice inside hours triggers `POST /call`. Auth: functional service-key probe. Every turn writes a `brain_audit` row (provider, applied/rejected, latency). |
 | `functions/inbound-brain/ASSISTANT_PROMPT.md` | The WhatsApp Assistant's installed system prompt (tune/contract halves), assistant ids, recreate instructions. |
@@ -98,6 +99,7 @@ secrets (dashboard → Edge Functions → Secrets): `AGENTICFLOW_API_KEY`,
 | `catalogue/raw/2026-09-13/` | The raw fetched pages + fetch log from the scrape date (provenance for every quoted price). |
 | `catalogue/emit-module.mjs` | Regenerates `supabase/functions/_shared/catalogue.ts` from the JSON. |
 | `agenticflow-mcp/index.mjs` + `catalog.json` | Local MCP server wrapping the AgenticFlow API + docs (this is the `project-0-amira-agenticflow` MCP in Cursor). `generate-catalog.mjs` rebuilds the operations catalog. |
+| `reset-test-data.sh` | One-command test reset — calls the `reset_test_data()` RPC (key from env/`.env`). |
 
 ### `tickets/` — the ticketing system
 
@@ -113,6 +115,7 @@ at); `tickets/TEMPLATE.md` is the form. One file per ticket, numbered.
 | `rules/store-micro-context.mdc` | Data-contract rules every agent must follow (write-as-you-go, facts are coverage, no invented tools). |
 | `rules/tickets.mdc` | Points every agent session at `tickets/`. |
 | `skills/amira-create-wa-template-flow/` | Skill that generates WA template-send subflows (`SKILL.md`, flow template, input schema, generator script). |
+| `skills/amira-reset-test-data/` | Skill wrapping the test-data reset (RPC / script / SQL — one mechanism, never hand-written truncates). |
 | `mcp.json` | Wires the local AgenticFlow MCP into Cursor. |
 
 ### `web/` — the public form (GitHub Pages)

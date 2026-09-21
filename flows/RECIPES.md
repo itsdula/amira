@@ -24,11 +24,16 @@ python3 flows/validate_flow.py flows/amira-inbound-whatsapp.json
 
 ## Reset test data
 
-All lead tables cascade from `leads`. Run in the Supabase SQL editor between test rounds:
+One reusable mechanism (skill: `.cursor/skills/amira-reset-test-data/`) — the
+`reset_test_data()` RPC truncates every public table and returns the counts it
+wiped. Run any of:
 
 ```sql
-truncate public.leads cascade;   -- also clears submissions, facts, step_contexts, messages
-truncate public.request_calls;
+select public.reset_test_data();          -- SQL editor or Supabase MCP
+```
+
+```bash
+tools/reset-test-data.sh                   # local (service key in env or .env)
 ```
 
 Useful checks after a test conversation:
