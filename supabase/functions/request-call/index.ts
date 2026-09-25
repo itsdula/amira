@@ -1,14 +1,9 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { sendTemplate, vehicleLabel } from "../_shared/af.ts";
 import { corsHeaders } from "../_shared/cors.ts";
+import { serviceKey } from "../_shared/env.ts";
+import { guessGender } from "../_shared/gender.ts";
 import { isVehicleId } from "../_shared/vehicles.ts";
-
-function serviceKey(): string {
-  const legacy = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (legacy) return legacy;
-  const raw = Deno.env.get("SUPABASE_SECRET_KEYS");
-  if (raw) return JSON.parse(raw)["default"];
-  throw new Error("Missing service role key");
-}
 
 function json(status: number, body: unknown) {
   return new Response(JSON.stringify(body), {
@@ -95,37 +90,40 @@ Deno.serve(async (req) => {
 
   const lead = pack.lead;
   const latest = pack.latest_submission ?? {};
+  const gender = guessGender(lead.full_name);
+  if (gender !== "unknown") {
+    await supabase.from("leads").update({ gender_form: gender }).eq("id", lead.id);
+  }
 
-  const payload = {
-    id: lead.id,
-    submissionId: pack.submission_id,
-    fullName: lead.full_name,
-    mobileE164: lead.mobile_e164,
-    vehicle: latest.vehicle ?? vehicle,
-    language: lead.language,
-    consentWhatsapp: lead.consent_whatsapp,
-    submittedAt: latest.submitted_at ?? submittedAt,
-    template: "callback_request_confirm",
-    templateLanguage: lead.language === "ar" ? "ar" : "en_US",
-  };
-
-  const webhookUrl = Deno.env.get("FORM_WEBHOOK_URL");
-  if (!webhookUrl) {
-    console.error("FORM_WEBHOOK_URL is not set; skipped template webhook.");
-  } else if (!pack.send_template) {
-    console.info("Skipped template webhook (no consent or opted out).");
-  } else {
+  const chosenVehicle = latest.vehicle ?? vehicle;
+  if (pack.send_template) {
+    const ar = lead.language === "ar";
     try {
-      const hook = await fetch(webhookUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+      const name = ar ? "callback_request_confirm_ar" : "callback_request_confirm_en";
+      const params = [lead.full_name.split(/\s+/)[0] || lead.full_name, vehicleLabel(chosenVehicle, ar)];
+      let sent = await sendTemplate({
+        to: lead.mobile_e164,
+        name,
+        language: ar ? "ar" : "en_US",
+        params,
       });
-      if (!hook.ok) {
-        console.error("Form webhook failed", hook.status, await hook.text());
+      if (!sent.ok && ar) {
+        sent = await sendTemplate({ to: lead.mobile_e164, name, language: "en_US", params });
+      }
+      if (!sent.ok) {
+        console.error("Form template send failed", sent.status, sent.text.slice(0, 300));
+      } else {
+        await supabase.rpc("record_outbound", {
+          p_mobile: lead.mobile_e164,
+          p_text: `template ${ar ? "callback_request_confirm_ar" : "callback_request_confirm_en"}`,
+          p_channel: "whatsapp",
+          p_step: "channel",
+          p_handler: "form",
+          p_meta: { kind: "open_template", language: ar ? "ar" : "en_US" },
+        });
       }
     } catch (err) {
-      console.error("Form webhook error", err);
+      console.error("Form template send error", err);
     }
   }
 

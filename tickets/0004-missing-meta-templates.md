@@ -25,4 +25,4 @@ see AGENT-HANDOFF "WhatsApp templates".
   critical path for ghost/close.
 - Component: Meta template submission (dashboard — API keys can't manage
   templates) + then the ghost/close services consume them.
-- Fix / commit: —
+- Fix / commit: `closing_summary_ar` and `closing_summary_en` are approved. Inbound sends the matching one when a lead is written hot or cold. `reschedule` sends `followup_nudge_ar` / `followup_nudge_en` once, 15 minutes after the opening template, if the lead never replied and the clock is 09:00–21:00 Asia/Riyadh. Those two nudge templates are not submitted yet: API keys cannot manage templates.

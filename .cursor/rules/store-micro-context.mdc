@@ -1,16 +1,16 @@
 ---
-description: Store writes, per-step micro-context, and indexed chat log
+description: Store writes and lead selection blob
 alwaysApply: true
 ---
 
-# Store and micro-context
+# Store and selection
 
 When changing process, handlers, prompts, or AgenticFlow tools, follow [requirements/store-micro-context.md](requirements/store-micro-context.md).
 
 - Three TRIGGERS, three handlers: **form**, **reschedule**, **inbound**. Do not merge them.
-- External tools (templates, store, catalogue, `POST /call`, scheduler, opt-out, can-send) are listed in that spec. Do not invent a new tool without adding it there.
-- Every step writes as it goes: `leads` + `facts` + that step’s `step_contexts` + `messages`.
-- A fact is coverage. Re-asking a stored or declined field is a defect.
-- Micro-context is narrative + open threads (e.g. “white Camry, wife may drive it”), not only slots.
-- Chat log is append-only and indexed by `lead_id+at`, `lead_id+step`, and full-text. Index inbound text in the inbound handler before the model replies.
-- Expand the step table in that spec when a band is in progress. Do not invent later-step facts early.
+- External tools (AF messaging/call HTTP APIs, store, catalogue, scheduler, opt-out, can-send) are listed in that spec. Do not invent a new tool without adding it there. Do not put handler logic in an AF canvas.
+- Qualification is `leads.selection` (one JSON object). Pass it every turn. The model fills empty keys; code picks the next empty key. Code also writes NEXT ASK from a clear inbound answer if the model omitted the patch.
+- A filled key (including `accessories: "none"`) is coverage. Re-asking it is a defect.
+- Never ask for the phone number. It is `leads.mobile_e164`.
+- Chat log is append-only `messages`. Index inbound text in the inbound handler before the model replies.
+- Do not bring back `facts` or `step_contexts`.

@@ -1,8 +1,8 @@
 # Amira — bilingual WhatsApp + voice assistant for KSA automotive retail
 
 Amira qualifies Changan Saudi Arabia leads over WhatsApp and phone calls, in
-Najdi Arabic or English: channel choice → vehicle → payment → colours → order
-gate → accessories → timing → close. Built as small services around one shared
+Najdi Arabic or English: channel choice → vehicle → payment → color → order
+now → accessories → timing → close. Built as small services around one shared
 lead store, not one giant flow.
 
 **Live lead form:** [itsdula.github.io/amira](https://itsdula.github.io/amira/)
@@ -13,19 +13,18 @@ and the data contract `requirements/store-micro-context.md`.
 ## How it runs (30 seconds)
 
 ```
-Form (web/) ──► request-call fn ──► ingest_form_submission ──► WA template (AF init flow)
-Customer replies on WhatsApp ──► AF inbound flow ──► record_inbound (store first)
+Form (web/) ──► request-call fn ──► ingest_form_submission ──► POST /messaging/messages (template)
+Customer replies on WhatsApp ──► AF channel ──► inbound fn ──► record_inbound (store first)
    ├─ keyword channel choice ──► set_channel_choice ──► confirm text ──► dial if call_now
-   └─ anything semantic ──────► inbound-brain fn: model → validate actions → write store → reply
+   └─ anything semantic ──────► model → write selection → POST /messaging/messages (text)
 "Call now" (in 09:00–21:00 Riyadh) ──► POST /call ──► Voice Assistant rings the customer
-Call ends ──► AF end-of-call report ──► voice-hub fn: transcript + validated facts → store
+Call ends ──► AF end-of-call report ──► voice-hub fn: transcript + validated selection → store
 ```
 
-Two LLM surfaces, both tuned **only** in the AgenticFlow dashboard system
-messages (each prompt is split "tune freely" / "machine contract — don't
-edit"): **WhatsApp Assistant** (`8ef58e44-…`, drives `inbound-brain`) and
-**Voice Assistant** (`bb7401d6-…`, realtime calls). The Edge Functions inject
-per-turn state (`[CONTEXT]`, call variables), never style.
+Two assistants, both tuned in the AgenticFlow dashboard: **WhatsApp Assistant**
+(`8ef58e44-…`) and **Voice Assistant** (`bb7401d6-…`). The WhatsApp function
+sends facts (selection, catalogue, the latest lines). It does not repeat the
+objective. That lives on the assistant, which always returns `{ reply, actions }`.
 
 ## Repo map — every folder and file
 
@@ -50,27 +49,33 @@ per-turn state (`[CONTEXT]`, call variables), never style.
 
 | Path | What it is |
 | --- | --- |
-| `config.toml` | Local CLI config; declares `verify_jwt=false` for the three functions (each does its own auth). |
+| `config.toml` | Local CLI config; declares `verify_jwt=false` for the functions (each does its own auth). |
 | `migrations/20260913090000_create_request_calls.sql` | First slice: raw form submissions table (kept for history/backfill). |
-| `migrations/20260914120000_lead_store.sql` | The lead store: `leads`, `submissions`, `facts`, `step_contexts`, `messages`, view `lead_latest_submission`, RPCs `record_inbound`, `get_lead_pack`, `upsert_fact`, `ingest_form_submission`, `lead_next_action`, `lead_pack_for`. RLS on everything; service-role only. |
+| `migrations/20260914120000_lead_store.sql` | Original lead store: `leads`, `submissions`, `messages` (plus the retired `facts` / `step_contexts` tables). RPCs `record_inbound`, `get_lead_pack`, `ingest_form_submission`, `lead_next_action`, `lead_pack_for`. RLS on everything; service-role only. |
 | `migrations/20260914160000_channel_choice_outbound.sql` | RPCs `set_channel_choice` (channel + 09:00–21:00 Riyadh clamp + `dial_now` flag) and `record_outbound` (log what we sent). |
 | `migrations/20260917210000_normalize_mobile.sql` | `normalize_mobile()` folded into every RPC — inbound `966…` becomes `+966…` before any constraint sees it. |
 | `migrations/20260921120000_reset_test_data.sql` | `reset_test_data()` — truncates every public table, returns pre-wipe counts. Test resets only; service-role only. |
-| `functions/request-call/index.ts` | **Init service.** Receives the public form POST, calls `ingest_form_submission`, fires the AF template flow when consent allows. |
-| `functions/inbound-brain/index.ts` | **The WhatsApp brain.** `{pack, text}` → model (AF assistant first, OpenAI-compatible fallback, deterministic questions if neither) → `validateActions` → write store synchronously → reply. Also owns the **dialer**: a validated `call_now` choice inside hours triggers `POST /call`. Auth: functional service-key probe. Every turn writes a `brain_audit` row (provider, applied/rejected, latency). |
-| `functions/inbound-brain/ASSISTANT_PROMPT.md` | The WhatsApp Assistant's installed system prompt (tune/contract halves), assistant ids, recreate instructions. |
-| `functions/voice-hub/index.ts` | **Voice ingest.** Receives the assistant's end-of-call report (HMAC-verified), logs transcript+summary to `messages` (channel `voice`), writes `analysis.structuredData` facts through the same `checkFactValue` validation as chat, sets name+gender if new. |
+| `migrations/20260921180000_lead_selection.sql` | `leads.selection` jsonb (one qualification object per lead). Drops `facts` and `step_contexts`. RPC `patch_selection`. |
+| `functions/request-call/index.ts` | **Init service.** Public form POST → `ingest_form_submission` → AF `POST /messaging/messages` template when consent allows. |
+| `functions/inbound/index.ts` | **WhatsApp handler.** Channel webhook (HMAC). `record_inbound` first, then keyword channel or the model turn, then AF send / `POST /call`. |
+| `functions/inbound-brain/index.ts` | Model turn only (debug/curls). Live traffic uses `inbound`. |
+| `functions/inbound-brain/ASSISTANT_PROMPT.md` | Copy of the WhatsApp Assistant system prompt. That prompt is the only instruction. |
+| `functions/voice-hub/index.ts` | **Voice ingest.** Receives the assistant's end-of-call report (HMAC-verified), logs transcript+summary to `messages` (channel `voice`), writes `analysis.structuredData` through `applySelectionPatch`. |
 | `functions/voice-hub/VOICE_ASSISTANT.md` | The Voice Assistant's installed prompt, config table, extraction schema, dial-path explanation. |
-| `functions/_shared/brain-contract.ts` | The action contract: types, per-step fact allowlists (`FACTS_OWNED`), legal step transitions, catalogue-grounded value checks. Pure functions — the LLM proposes, this decides. |
+| `functions/_shared/brain-contract.ts` | The action contract: `selection` shape, `nextAsk`, catalogue-grounded value checks. Pure functions — the LLM proposes, this decides. |
 | `functions/_shared/catalogue.ts` | GENERATED from the scrape (`tools/catalogue/emit-module.mjs`). Models/grades/prices/colours + lookup helpers. Do not hand-edit. |
 | `functions/_shared/gender.ts` | `guessGender(name)` — list + suffix heuristics, honest `unknown`. |
 
 Deploys go through the Supabase MCP (`deploy_edge_function`) or CLI. Function
 secrets (dashboard → Edge Functions → Secrets): `AGENTICFLOW_API_KEY`,
-`BRAIN_AF_ASSISTANT_ID`, `VOICE_ASSISTANT_ID`, `VOICE_HUB_SECRET`
+`BRAIN_AF_ASSISTANT_ID`, `CHANNEL_WEBHOOK_SECRET`, `VOICE_ASSISTANT_ID`, `VOICE_HUB_SECRET`
 (+ optional `BRAIN_API_KEY`/`BRAIN_MODEL`/`BRAIN_API_URL` fallback).
 
-### `flows/` — AgenticFlow automation
+### `desk/` — local view of the store
+
+Vite app. Lists leads and the message log, and subscribes to Realtime so a WhatsApp turn shows up as it lands. Run `npm install && npm run dev` inside `desk/`. The service role key stays in the browser on your machine; do not deploy this app. See `desk/README.md`.
+
+### `flows/` — retired AF canvas (kept as history / samples)
 
 | Path | What it is |
 | --- | --- |

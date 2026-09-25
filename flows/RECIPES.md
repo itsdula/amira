@@ -1,16 +1,13 @@
-# AF flows — import, wire, test
+# AF flows — retired
 
-Two flows run the product today:
+Live path is Edge Functions, not a canvas.
 
-| Flow | File | Trigger |
-| --- | --- | --- |
-| Send WA Template (init) | live in AF already (regenerate with `.cursor/skills/amira-create-wa-template-flow/` if ever lost) | Called with `{ name, phone, vehicle, language }` from the form webhook |
-| Amira Inbound WhatsApp | `flows/amira-inbound-whatsapp.json` | Imports with a **Manual Trigger** — swap to Catch Webhook in the UI after import |
+- Form template: `request-call` → `POST /messaging/messages`
+- Inbound: channel `webhookUrl` → `https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/inbound`
 
-> Re-import needed (2026-09-17): the generated flow gained a dial branch
-> (`route_dial` → `place_call`) so the keyword fast path actually places the
-> call it promises. Import the fresh JSON, swap the trigger, re-point the
-> channel `webhookUrl`.
+This folder is history + event samples (`flows/samples/`). The generator and
+import notes below are only useful if someone has to reconstruct the old
+canvas. Do not re-point the channel at a flow.
 
 Import rules come from the team's own skill repo ([AC-Group2/agenticflow-studio](https://github.com/AC-Group2/agenticflow-studio), `activepieces-flow-builder`): SHARED wrapper with `flows[]` + `metadata.externalId`, schema `22`, and **the imported first piece must be a Manual Trigger** — webhook-first flows import with an empty trigger (exactly what we saw). Every step, code and routers included, carries `lastUpdatedDate`, `sampleData`, and per-input `propertySettings`. Validate before importing:
 
@@ -39,10 +36,8 @@ tools/reset-test-data.sh                   # local (service key in env or .env)
 Useful checks after a test conversation:
 
 ```sql
--- lead state machine
-select mobile_e164, status, current_step, current_channel, opted_out, preferred_call_at from leads;
--- coverage (including declines)
-select key, value, declined, step from facts order by at;
+-- lead + selection
+select mobile_e164, status, current_step, current_channel, selection from leads;
 -- what the model tried vs what the executor allowed, with latency
 select at, text, meta->>'model_ms' as model_ms, meta->>'total_ms' as total_ms
 from messages where meta->>'kind' = 'brain_audit' order by at;

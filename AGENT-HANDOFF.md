@@ -18,14 +18,14 @@ Never paint a band green. Green HOT / red COLD nodes are lead outcomes, not conf
 
 **Three handlers stay split:** form, reschedule, inbound. Do not merge them.
 
-Data contract: `requirements/store-micro-context.md`. Every step writes as it goes: `leads` + `facts` + that step’s `step_contexts` + `messages`. A fact is coverage (including declined). Micro-context is narrative + open threads, not only slots. Chat log is append-only; index inbound **before** the model replies.
+Data contract: `requirements/store-micro-context.md`. Qualification is `leads.selection` (one JSON object, passed every turn). The model fills empty keys; code picks the next empty key and writes a clear inbound answer to that key if the model omitted `patch_selection`. Chat log is append-only `messages`; index inbound **before** the model replies. Never ask for the mobile.
 
 ## Architecture (decided)
 
 - **Store = existing Supabase project `amira`** (`tmewbswbhnmuuomdfewq`, `ap-south-1`). Not AgenticFlow/n8n tables. KB = company RAG only.
 - AgenticFlow has **no** leads/memory API. WhatsApp and voice share one lead page (requirement D), keyed by `mobileE164`.
-- Turn start: small **sync read** (lead + facts + this step’s micro-context + last N messages). Writes fire-and-forget on voice (do not block speech / narrate plumbing).
-- **AF is the pipe** (WhatsApp channel, templates, voice STT/TTS, optional chat). The **harness** (load pack → model → tools → write) should not be a pile of routers. A small Node/Edge Function is the intended brain for inbound; AF **callable boxes** are reusable edges (send template, can-send, HTTP to Supabase).
+- Turn start: small **sync read** (lead.selection + last N messages). Writes fire-and-forget on voice (do not block speech / narrate plumbing).
+- **AF is the pipe** (WhatsApp channel, messaging/call HTTP APIs, voice STT/TTS, chat assistant, files, KB). Handler logic is Edge Functions. There is no inbound canvas on the live path. Channel `webhookUrl` = `…/functions/v1/inbound`.
 - Voice cannot read tables in-process. Function tools only POST `server.url`. That URL can be a **sync catch-webhook** or a **Supabase Edge Function**. Same store URLs for WhatsApp handlers and voice tools.
 - AF MCP in docs is **docs for Cursor**, not a runtime. You cannot attach MCP to their assistant. Chat/voice tools are HTTP. `POST /chat/message` **is** their harness. Own harness + own model + MCP is OK for **WhatsApp text**; voice stays AF assistant + HTTP tools.
 - Knowledge base ≠ lead store. He already knows. Company details go in KB; leads go in Supabase.
@@ -36,7 +36,7 @@ Data contract: `requirements/store-micro-context.md`. Every step writes as it go
 - Auth: `X-Api-Key`. Use `{{variables['AgenticFlow_API_KEY']}}` in flows — never bake keys into exports (old `whatsapp-messaging.json` / `widget-simple.json` had a live key; rotate if still there).
 - WhatsApp channel (connected, active): id **`160e6c61-174a-4de1-b338-ce2e27666c37`**, display **Amira AI - almost human**, number **+49 681 93784711**. `channelId` is the inbox, not a user/chat; `to` is the customer E.164. Stable until reconnect.
 - English Meta locale is always **`en_US`**, never `en`. Arabic is **`ar`**. Form language field may still be `en`/`ar`.
-- Inbound WhatsApp: **Meta → AF → POST channel `webhookUrl`** (Catch Webhook). Lead does not hit the flow. If `webhookUrl` is empty, the flow never runs.
+- Inbound WhatsApp: **Meta → AF channel → POST `webhookUrl`** = `inbound` Edge Function. HMAC `t=,v1=` with `CHANNEL_WEBHOOK_SECRET`. If `webhookUrl` is empty or still the old canvas, our function never runs.
 - Assistant webhooks (`status-update`, `transcript`, `end-of-call-report`) are **voice lifecycle** on the assistant `server` block — not messaging. Messaging events live on the **channel**. `tool-calls` go to each tool’s URL. `assistant-request` is on the **phone number**.
 - Workspace assistant via API: **Forward - 6 digits code** (`1eab5020-8570-43f3-bfd9-4787cdb0318e`), `type: realtime`, `tools: []`, those three voice events, no KB. Widget/WA demo flows referenced `f4e15aeb-…` which **404s** on this workspace. Realtime assistants are not chat-compatible.
 - Chat vs send: `POST /chat/message` generates text (nothing to the customer). `POST /messaging/messages` delivers. Bridge: same `channelId` and `threadKey` = `to` (E.164) or each turn is a new billed conversation.
@@ -63,7 +63,7 @@ Intended names (drift — confirm in dashboard before sending):
 
 - Public form is **`web/index.html`** in this repo, served by the GitHub Pages workflow → [itsdula.github.io/amira](https://itsdula.github.io/amira/). Not an Edge Function HTML (Supabase GET `text/html` rewrite).
 - POSTs JSON to `https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/request-call` with publishable key on the page (intentional).
-- Function upserts `request_calls`, then if consent POSTs to `FORM_WEBHOOK_URL` (AF catch/callable). Payload includes `fullName`, `mobileE164`, `vehicle`, `language`, `template`, `templateLanguage`. Test payloads to the box sometimes used `{ name, phone, vehicle, language }` — map carefully.
+- Function upserts via `ingest_form_submission`, then if consent sends `callback_request_confirm_en` / `_ar` with `POST /messaging/messages`. No `FORM_WEBHOOK_URL`.
 - `verify_jwt = false` on that function. Do not fail the form 200 if the webhook fails.
 
 ## AF workflow patterns (exploration)
@@ -84,11 +84,11 @@ The workspace reference exports (`whatsapp-messaging.json`, `whatsapp-send-templ
 
 ## Store (built)
 
-Tables: `leads`, `submissions`, `facts`, `step_contexts`, `messages`. View: `lead_latest_submission`. RPCs (service_role): `ingest_form_submission`, `record_inbound`, `set_channel_choice`, `record_outbound`, `get_lead_pack`, `upsert_fact`. Form Edge Function writes via ingest (not `request_calls`). Pack `next_action`: `ask_channel` \| `gather` \| `stop_opted_out` \| `already_closed`.
+Tables: `leads` (includes `selection` jsonb), `submissions`, `messages`. View: `lead_latest_submission`. RPCs (service_role): `ingest_form_submission`, `record_inbound`, `set_channel_choice`, `record_outbound`, `get_lead_pack`, `patch_selection`. Form Edge Function writes via ingest (not `request_calls`). Pack `next_action`: `ask_channel` \| `gather` \| `stop_opted_out` \| `already_closed`. Pack `next_ask` is the next empty selection key.
 
 ## Flows (repo `flows/`)
 
-`flows/amira-inbound-whatsapp.json` — generated by `flows/build-inbound-flow.mjs` (rerun after edits; do not hand-edit). Wiring, node recipes, and test curls: `flows/RECIPES.md`. Paste-ready test payloads: `flows/samples/`. Needs AF variables `SUPABASE_SERVICE_ROLE_KEY` + `AgenticFlow_API_KEY` and the channel `webhookUrl` pointed at the flow. The keyword fast path now dials on `dial_now` (`route_dial` → `place_call`; voice assistant + phone number ids baked in the generator) — the regenerated JSON must be re-imported. A live workspace API key once sat in the old `whatsapp-messaging.json` export (since removed) — rotate that key in the AF dashboard if it was never rotated.
+`flows/` is retired history (generator + samples). Live inbound is `supabase/functions/inbound`. Point the channel `webhookUrl` at `https://tmewbswbhnmuuomdfewq.supabase.co/functions/v1/inbound`. Event samples: `flows/samples/`.
 
 **Import ground truth:** [AC-Group2/agenticflow-studio](https://github.com/AC-Group2/agenticflow-studio) — the assessing team's own skills repo (their product is also called Amira). `activepieces-flow-builder` skill: SHARED wrapper + `metadata.externalId`, schema 22, **first piece must be a Manual Trigger** (webhook-first imports produce an empty trigger — swap in the UI after import), every step needs `lastUpdatedDate`/`sampleData`/`propertySettings`, code steps are isolated-vm (no fetch/npm). Validator vendored at `flows/validate_flow.py` — run it before delivering any flow file. Their `agenticflow-api` skill has the full OpenAPI spec; `reference/agenticflow-assistant.md` documents the voice-assistant export shape (useful for the voice slice). Caveat: `.cursor/skills/amira-create-wa-template-flow` generates a callableFlow-first flow — same import risk; if its import fails, use its snippets (that is what they are for).
 
@@ -107,21 +107,21 @@ Tables: `leads`, `submissions`, `facts`, `step_contexts`, `messages`. View: `lea
 - Delete leftover deployed `request-call-form` in dashboard if it still exists (CLI undeploy needed login).
 - Treat Dula’s AF JSON as a **tool to learn**, not a finished product to nitpick against the brief unless he asks.
 
-## inbound-brain (built)
+## inbound (built 2026-09-22)
 
-Edge Function `inbound-brain` (deployed, v2): the model turn for ask_channel misses + all gather turns. `{pack, text, message_id}` → model → executor validates actions (`_shared/brain-contract.ts`: step fact allowlists, legal transitions, catalogue-grounded values via generated `_shared/catalogue.ts`) → writes state sync → returns reply. Rejections audit-logged (`messages.meta.kind=brain_audit` + `provider`/`model_ms`/`total_ms` — latency evidence for G). **Model provider AF-first**: `/chat/message` with assistant **Amira Brain** `8ef58e44-6de1-48ec-8d76-189e8595fd7f` (type `pipeline` — AF's chat-capable type; model gpt-5.4-mini; KB Amira attached; smoke-tested: JSON + grounded price in 2.7s). Static rules + JSON schema live on the assistant, per-turn pack goes in `[CONTEXT]` (`supabase/functions/inbound-brain/ASSISTANT_PROMPT.md`). Secrets: `AGENTICFLOW_API_KEY` + `BRAIN_AF_ASSISTANT_ID`. AF facts learned: assistant types are only `pipeline`/`realtime`; tiers `standard`/`premium`/`gold`; `premium`→realtime-only; pipeline needs model+voice+transcriber (voice/STT schema-required even for chat use). OpenAI-compatible fallback only if AF pair unset (`BRAIN_API_KEY`). No model configured → deterministic fallback questions, flow still works. Auth = service-role key header; `verify_jwt=false`.
+Edge Function `inbound` is the WhatsApp handler. Channel webhook → HMAC → `record_inbound` → keyword channel or `runBrainTurn` → `POST /messaging/messages` / `POST /call`. Shared code: `_shared/af.ts`, `_shared/brain-turn.ts`, `_shared/channel.ts`. `inbound-brain` is the same model turn without send (debug). Secrets: `AGENTICFLOW_API_KEY`, `BRAIN_AF_ASSISTANT_ID`, `CHANNEL_WEBHOOK_SECRET`. `verify_jwt=false`.
 
 ## Voice slice (built 2026-09-17)
 
 - **Voice Assistant** (realtime, premium/holly): `bb7401d6-b4ba-45e1-98b2-948a74448ed5`. KB Amira attached. No mid-call tools — facts come from `analysis.structuredData` on the end-of-call report. Prompt + schema doc: `supabase/functions/voice-hub/VOICE_ASSISTANT.md`. **Voice card still English (holly)** — swap to an Arabic card in the dashboard (tier voice cards are dashboard-only).
-- **Dialer** exists twice, disjoint paths, one dial max per turn: brain executor (v13; semantic path — `set_channel_choice` returns `dial_now:true` → `POST /call` with pack as `variables`, `lead_id` in `metadata`; phone number id discovered from `GET /phone-number` → `data.phoneNumbers[0]`, cached) and flow fast path (`route_dial` → `place_call` node, ids baked at generation). Workspace phone number: `a76efc61-6055-4fd0-8943-d79e067cc2d4` (+49 sandbox).
-- **voice-hub** Edge Function (v1, deployed): receives `end-of-call-report`, verifies `X-Webhook-Signature` HMAC against `VOICE_HUB_SECRET`, logs transcript+summary to `messages` (channel=voice), writes extracted facts through `checkFactValue` (exported from `brain-contract.ts`), sets name+gender if new. Unsigned posts 401 (smoke-tested).
+- **Dialer** lives in `inbound` / `brain-turn` (`set_channel_choice` → `dial_now` → `POST /call`). Workspace phone number: `a76efc61-6055-4fd0-8943-d79e067cc2d4` (+49 sandbox).
+- **voice-hub** Edge Function: receives `end-of-call-report`, verifies `X-Webhook-Signature` HMAC against `VOICE_HUB_SECRET`, logs transcript+summary to `messages` (channel=voice), writes extracted fields through `applySelectionPatch`. Unsigned posts 401.
 - Secrets still to set (dashboard or CLI): `VOICE_ASSISTANT_ID`, `VOICE_HUB_SECRET` (value printed at creation; also lives on the assistant `server.secret`).
 - Prompt tuning model: **AF dashboard is the single tuning surface** for both assistants. Both prompts are split TUNE-FREELY / MACHINE-CONTRACT; the Edge Function only injects per-turn `[CONTEXT]` (state, not style). `STATIC_RULES` in `inbound-brain` is OpenAI-fallback-only, dead code in AF mode.
 - API gotchas hit: Cloudflare 1010 blocks python-urllib UA (set any custom UA); `kbRetrievalMode` is tier-forced on premium (omit); inline `{"type":"endCall"}` rejected on create (tools must be ids or accepted inline shapes; add end-call tool from dashboard if wanted).
 
 ## Suggested next work (when he says go)
 
-1. Set `VOICE_ASSISTANT_ID` + `VOICE_HUB_SECRET` Edge Function secrets; swap voice card to Arabic; test a call_now turn end-to-end (WhatsApp "اتصلوا علي" → dial → report lands in `messages`).
+1. Point channel `webhookUrl` at `inbound`; set `CHANNEL_WEBHOOK_SECRET`; delete the inbound canvas. Then a WhatsApp turn.
 2. Submit the two missing Meta UTILITY templates (follow-up nudge + closing recap) — review time blocks ghost and recap.
 3. Then: ghost scheduler (reads `preferred_call_at` + voice_call_report ended_reason), close service, Najdi gate + evals (replay `brain_audit` rows), latency report from `messages.meta`.

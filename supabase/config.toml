@@ -1,6 +1,10 @@
 [functions.request-call]
 verify_jwt = false
 
+[functions.inbound]
+# Auth is HMAC on X-Webhook-Signature (channel signing secret).
+verify_jwt = false
+
 [functions.inbound-brain]
 # Auth is the service-role key in headers (same as the flow's PostgREST calls).
 verify_jwt = false
@@ -8,3 +12,7 @@ verify_jwt = false
 [functions.voice-hub]
 # Auth is HMAC over the raw body with VOICE_HUB_SECRET (assistant server.secret).
 verify_jwt = false
+
+[functions.reschedule]
+verify_jwt = false
+schedule = "*/5 * * * *"

@@ -28,10 +28,8 @@ export const code = async (inputs) => {
   // dial_now=true (call_now inside 09:00-21:00 Riyadh): the flow places the
   // call itself on this deterministic path. The brain path dials in its
   // executor instead - the two never overlap on one turn.
-  const facts = pack.facts || {};
-  const covered = Object.keys(facts)
-    .map((k) => k + "=" + (facts[k].declined ? "declined" : JSON.stringify(facts[k].value)))
-    .join(", ") || "none";
+  const facts = pack.selection || lead.selection || {};
+  const covered = JSON.stringify(facts);
   const customer = { number: to, externalId: lead.id };
   if (lead.full_name) customer.name = lead.full_name;
 
@@ -46,7 +44,7 @@ export const code = async (inputs) => {
         customer_name: lead.full_name || "",
         gender_form: lead.gender_form || "unknown",
         language: lead.language || "ar",
-        vehicle: String((facts.vehicle || {}).value || ""),
+        vehicle: String(facts.vehicle || ""),
         covered_facts: covered,
       },
     },
