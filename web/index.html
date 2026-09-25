@@ -217,6 +217,21 @@
       cursor: pointer;
     }
 
+    button.fill {
+      width: 100%;
+      height: 2.5rem;
+      margin-bottom: 0.55rem;
+      border: 1px solid var(--line);
+      border-radius: 0.85rem;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    button.fill:hover { background: #f7f4ee; }
+
     button.submit {
       width: 100%;
       height: 2.95rem;
@@ -345,6 +360,7 @@
             <label for="consentWhatsapp" data-i18n="consent"></label>
           </div>
 
+          <button class="fill" id="fill" type="button" data-i18n="fill"></button>
           <button class="submit" type="submit" data-i18n="submit"></button>
           <p id="status" role="alert" aria-live="polite"></p>
         </form>
@@ -366,6 +382,7 @@
         vehicle: "السيارة",
         vehiclePh: "اختر السيارة",
         consent: "أوافق على التواصل عبر واتساب",
+        fill: "عبّي بياناتي",
         submit: "إرسال",
         sending: "جارٍ الإرسال…",
         sent: "تم استلام طلبك. سنتواصل معك قريباً.",
@@ -382,6 +399,7 @@
         vehicle: "Vehicle",
         vehiclePh: "Choose a vehicle",
         consent: "I consent to being contacted on WhatsApp",
+        fill: "Fill my details",
         submit: "Send",
         sending: "Sending…",
         sent: "Your request was received. We will be in touch shortly.",
@@ -419,6 +437,13 @@
     });
 
     applyLanguage(language);
+
+    document.getElementById("fill").addEventListener("click", () => {
+      form.fullName.value = "عبدالله الشهيل";
+      form.mobileE164.value = "+966555841684";
+      form.vehicle.value = "EADO-PLUS";
+      form.consentWhatsapp.checked = true;
+    });
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
